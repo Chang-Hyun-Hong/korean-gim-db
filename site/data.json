@@ -1,5 +1,20 @@
 [
   {
+    "name": "곰곰 광천김 전장",
+    "type": "재래김",
+    "cook": "조미김",
+    "oil": 7,
+    "salt": 7,
+    "score": "⭐️⭐️",
+    "scoreNum": 2,
+    "price": "₩15,580",
+    "priceNum": 15580,
+    "review": "적당히 맛있고 가격 저렴한 김을 원하는 사람들에게 추천",
+    "desc": "쿠팡 PB 브랜드의 광천김. 일반적인 김 맛임. 김 단독으로만 먹기에는 다소 짜고, 김이 얇고 잘 부서지는 편이라, 접어서 등분하면 부스러기가 많이 나옴. PB 상품이다 보니 가격은 꽤 저렴한 편이라 부담 없이 먹기에는 좋음. ",
+    "link": "https://www.coupang.com/vp/products/186399465?itemId=532932055&vendorItemId=4388765366&q=쿠팡+김&searchId=ebaeafe62260140&sourceType=search&itemsCount=36&searchRank=3&rank=3&traceId=mnbbi34n",
+    "cut": "N"
+  },
+  {
     "name": "광천 재래 캔김",
     "type": "재래김",
     "cook": "조미김",
