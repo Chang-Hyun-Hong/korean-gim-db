@@ -83,8 +83,8 @@ def parse_page(page):
     name = extract_text(props.get("Name", {}).get("title", []))
     desc = extract_text(props.get("Description", {}).get("rich_text", []))
     review = extract_text(props.get("한줄평", {}).get("rich_text", []))
-    score = extract_text(props.get("총점", {}).get("rich_text", []))
-    price_text = extract_text(props.get("구매가격", {}).get("rich_text", []))
+    score = extract_select(props.get("총점", {}).get("select"))
+    price_raw = extract_number(props.get("구매가격", {}).get("number"))
     link = extract_url(props.get("구매링크", {}).get("url"))
     oil = extract_number(props.get("기름진 정도(0~10)", {}).get("number"))
     salt = extract_number(props.get("짠 정도(0~10)", {}).get("number"))
@@ -92,12 +92,9 @@ def parse_page(page):
     cook_state = extract_select(props.get("조리상태", {}).get("select"))
     cut = extract_select(props.get("등분 여부", {}).get("select"))
 
-    # 가격 텍스트에서 숫자만 추출
-    price_num = 0
-    if price_text:
-        digits = re.sub(r"[^\d]", "", price_text)
-        if digits:
-            price_num = int(digits)
+    # 가격: number 타입 → 표시용 텍스트 생성
+    price_num = int(price_raw) if price_raw else 0
+    price_text = f"₩{price_num:,}" if price_num else ""
 
     return {
         "name": name,
