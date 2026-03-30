@@ -1,5 +1,20 @@
 [
   {
+    "name": "(루프 테스트용)",
+    "type": "돌김",
+    "cook": "무조미김",
+    "oil": 5,
+    "salt": 3,
+    "score": "⭐️⭐️⭐️",
+    "scoreNum": 3,
+    "price": "₩16,000",
+    "priceNum": 16000,
+    "review": "루프 테스트용으로, 번역도 잘되는지?",
+    "desc": "3/30 오전 9시에 반영되어야 함",
+    "link": "https://www.coupang.com/vp/products/186399465?itemId=532932055&vendorItemId=4388765366&q=쿠팡+김&searchId=ebaeafe62260140&sourceType=search&itemsCount=36&searchRank=3&rank=3&traceId=mnbbi34n",
+    "cut": "Y"
+  },
+  {
     "name": "곰곰 광천김 전장",
     "type": "재래김",
     "cook": "조미김",
