@@ -165,6 +165,21 @@
     "cut": "Y"
   },
   {
+    "name": "예지김 진도 두번 구운 곱창돌김 5매 5봉 햇김 구운김 전장김 곱창김",
+    "type": "돌김",
+    "cook": "무조미김",
+    "oil": 0,
+    "salt": 0,
+    "score": "⭐️⭐️⭐️",
+    "scoreNum": 3,
+    "price": "₩13,890",
+    "priceNum": 13890,
+    "review": "양념 없이 먹어도 김 자체의 맛이 좋음. 그런데 입천장에 자주 붙는 게 꽤나 거슬려서 아쉬웠음",
+    "desc": "곱창김은 돌김의 일종으로, 가을(10~11월) 초반에만 짧게 생산되는 잇바디돌김. 일반 돌김보다 단맛이 강하고 두껍고 식감이 쫄깃한 것이 특징. 이 김도 마찬가지로 곱창김 특유의 바삭바삭함이 있음. 단독으로 먹어도 김 자체의 맛이 좋고, 곱창김들 중에서도 먹으면 입천장에 엄청 잘 붙음. 무조미 곱창김은 역시 간장+기름+고춧가루와 조합이 좋다.",
+    "link": "https://www.coupang.com/vp/products/7796683359?itemId=24687600548&vendorItemId=90962903818&src=1191000&spec=10999999&addtag=400&ctag=7796683359&lptag=CFM11981631&itime=20260408213211&pageType=PRODUCT&pageValue=7796683359&wPcid=17724408576760377210222&wRef=&wTime=20260408213211&redirect=landing&abTestInfo=&mcid=0c722a01c2f6492a87864c5b0de0e5e8&sharesource=sharebutton&style=&isshortened=Y",
+    "cut": "N"
+  },
+  {
     "name": "한나네김 빨강이 일반김",
     "type": "재래김",
     "cook": "조미김",
