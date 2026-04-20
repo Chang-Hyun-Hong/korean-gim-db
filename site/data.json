@@ -30,6 +30,21 @@
     "cut": "Y"
   },
   {
+    "name": "광천 해저 올리브 전장김",
+    "type": "재래김",
+    "cook": "조미김",
+    "oil": 5,
+    "salt": 6,
+    "score": "⭐️",
+    "scoreNum": 1,
+    "price": "₩11,990",
+    "priceNum": 11990,
+    "review": "특별한 맛은 없었음. 저렴하게 많이 먹고 싶을 때 추천",
+    "desc": "얇고 무난한 조미김. 특별한 식감이나 맛은 없었고, 저렴하게 먹기 좋은 정도.",
+    "link": "https://www.coupang.com/vp/products/6578948288?itemId=14796789310&vendorItemId=82036618679&src=1191000&spec=10999999&addtag=400&ctag=6578948288&lptag=CFM11981631&itime=20260419230733&pageType=PRODUCT&pageValue=6578948288&wPcid=17724408576760377210222&wRef=&wTime=20260419230733&redirect=landing&abTestInfo=&mcid=6bb55801ea4640d4a9d07bcfa3246f60&sharesource=sharebutton&style=&isshortened=Y&settlement=N",
+    "cut": "N"
+  },
+  {
     "name": "기역이미음 일월의돌김 구운 무조미김",
     "type": "돌김",
     "cook": "무조미김",
@@ -72,6 +87,21 @@
     "review": "간식용으로 덜 짜게 먹고 싶을 때 좋음",
     "desc": "염도와 기름진 정도는 낮은 편이고, 바삭해서 간식으로 먹기 좋음. 봉지 단위로는 20봉 단위로밖에 안 팔아서 좀 아쉬움.",
     "link": "https://www.coupang.com/vp/products/7558095030?itemId=19906205600&vendorItemId=85787050555&q=%EB%AF%BC%EC%86%8D%EB%AC%BC%EC%82%B0+%EC%86%94%EC%9E%8E%EA%B9%80&searchId=497c1bfc4438679&sourceType=search&itemsCount=36&searchRank=0&rank=0&traceId=mglzm1v9",
+    "cut": "N"
+  },
+  {
+    "name": "바다마음 명품 광천 파래김",
+    "type": "파래김",
+    "cook": "조미김",
+    "oil": 4,
+    "salt": 5,
+    "score": "⭐️⭐️",
+    "scoreNum": 2,
+    "price": "₩13,850",
+    "priceNum": 13850,
+    "review": "염도와 기름이 적어, 일상 간식으로 먹기 용이한 파래김",
+    "desc": "동일한 가격과 퀄리티의 조미김 대비 염도가 조금 낮은 편. 기름도 적은 편이라 일상적인 간식으로 먹기 좋음. 재래김과 달리 파래김이라 특유의 향이 매력적임. 포장 용기의 부피가 안에 들어있는 내용물 대비 커서, 보관 시 구겨질 위험이 있음",
+    "link": "https://www.coupang.com/vp/products/9185680437?itemId=27096420846&vendorItemId=94064615279&q=%EB%B0%94%EB%8B%A4%EB%A7%88%EC%9D%8C%20%EB%AA%85%ED%91%BC%20%EA%B4%91%EC%B2%9C%20%ED%8C%8C%EB%9E%98%EA%B9%80&searchId=31aeef9613846139&sourceType=search&itemsCount=36&searchRank=0&rank=0&traceId=mo5uooia",
     "cut": "N"
   },
   {
@@ -165,7 +195,7 @@
     "cut": "Y"
   },
   {
-    "name": "예지김 진도 두번 구운 곱창돌김 5매 5봉 햇김 구운김 전장김 곱창김",
+    "name": "예지김 진도 두번 구운 곱창돌김",
     "type": "돌김",
     "cook": "무조미김",
     "oil": 0,
