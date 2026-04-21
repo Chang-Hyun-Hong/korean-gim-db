@@ -135,7 +135,51 @@
   </style>
 </head>
 <body>
-  <!-- Task 4에서 body markup 추가 -->
-  <p>placeholder</p>
+  <div class="header">
+    <h1 id="title">맛있는 김 DB</h1>
+    <div class="lang-toggle">
+      <button class="lang-btn active" data-lang="ko">한국어</button>
+      <button class="lang-btn" data-lang="en">English</button>
+    </div>
+  </div>
+  <p class="subtitle" id="subtitle">김 리뷰 데이터베이스 — 기름진 정도, 짠 정도, 총점으로 나에게 맞는 김 찾기</p>
+
+  <div class="filters">
+    <div class="filter-group">
+      <label id="labelType">김 종류</label>
+      <select id="filterType"></select>
+    </div>
+    <div class="filter-group">
+      <label id="labelCook">조리상태</label>
+      <select id="filterCook"></select>
+    </div>
+    <div class="filter-group">
+      <label id="labelSearch">검색</label>
+      <input type="text" id="searchInput">
+    </div>
+  </div>
+
+  <p class="count"><span id="count">0</span><span id="countLabel">개 결과</span></p>
+
+  <table>
+    <thead>
+      <tr id="theadRow">
+        <th data-key="name"><span class="col-label">이름</span> <span class="sort-arrow">↕</span></th>
+        <th data-key="type"><span class="col-label">김 종류</span> <span class="sort-arrow">↕</span></th>
+        <th data-key="cook"><span class="col-label">조리</span> <span class="sort-arrow">↕</span></th>
+        <th data-key="oil"><span class="col-label">기름</span> <span class="sort-arrow">↕</span></th>
+        <th data-key="salt"><span class="col-label">짠맛</span> <span class="sort-arrow">↕</span></th>
+        <th data-key="score"><span class="col-label">총점</span> <span class="sort-arrow">↕</span></th>
+        <th data-key="review"><span class="col-label">한줄평</span></th>
+        <th data-key="price"><span class="col-label">가격</span> <span class="sort-arrow">↕</span></th>
+        <th><span class="col-label">링크</span></th>
+      </tr>
+    </thead>
+    <tbody id="tbody">
+      <tr><td colspan="9" class="loading">Loading...</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Task 5-6에서 script 추가 -->
 </body>
 </html>
