@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 jobs:
-  fetch-and-deploy:
+  fetch-data:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,13 +32,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add site/data.json
+          git add public/data.json
           git diff --staged --quiet || git commit -m "Update gim data from Notion"
           git push
-
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./site
