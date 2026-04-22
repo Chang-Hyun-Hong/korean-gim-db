@@ -1,0 +1,386 @@
+---
+// Phase 1: 기존 vanilla HTML을 그대로 Astro로 이식
+// style + body + script는 다음 태스크들에서 채움
+---
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>맛있는 김 DB | Korean GIM Database</title>
+  <style is:global>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f8f6f0;
+      color: #333;
+      padding: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+    h1 { font-size: 2rem; color: #1a5c2a; }
+    .lang-toggle {
+      display: flex;
+      border: 2px solid #1a5c2a;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .lang-btn {
+      padding: 6px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      background: white;
+      color: #1a5c2a;
+      transition: all 0.2s;
+    }
+    .lang-btn.active {
+      background: #1a5c2a;
+      color: white;
+    }
+    .subtitle {
+      color: #666;
+      margin-bottom: 24px;
+      font-size: 0.95rem;
+    }
+    .filters {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .filters select, .filters input {
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      background: white;
+    }
+    .filters label {
+      font-size: 0.85rem;
+      color: #555;
+      font-weight: 600;
+    }
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    thead { background: #1a5c2a; color: white; }
+    th {
+      padding: 12px 14px;
+      text-align: left;
+      font-size: 0.85rem;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+    th:hover { background: #14752e; }
+    th .sort-arrow { margin-left: 4px; opacity: 0.5; }
+    th.sorted .sort-arrow { opacity: 1; }
+    td {
+      padding: 10px 14px;
+      font-size: 0.88rem;
+      border-bottom: 1px solid #eee;
+      vertical-align: top;
+    }
+    tr:hover td { background: #f0f8f0; }
+    td.name { font-weight: 600; min-width: 140px; }
+    td.score { text-align: center; font-size: 1rem; }
+    td.num { text-align: center; }
+    td.review { font-size: 0.82rem; color: #444; max-width: 200px; }
+    a.buy-link {
+      display: inline-block;
+      padding: 4px 10px;
+      background: #1a5c2a;
+      color: white;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 0.78rem;
+    }
+    a.buy-link:hover { background: #14752e; }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-재래김, .badge-Traditional { background: #e8f5e9; color: #2e7d32; }
+    .badge-돌김, .badge-Stone { background: #e3f2fd; color: #1565c0; }
+    .badge-파래김, .badge-Green { background: #f3e5f5; color: #7b1fa2; }
+    .badge-조미김, .badge-Seasoned { background: #fff3e0; color: #e65100; }
+    .badge-무조미김, .badge-Unseasoned { background: #efebe9; color: #4e342e; }
+    .empty { color: #bbb; font-style: italic; }
+    .count { font-size: 0.85rem; color: #888; margin-bottom: 12px; }
+    .loading { text-align: center; padding: 40px; color: #888; }
+    @media (max-width: 768px) {
+      body { padding: 12px; }
+      .filters { flex-direction: column; }
+      table { font-size: 0.8rem; display: block; overflow-x: auto; }
+      .header { flex-direction: column; gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1 id="title">맛있는 김 DB</h1>
+    <div class="lang-toggle">
+      <button class="lang-btn active" data-lang="ko">한국어</button>
+      <button class="lang-btn" data-lang="en">English</button>
+    </div>
+  </div>
+  <p class="subtitle" id="subtitle">김 리뷰 데이터베이스 — 기름진 정도, 짠 정도, 총점으로 나에게 맞는 김 찾기</p>
+
+  <div class="filters">
+    <div class="filter-group">
+      <label id="labelType">김 종류</label>
+      <select id="filterType"></select>
+    </div>
+    <div class="filter-group">
+      <label id="labelCook">조리상태</label>
+      <select id="filterCook"></select>
+    </div>
+    <div class="filter-group">
+      <label id="labelSearch">검색</label>
+      <input type="text" id="searchInput">
+    </div>
+  </div>
+
+  <p class="count"><span id="count">0</span><span id="countLabel">개 결과</span></p>
+
+  <table>
+    <thead>
+      <tr id="theadRow">
+        <th data-key="name"><span class="col-label">이름</span> <span class="sort-arrow">↕</span></th>
+        <th data-key="type"><span class="col-label">김 종류</span> <span class="sort-arrow">↕</span></th>
+        <th data-key="cook"><span class="col-label">조리</span> <span class="sort-arrow">↕</span></th>
+        <th data-key="oil"><span class="col-label">기름</span> <span class="sort-arrow">↕</span></th>
+        <th data-key="salt"><span class="col-label">짠맛</span> <span class="sort-arrow">↕</span></th>
+        <th data-key="score"><span class="col-label">총점</span> <span class="sort-arrow">↕</span></th>
+        <th data-key="review"><span class="col-label">한줄평</span></th>
+        <th data-key="price"><span class="col-label">가격</span> <span class="sort-arrow">↕</span></th>
+        <th><span class="col-label">링크</span></th>
+      </tr>
+    </thead>
+    <tbody id="tbody">
+      <tr><td colspan="9" class="loading">Loading...</td></tr>
+    </tbody>
+  </table>
+
+  <script>
+  import {
+    i18n,
+    enNameMap,
+    enReviewMap,
+    typeDisplayMap,
+    cookDisplayMap,
+    type Lang,
+  } from '../data/translations';
+
+  interface Gim {
+    name: string;
+    type: string;
+    cook: string;
+    oil: number | null;
+    salt: number | null;
+    score: string;
+    scoreNum: number;
+    price: string;
+    priceNum: number;
+    review: string;
+    desc: string;
+    link: string;
+    cut: string;
+  }
+
+  let gimData: Gim[] = [];
+  let lang: Lang = 'ko';
+  let sortKey: keyof Gim | null = null;
+  let sortAsc = true;
+
+  async function loadData() {
+    try {
+      const resp = await fetch('/data.json');
+      gimData = await resp.json();
+      updateUI();
+    } catch {
+      const tbody = document.getElementById('tbody');
+      if (tbody) {
+        tbody.innerHTML =
+          '<tr><td colspan="9" class="loading">데이터를 불러올 수 없습니다. data.json 파일을 확인해주세요.</td></tr>';
+      }
+    }
+  }
+
+  function getDisplayData(): Gim[] {
+    if (lang === 'ko') return gimData;
+    return gimData.map(d => ({
+      ...d,
+      name: enNameMap[d.name] || d.name,
+      review: enReviewMap[d.review] || d.review,
+    }));
+  }
+
+  function setLang(l: Lang) {
+    lang = l;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.lang-btn[data-lang="${l}"]`)?.classList.add('active');
+    sortKey = null;
+    sortAsc = true;
+    updateUI();
+  }
+
+  function updateUI() {
+    const t = i18n[lang];
+    const setText = (id: string, text: string) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    };
+    setText('title', t.title);
+    setText('subtitle', t.subtitle);
+    setText('labelType', t.labelType);
+    setText('labelCook', t.labelCook);
+    setText('labelSearch', t.labelSearch);
+    setText('countLabel', t.countLabel);
+
+    const searchInput = document.getElementById('searchInput') as HTMLInputElement | null;
+    if (searchInput) searchInput.placeholder = t.searchPlaceholder;
+
+    const filterType = document.getElementById('filterType') as HTMLSelectElement | null;
+    const filterCook = document.getElementById('filterCook') as HTMLSelectElement | null;
+    if (filterType) {
+      filterType.innerHTML = t.filterType.map(([v, l]) => `<option value="${v}">${l}</option>`).join('');
+    }
+    if (filterCook) {
+      filterCook.innerHTML = t.filterCook.map(([v, l]) => `<option value="${v}">${l}</option>`).join('');
+    }
+
+    const labels = document.querySelectorAll('#theadRow .col-label');
+    t.cols.forEach((c, i) => {
+      const el = labels[i];
+      if (el) el.textContent = c;
+    });
+
+    document.querySelectorAll('th').forEach(th => {
+      th.classList.remove('sorted');
+      const arrow = th.querySelector('.sort-arrow');
+      if (arrow) arrow.textContent = '↕';
+    });
+
+    render();
+  }
+
+  function bar(val: number | null | undefined, max: number, color: string): string {
+    if (val === null || val === undefined) return '<span class="empty">-</span>';
+    const pct = (val / max) * 100;
+    return `<div style="display:flex;align-items:center;gap:6px;">
+      <div style="width:60px;height:8px;background:#eee;border-radius:4px;overflow:hidden;">
+        <div style="width:${pct}%;height:100%;background:${color};border-radius:4px;"></div>
+      </div>
+      <span style="font-size:0.8rem;">${val}</span>
+    </div>`;
+  }
+
+  function render() {
+    const t = i18n[lang];
+    const data = getDisplayData();
+    const filterType = document.getElementById('filterType') as HTMLSelectElement | null;
+    const filterCook = document.getElementById('filterCook') as HTMLSelectElement | null;
+    const searchInput = document.getElementById('searchInput') as HTMLInputElement | null;
+
+    const typeVal = filterType?.value || '';
+    const cookVal = filterCook?.value || '';
+    const search = (searchInput?.value || '').toLowerCase();
+
+    let filtered = data.filter(d => {
+      if (typeVal && d.type !== typeVal) return false;
+      if (cookVal && d.cook !== cookVal) return false;
+      if (search && !d.name.toLowerCase().includes(search) && !(d.review || '').toLowerCase().includes(search)) return false;
+      return true;
+    });
+
+    if (sortKey) {
+      const key = sortKey;
+      filtered.sort((a, b) => {
+        let va: any = a[key];
+        let vb: any = b[key];
+        if (va === null || va === undefined || va === '') va = sortAsc ? Infinity : -Infinity;
+        if (vb === null || vb === undefined || vb === '') vb = sortAsc ? Infinity : -Infinity;
+        if (typeof va === 'string') return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+        return sortAsc ? va - vb : vb - va;
+      });
+    }
+
+    const countEl = document.getElementById('count');
+    if (countEl) countEl.textContent = String(filtered.length);
+
+    const tMap = typeDisplayMap[lang];
+    const cMap = cookDisplayMap[lang];
+
+    const tbody = document.getElementById('tbody');
+    if (tbody) {
+      tbody.innerHTML = filtered.map(d => `
+        <tr>
+          <td class="name">${d.name}</td>
+          <td><span class="badge badge-${tMap[d.type] || d.type}">${tMap[d.type] || d.type}</span></td>
+          <td><span class="badge badge-${cMap[d.cook] || d.cook}">${cMap[d.cook] || d.cook}</span></td>
+          <td class="num">${bar(d.oil, 10, '#f59e0b')}</td>
+          <td class="num">${bar(d.salt, 10, '#3b82f6')}</td>
+          <td class="score">${d.score || '<span class="empty">-</span>'}</td>
+          <td class="review">${d.review || '<span class="empty">-</span>'}</td>
+          <td class="num">${d.price || '<span class="empty">-</span>'}</td>
+          <td>${d.link ? `<a class="buy-link" href="${d.link}" target="_blank">${t.buyBtn}</a>` : ''}</td>
+        </tr>
+      `).join('');
+    }
+  }
+
+  // 이벤트 바인딩
+  document.querySelectorAll<HTMLButtonElement>('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const l = btn.dataset.lang as Lang;
+      if (l) setLang(l);
+    });
+  });
+
+  document.getElementById('filterType')?.addEventListener('change', render);
+  document.getElementById('filterCook')?.addEventListener('change', render);
+  document.getElementById('searchInput')?.addEventListener('input', render);
+
+  document.querySelectorAll<HTMLTableCellElement>('th[data-key]').forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.key;
+      if (!key) return;
+      const sortMap: Record<string, keyof Gim> = {
+        name: 'name', type: 'type', cook: 'cook', oil: 'oil', salt: 'salt',
+        score: 'scoreNum', price: 'priceNum', review: 'review',
+      };
+      const realKey = sortMap[key];
+      if (!realKey) return;
+      if (sortKey === realKey) { sortAsc = !sortAsc; }
+      else { sortKey = realKey; sortAsc = true; }
+      document.querySelectorAll('th').forEach(t => t.classList.remove('sorted'));
+      th.classList.add('sorted');
+      const arrow = th.querySelector('.sort-arrow');
+      if (arrow) arrow.textContent = sortAsc ? '↑' : '↓';
+      render();
+    });
+  });
+
+  loadData();
+</script>
+</body>
+</html>

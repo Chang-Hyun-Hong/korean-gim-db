@@ -119,7 +119,7 @@ def main():
     # 이름 기준 정렬
     items.sort(key=lambda x: x["name"])
 
-    output_path = os.path.join(os.path.dirname(__file__), "..", "site", "data.json")
+    output_path = os.path.join(os.path.dirname(__file__), "..", "public", "data.json")
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(items, f, ensure_ascii=False, indent=2)
 
