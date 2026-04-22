@@ -180,6 +180,207 @@
     </tbody>
   </table>
 
-  <!-- Task 5-6에서 script 추가 -->
+  <script>
+  import {
+    i18n,
+    enNameMap,
+    enReviewMap,
+    typeDisplayMap,
+    cookDisplayMap,
+    type Lang,
+  } from '../data/translations';
+
+  interface Gim {
+    name: string;
+    type: string;
+    cook: string;
+    oil: number | null;
+    salt: number | null;
+    score: string;
+    scoreNum: number;
+    price: string;
+    priceNum: number;
+    review: string;
+    desc: string;
+    link: string;
+    cut: string;
+  }
+
+  let gimData: Gim[] = [];
+  let lang: Lang = 'ko';
+  let sortKey: keyof Gim | null = null;
+  let sortAsc = true;
+
+  async function loadData() {
+    try {
+      const resp = await fetch('/data.json');
+      gimData = await resp.json();
+      updateUI();
+    } catch {
+      const tbody = document.getElementById('tbody');
+      if (tbody) {
+        tbody.innerHTML =
+          '<tr><td colspan="9" class="loading">데이터를 불러올 수 없습니다. data.json 파일을 확인해주세요.</td></tr>';
+      }
+    }
+  }
+
+  function getDisplayData(): Gim[] {
+    if (lang === 'ko') return gimData;
+    return gimData.map(d => ({
+      ...d,
+      name: enNameMap[d.name] || d.name,
+      review: enReviewMap[d.review] || d.review,
+    }));
+  }
+
+  function setLang(l: Lang) {
+    lang = l;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.lang-btn[data-lang="${l}"]`)?.classList.add('active');
+    sortKey = null;
+    sortAsc = true;
+    updateUI();
+  }
+
+  function updateUI() {
+    const t = i18n[lang];
+    const setText = (id: string, text: string) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    };
+    setText('title', t.title);
+    setText('subtitle', t.subtitle);
+    setText('labelType', t.labelType);
+    setText('labelCook', t.labelCook);
+    setText('labelSearch', t.labelSearch);
+    setText('countLabel', t.countLabel);
+
+    const searchInput = document.getElementById('searchInput') as HTMLInputElement | null;
+    if (searchInput) searchInput.placeholder = t.searchPlaceholder;
+
+    const filterType = document.getElementById('filterType') as HTMLSelectElement | null;
+    const filterCook = document.getElementById('filterCook') as HTMLSelectElement | null;
+    if (filterType) {
+      filterType.innerHTML = t.filterType.map(([v, l]) => `<option value="${v}">${l}</option>`).join('');
+    }
+    if (filterCook) {
+      filterCook.innerHTML = t.filterCook.map(([v, l]) => `<option value="${v}">${l}</option>`).join('');
+    }
+
+    const labels = document.querySelectorAll('#theadRow .col-label');
+    t.cols.forEach((c, i) => {
+      const el = labels[i];
+      if (el) el.textContent = c;
+    });
+
+    document.querySelectorAll('th').forEach(th => {
+      th.classList.remove('sorted');
+      const arrow = th.querySelector('.sort-arrow');
+      if (arrow) arrow.textContent = '↕';
+    });
+
+    render();
+  }
+
+  function bar(val: number | null | undefined, max: number, color: string): string {
+    if (val === null || val === undefined) return '<span class="empty">-</span>';
+    const pct = (val / max) * 100;
+    return `<div style="display:flex;align-items:center;gap:6px;">
+      <div style="width:60px;height:8px;background:#eee;border-radius:4px;overflow:hidden;">
+        <div style="width:${pct}%;height:100%;background:${color};border-radius:4px;"></div>
+      </div>
+      <span style="font-size:0.8rem;">${val}</span>
+    </div>`;
+  }
+
+  function render() {
+    const t = i18n[lang];
+    const data = getDisplayData();
+    const filterType = document.getElementById('filterType') as HTMLSelectElement | null;
+    const filterCook = document.getElementById('filterCook') as HTMLSelectElement | null;
+    const searchInput = document.getElementById('searchInput') as HTMLInputElement | null;
+
+    const typeVal = filterType?.value || '';
+    const cookVal = filterCook?.value || '';
+    const search = (searchInput?.value || '').toLowerCase();
+
+    let filtered = data.filter(d => {
+      if (typeVal && d.type !== typeVal) return false;
+      if (cookVal && d.cook !== cookVal) return false;
+      if (search && !d.name.toLowerCase().includes(search) && !(d.review || '').toLowerCase().includes(search)) return false;
+      return true;
+    });
+
+    if (sortKey) {
+      const key = sortKey;
+      filtered.sort((a, b) => {
+        let va: any = a[key];
+        let vb: any = b[key];
+        if (va === null || va === undefined || va === '') va = sortAsc ? Infinity : -Infinity;
+        if (vb === null || vb === undefined || vb === '') vb = sortAsc ? Infinity : -Infinity;
+        if (typeof va === 'string') return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+        return sortAsc ? va - vb : vb - va;
+      });
+    }
+
+    const countEl = document.getElementById('count');
+    if (countEl) countEl.textContent = String(filtered.length);
+
+    const tMap = typeDisplayMap[lang];
+    const cMap = cookDisplayMap[lang];
+
+    const tbody = document.getElementById('tbody');
+    if (tbody) {
+      tbody.innerHTML = filtered.map(d => `
+        <tr>
+          <td class="name">${d.name}</td>
+          <td><span class="badge badge-${tMap[d.type] || d.type}">${tMap[d.type] || d.type}</span></td>
+          <td><span class="badge badge-${cMap[d.cook] || d.cook}">${cMap[d.cook] || d.cook}</span></td>
+          <td class="num">${bar(d.oil, 10, '#f59e0b')}</td>
+          <td class="num">${bar(d.salt, 10, '#3b82f6')}</td>
+          <td class="score">${d.score || '<span class="empty">-</span>'}</td>
+          <td class="review">${d.review || '<span class="empty">-</span>'}</td>
+          <td class="num">${d.price || '<span class="empty">-</span>'}</td>
+          <td>${d.link ? `<a class="buy-link" href="${d.link}" target="_blank">${t.buyBtn}</a>` : ''}</td>
+        </tr>
+      `).join('');
+    }
+  }
+
+  // 이벤트 바인딩
+  document.querySelectorAll<HTMLButtonElement>('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const l = btn.dataset.lang as Lang;
+      if (l) setLang(l);
+    });
+  });
+
+  document.getElementById('filterType')?.addEventListener('change', render);
+  document.getElementById('filterCook')?.addEventListener('change', render);
+  document.getElementById('searchInput')?.addEventListener('input', render);
+
+  document.querySelectorAll<HTMLTableCellElement>('th[data-key]').forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.key;
+      if (!key) return;
+      const sortMap: Record<string, keyof Gim> = {
+        name: 'name', type: 'type', cook: 'cook', oil: 'oil', salt: 'salt',
+        score: 'scoreNum', price: 'priceNum', review: 'review',
+      };
+      const realKey = sortMap[key];
+      if (!realKey) return;
+      if (sortKey === realKey) { sortAsc = !sortAsc; }
+      else { sortKey = realKey; sortAsc = true; }
+      document.querySelectorAll('th').forEach(t => t.classList.remove('sorted'));
+      th.classList.add('sorted');
+      const arrow = th.querySelector('.sort-arrow');
+      if (arrow) arrow.textContent = sortAsc ? '↑' : '↓';
+      render();
+    });
+  });
+
+  loadData();
+</script>
 </body>
 </html>
