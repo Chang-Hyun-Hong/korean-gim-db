@@ -3,7 +3,6 @@
 Korean seaweed (김/gim) review database with filterable ratings.
 
 **Live**: https://korean-gim-db.vercel.app/
-**Legacy (GitHub Pages, freeze)**: https://chang-hyun-hong.github.io/korean-gim-db/ (업데이트 중단)
 
 ## Features
 
