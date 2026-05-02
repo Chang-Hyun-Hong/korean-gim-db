@@ -1,0 +1,257 @@
+---
+import type { Locale } from '../i18n/utils';
+import { useTranslations } from '../i18n/utils';
+
+interface Gim {
+  name: string;
+  name_en?: string;
+  type: string;
+  cook: string;
+  oil: number | null;
+  salt: number | null;
+  score: string;
+  scoreNum: number;
+  price: string;
+  priceNum: number;
+  review: string;
+  review_en?: string;
+  desc: string;
+  link: string;
+  cut: string;
+}
+
+interface Props {
+  locale: Locale;
+  data: Gim[];
+}
+const { locale, data } = Astro.props;
+const t = useTranslations(locale);
+
+function displayName(d: Gim): string {
+  if (locale === 'en') return d.name_en || d.name;
+  return d.name;
+}
+function displayReview(d: Gim): string {
+  if (locale === 'en') return d.review_en || d.review;
+  return d.review;
+}
+
+const sortableCols = [
+  { key: 'name', label: t('table.name'), sortKey: 'name' },
+  { key: 'type', label: t('table.type'), sortKey: 'type' },
+  { key: 'cook', label: t('table.cooking'), sortKey: 'cook' },
+  { key: 'oil', label: t('table.oil'), sortKey: 'oil' },
+  { key: 'salt', label: t('table.salt'), sortKey: 'salt' },
+  { key: 'score', label: t('table.rating'), sortKey: 'scoreNum' },
+  { key: 'review', label: t('table.review'), sortKey: null },
+  { key: 'price', label: t('table.price'), sortKey: 'priceNum' },
+  { key: 'link', label: t('table.link'), sortKey: null },
+];
+---
+<section class="max-w-7xl mx-auto px-6 mt-16">
+  <div class="flex items-baseline justify-between mb-4">
+    <h2 class="text-h2 font-serif font-medium text-text-primary tracking-tight">
+      {locale === 'en' ? 'Full Database' : '전체 데이터베이스'}
+    </h2>
+    <p class="text-sm text-text-muted">
+      <span data-count>{data.length}</span><span>{t('table.count_suffix')}</span>
+    </p>
+  </div>
+
+  <div class="bg-bg-card border border-border rounded-lg shadow-sm overflow-x-auto">
+    <table class="w-full text-sm" data-review-table>
+      <thead class="bg-bg-secondary text-text-primary">
+        <tr>
+          {sortableCols.map(c => (
+            <th
+              class:list={[
+                'px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider whitespace-nowrap',
+                c.sortKey ? 'cursor-pointer select-none hover:bg-seafoam-light transition-colors' : '',
+              ]}
+              data-sort-key={c.sortKey ?? undefined}
+            >
+              <span>{c.label}</span>
+              {c.sortKey && <span class="ml-1 text-text-muted" data-sort-arrow>↕</span>}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody data-tbody>
+        {data.map(d => (
+          <tr
+            class="group relative border-b border-border last:border-0 hover:bg-bg-secondary/40 transition-colors before:content-[''] before:absolute before:inset-y-0 before:left-0 before:w-1 before:bg-kelp before:scale-y-0 hover:before:scale-y-100 before:transition-transform before:duration-200 before:origin-center"
+            data-row
+            data-name={d.name}
+            data-name-en={d.name_en || ''}
+            data-type={d.type}
+            data-cook={d.cook}
+            data-oil={d.oil ?? ''}
+            data-salt={d.salt ?? ''}
+            data-score-num={d.scoreNum}
+            data-price-num={d.priceNum}
+            data-review={d.review}
+            data-review-en={d.review_en || ''}
+          >
+            <td class="px-4 py-3 font-medium text-text-primary min-w-[10rem]">{displayName(d)}</td>
+            <td class="px-4 py-3">
+              <span class="inline-block px-2 py-0.5 rounded-sm text-xs font-medium bg-bg-secondary text-text-primary">
+                {t(`type_labels.${d.type}`) || d.type}
+              </span>
+            </td>
+            <td class="px-4 py-3">
+              <span class="inline-block px-2 py-0.5 rounded-sm text-xs font-medium bg-bg-secondary text-text-secondary">
+                {t(`cooking_labels.${d.cook}`) || d.cook}
+              </span>
+            </td>
+            <td class="px-4 py-3">
+              {d.oil != null ? (
+                <div class="flex items-center gap-2">
+                  <div class="relative w-16 h-1.5 bg-bg-secondary rounded-sm overflow-hidden">
+                    <div
+                      class="absolute inset-y-0 left-0 rounded-sm"
+                      style={`width: ${(d.oil / 10) * 100}%; background: linear-gradient(90deg, var(--color-kelp-light), var(--color-kelp));`}
+                    ></div>
+                  </div>
+                  <span class="text-xs text-text-secondary tabular-nums">{d.oil}</span>
+                </div>
+              ) : <span class="italic text-text-muted">—</span>}
+            </td>
+            <td class="px-4 py-3">
+              {d.salt != null ? (
+                <div class="flex items-center gap-2">
+                  <div class="relative w-16 h-1.5 bg-bg-secondary rounded-sm overflow-hidden">
+                    <div
+                      class="absolute inset-y-0 left-0 rounded-sm"
+                      style={`width: ${(d.salt / 10) * 100}%; background: linear-gradient(90deg, var(--color-ocean-light), var(--color-ocean));`}
+                    ></div>
+                  </div>
+                  <span class="text-xs text-text-secondary tabular-nums">{d.salt}</span>
+                </div>
+              ) : <span class="italic text-text-muted">—</span>}
+            </td>
+            <td class="px-4 py-3 text-center whitespace-nowrap">
+              {d.score || <span class="italic text-text-muted">—</span>}
+            </td>
+            <td class="px-4 py-3 text-text-secondary text-xs leading-relaxed max-w-[16rem]">
+              {displayReview(d) || <span class="italic text-text-muted">—</span>}
+            </td>
+            <td class="px-4 py-3 text-text-secondary text-xs tabular-nums whitespace-nowrap">
+              {d.price || <span class="italic text-text-muted">—</span>}
+            </td>
+            <td class="px-4 py-3">
+              {d.link ? (
+                <a
+                  href={d.link}
+                  target="_blank"
+                  rel="noopener"
+                  class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-sm bg-seafoam-light text-text-primary hover:bg-seafoam transition-colors"
+                >
+                  {t('table.buy')}
+                </a>
+              ) : <span class="italic text-text-muted">—</span>}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<script>
+  type SortDir = 'asc' | 'desc';
+  let sortKey: string | null = null;
+  let sortDir: SortDir = 'asc';
+
+  const table = document.querySelector<HTMLTableElement>('[data-review-table]');
+  const tbody = document.querySelector<HTMLTableSectionElement>('[data-tbody]');
+  const filterType = document.getElementById('filterType') as HTMLSelectElement | null;
+  const filterCook = document.getElementById('filterCook') as HTMLSelectElement | null;
+  const searchInput = document.getElementById('searchInput') as HTMLInputElement | null;
+  const countEl = document.querySelector<HTMLElement>('[data-count]');
+  const allRows = tbody ? Array.from(tbody.querySelectorAll<HTMLTableRowElement>('[data-row]')) : [];
+
+  // 영어 페이지인지: <html lang> 확인
+  const isEn = document.documentElement.lang === 'en';
+
+  function rowMatches(row: HTMLTableRowElement, typeVal: string, cookVal: string, search: string): boolean {
+    if (typeVal && row.dataset.type !== typeVal) return false;
+    if (cookVal && row.dataset.cook !== cookVal) return false;
+    if (search) {
+      const name = (isEn ? row.dataset.nameEn : row.dataset.name) || row.dataset.name || '';
+      const review = (isEn ? row.dataset.reviewEn : row.dataset.review) || row.dataset.review || '';
+      const hay = `${name} ${review}`.toLowerCase();
+      if (!hay.includes(search)) return false;
+    }
+    return true;
+  }
+
+  function rowSortValue(row: HTMLTableRowElement, key: string): number | string {
+    const raw = row.dataset[toCamel(key)] ?? '';
+    if (key === 'oil' || key === 'salt' || key === 'scoreNum' || key === 'priceNum') {
+      const n = Number(raw);
+      return Number.isFinite(n) && raw !== '' ? n : (sortDir === 'asc' ? Infinity : -Infinity);
+    }
+    return String(raw).toLowerCase();
+  }
+
+  function toCamel(s: string): string {
+    return s.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+  }
+
+  function applyFilters() {
+    if (!tbody) return;
+    const typeVal = filterType?.value || '';
+    const cookVal = filterCook?.value || '';
+    const search = (searchInput?.value || '').toLowerCase().trim();
+
+    let visible = allRows.filter(r => rowMatches(r, typeVal, cookVal, search));
+
+    if (sortKey) {
+      visible = [...visible].sort((a, b) => {
+        const va = rowSortValue(a, sortKey!);
+        const vb = rowSortValue(b, sortKey!);
+        if (typeof va === 'number' && typeof vb === 'number') {
+          return sortDir === 'asc' ? va - vb : vb - va;
+        }
+        return sortDir === 'asc'
+          ? String(va).localeCompare(String(vb))
+          : String(vb).localeCompare(String(va));
+      });
+    }
+
+    // 모든 행 숨기고, visible만 순서대로 다시 추가
+    allRows.forEach(r => { r.style.display = 'none'; });
+    visible.forEach(r => {
+      r.style.display = '';
+      tbody.appendChild(r);
+    });
+
+    if (countEl) countEl.textContent = String(visible.length);
+  }
+
+  function setSort(key: string, th: HTMLElement) {
+    if (sortKey === key) {
+      sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+    } else {
+      sortKey = key;
+      sortDir = 'asc';
+    }
+    // 화살표 갱신
+    document.querySelectorAll('[data-sort-arrow]').forEach(el => { el.textContent = '↕'; });
+    const arrow = th.querySelector('[data-sort-arrow]');
+    if (arrow) arrow.textContent = sortDir === 'asc' ? '↑' : '↓';
+    applyFilters();
+  }
+
+  // 정렬 헤더 바인딩
+  table?.querySelectorAll<HTMLElement>('th[data-sort-key]').forEach(th => {
+    const key = th.dataset.sortKey;
+    if (!key) return;
+    th.addEventListener('click', () => setSort(key, th));
+  });
+
+  // 필터 바인딩
+  filterType?.addEventListener('change', applyFilters);
+  filterCook?.addEventListener('change', applyFilters);
+  searchInput?.addEventListener('input', applyFilters);
+</script>
