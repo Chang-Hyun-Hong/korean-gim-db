@@ -1,0 +1,39 @@
+{
+  "site": {
+    "title": "Korean GIM Database",
+    "tagline": "Seaweed review database — find your perfect gim by oiliness, saltiness & rating."
+  },
+  "nav": {
+    "home": "Home",
+    "language": "Language"
+  },
+  "filter": {
+    "type_label": "Gim Type",
+    "cooking_label": "Seasoning",
+    "search_label": "Search",
+    "search_placeholder": "Search by name or review...",
+    "all": "All"
+  },
+  "table": {
+    "name": "Name",
+    "type": "Type",
+    "cooking": "Seasoning",
+    "oil": "Oiliness",
+    "salt": "Saltiness",
+    "rating": "Rating",
+    "review": "Review",
+    "price": "Price",
+    "link": "Link",
+    "buy": "Buy",
+    "count_suffix": " results"
+  },
+  "type_labels": {
+    "재래김": "Traditional",
+    "돌김": "Stone Laver",
+    "파래김": "Green Laver"
+  },
+  "cooking_labels": {
+    "조미김": "Seasoned",
+    "무조미김": "Unseasoned"
+  }
+}

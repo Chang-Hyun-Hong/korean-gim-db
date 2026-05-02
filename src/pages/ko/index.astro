@@ -1,0 +1,13 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { useTranslations } from '../../i18n/utils';
+
+const t = useTranslations('ko');
+---
+<Layout title={t('site.title')} description={t('site.tagline')} lang="ko">
+  <main class="max-w-7xl mx-auto px-6 py-12">
+    <h1 class="text-h1">{t('site.title')}</h1>
+    <p class="text-text-secondary mt-4">{t('site.tagline')}</p>
+    <p class="text-text-muted mt-8 italic">한국어 인덱스 — Task 8에서 본격 구현</p>
+  </main>
+</Layout>
