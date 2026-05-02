@@ -1,3 +1,5 @@
+@import "@fontsource-variable/fraunces";
+@import "@fontsource-variable/inter";
 @import "tailwindcss";
 
 @theme {
@@ -66,4 +68,34 @@
   --shadow-sm: 0 1px 2px 0 rgb(15 31 28 / 0.04);
   --shadow-md: 0 4px 12px -2px rgb(15 31 28 / 0.06);
   --shadow-lg: 0 12px 32px -8px rgb(15 31 28 / 0.10);
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    color: var(--color-text-primary);
+    background: var(--color-bg-primary);
+  }
+
+  /* 한국어 페이지는 Pretendard로 일원화 (현재 시스템 폰트 fallback — Pretendard 패키지 추후 재설치 예정) */
+  html[lang="ko"] body {
+    font-family: var(--font-sans-kr);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  /* 한국어 헤드라인은 Fraunces 대신 sans-kr (Fraunces는 라틴 전용) */
+  html[lang="ko"] h1,
+  html[lang="ko"] h2,
+  html[lang="ko"] h3,
+  html[lang="ko"] h4,
+  html[lang="ko"] h5,
+  html[lang="ko"] h6 {
+    font-family: var(--font-sans-kr);
+    font-weight: 600;
+  }
 }
