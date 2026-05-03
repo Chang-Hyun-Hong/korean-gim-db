@@ -64,12 +64,12 @@ const sortableCols = [
         <col style="width: 16%" /> {/* name */}
         <col style="width: 10%" /> {/* type */}
         <col style="width: 10%" /> {/* cooking */}
-        <col style="width: 9%" />  {/* oil */}
-        <col style="width: 9%" />  {/* salt */}
+        <col style="width: 10%" /> {/* oil */}
+        <col style="width: 10%" /> {/* salt */}
         <col style="width: 8%" />  {/* rating */}
         <col style="width: 18%" /> {/* review */}
         <col style="width: 10%" /> {/* price */}
-        <col style="width: 10%" /> {/* link */}
+        <col style="width: 8%" />  {/* link */}
       </colgroup>
       <thead class="bg-bg-secondary text-text-primary">
         <tr>
@@ -82,7 +82,7 @@ const sortableCols = [
               data-sort-key={c.sortKey ?? undefined}
             >
               <span>{c.label}</span>
-              {c.sortKey && <span class="ml-1 text-text-muted" data-sort-arrow>↕</span>}
+              {c.sortKey && <span class="ml-1 text-text-muted text-[0.65rem]" data-sort-arrow>↕︎</span>}
             </th>
           ))}
         </tr>
@@ -140,10 +140,12 @@ const sortableCols = [
                 </div>
               ) : <span class="italic text-text-muted">—</span>}
             </td>
-            <td class="px-4 py-3 text-center whitespace-nowrap">
-              {d.score || <span class="italic text-text-muted">—</span>}
+            <td class="px-2 py-3 text-center text-xs whitespace-nowrap tabular-nums">
+              {d.scoreNum > 0
+                ? <span><span class="text-amber-500">★</span> {d.scoreNum}</span>
+                : <span class="italic text-text-muted">—</span>}
             </td>
-            <td class="px-4 py-3 text-text-secondary text-xs leading-relaxed break-words">
+            <td class="px-4 py-3 text-text-secondary text-xs leading-relaxed [overflow-wrap:anywhere]">
               {displayReview(d) || <span class="italic text-text-muted">—</span>}
             </td>
             <td class="px-4 py-3 text-text-secondary text-xs tabular-nums whitespace-nowrap">
@@ -247,10 +249,10 @@ const sortableCols = [
       sortKey = key;
       sortDir = 'asc';
     }
-    // 화살표 갱신
-    document.querySelectorAll('[data-sort-arrow]').forEach(el => { el.textContent = '↕'; });
+    // 화살표 갱신 (variation selector U+FE0E로 텍스트 렌더링 강제)
+    document.querySelectorAll('[data-sort-arrow]').forEach(el => { el.textContent = '↕︎'; });
     const arrow = th.querySelector('[data-sort-arrow]');
-    if (arrow) arrow.textContent = sortDir === 'asc' ? '↑' : '↓';
+    if (arrow) arrow.textContent = sortDir === 'asc' ? '↑︎' : '↓︎';
     applyFilters();
   }
 
