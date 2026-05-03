@@ -59,7 +59,18 @@ const sortableCols = [
   </div>
 
   <div class="bg-bg-card border border-border rounded-lg shadow-sm overflow-x-auto">
-    <table class="w-full text-sm" data-review-table>
+    <table class="w-full text-sm table-fixed min-w-[64rem]" data-review-table>
+      <colgroup>
+        <col style="width: 16%" /> {/* name */}
+        <col style="width: 10%" /> {/* type */}
+        <col style="width: 10%" /> {/* cooking */}
+        <col style="width: 9%" />  {/* oil */}
+        <col style="width: 9%" />  {/* salt */}
+        <col style="width: 8%" />  {/* rating */}
+        <col style="width: 18%" /> {/* review */}
+        <col style="width: 10%" /> {/* price */}
+        <col style="width: 10%" /> {/* link */}
+      </colgroup>
       <thead class="bg-bg-secondary text-text-primary">
         <tr>
           {sortableCols.map(c => (
@@ -79,7 +90,7 @@ const sortableCols = [
       <tbody data-tbody>
         {data.map(d => (
           <tr
-            class="group relative border-b border-border last:border-0 hover:bg-bg-secondary/40 transition-colors before:content-[''] before:absolute before:inset-y-0 before:left-0 before:w-1 before:bg-kelp before:scale-y-0 hover:before:scale-y-100 before:transition-transform before:duration-200 before:origin-center"
+            class="group border-b border-border last:border-0 hover:bg-bg-secondary/40 transition-colors"
             data-row
             data-name={d.name}
             data-name-en={d.name_en || ''}
@@ -92,7 +103,7 @@ const sortableCols = [
             data-review={d.review}
             data-review-en={d.review_en || ''}
           >
-            <td class="px-4 py-3 font-medium text-text-primary min-w-[10rem]">{displayName(d)}</td>
+            <td class="relative px-4 py-3 font-medium text-text-primary break-words before:content-[''] before:absolute before:inset-y-0 before:left-0 before:w-1 before:bg-kelp before:scale-y-0 group-hover:before:scale-y-100 before:transition-transform before:duration-200 before:origin-center">{displayName(d)}</td>
             <td class="px-4 py-3">
               <span class="inline-block px-2 py-0.5 rounded-sm text-xs font-medium bg-bg-secondary text-text-primary">
                 {t(`type_labels.${d.type}`) || d.type}
@@ -132,7 +143,7 @@ const sortableCols = [
             <td class="px-4 py-3 text-center whitespace-nowrap">
               {d.score || <span class="italic text-text-muted">—</span>}
             </td>
-            <td class="px-4 py-3 text-text-secondary text-xs leading-relaxed max-w-[16rem]">
+            <td class="px-4 py-3 text-text-secondary text-xs leading-relaxed break-words">
               {displayReview(d) || <span class="italic text-text-muted">—</span>}
             </td>
             <td class="px-4 py-3 text-text-secondary text-xs tabular-nums whitespace-nowrap">
