@@ -1,0 +1,39 @@
+{
+  "site": {
+    "title": "맛있는 김 DB",
+    "tagline": "김 리뷰 데이터베이스 — 기름진 정도, 짠 정도, 총점으로 나에게 맞는 김 찾기"
+  },
+  "nav": {
+    "home": "홈",
+    "language": "언어"
+  },
+  "filter": {
+    "type_label": "김 종류",
+    "cooking_label": "조리상태",
+    "search_label": "검색",
+    "search_placeholder": "이름 또는 한줄평 검색...",
+    "all": "전체"
+  },
+  "table": {
+    "name": "이름",
+    "type": "김 종류",
+    "cooking": "조리",
+    "oil": "기름",
+    "salt": "짠맛",
+    "rating": "총점",
+    "review": "한줄평",
+    "price": "가격",
+    "link": "링크",
+    "buy": "구매",
+    "count_suffix": "개 결과"
+  },
+  "type_labels": {
+    "재래김": "재래김",
+    "돌김": "돌김",
+    "파래김": "파래김"
+  },
+  "cooking_labels": {
+    "조미김": "조미김",
+    "무조미김": "무조미김"
+  }
+}

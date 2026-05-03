@@ -81,8 +81,10 @@ def parse_page(page):
 
     # 각 속성 이름에 맞게 추출
     name = extract_text(props.get("Name", {}).get("title", []))
+    name_en = extract_text(props.get("Name_EN", {}).get("rich_text", []))
     desc = extract_text(props.get("Description", {}).get("rich_text", []))
     review = extract_text(props.get("한줄평", {}).get("rich_text", []))
+    review_en = extract_text(props.get("Review_EN", {}).get("rich_text", []))
     score = extract_select(props.get("총점", {}).get("select"))
     price_raw = extract_number(props.get("구매가격", {}).get("number"))
     link = extract_url(props.get("구매링크", {}).get("url"))
@@ -98,6 +100,7 @@ def parse_page(page):
 
     return {
         "name": name,
+        "name_en": name_en,
         "type": gim_type,
         "cook": cook_state,
         "oil": oil,
@@ -107,6 +110,7 @@ def parse_page(page):
         "price": price_text,
         "priceNum": price_num,
         "review": review,
+        "review_en": review_en,
         "desc": desc,
         "link": link or "",
         "cut": cut,

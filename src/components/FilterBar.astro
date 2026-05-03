@@ -1,0 +1,57 @@
+---
+import type { Locale } from '../i18n/utils';
+import { useTranslations } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+// type/cooking 옵션은 데이터 키(=한글) + locale 라벨
+const typeOptions = [
+  { value: '', label: t('filter.all') },
+  { value: '재래김', label: t('type_labels.재래김') },
+  { value: '돌김', label: t('type_labels.돌김') },
+  { value: '파래김', label: t('type_labels.파래김') },
+];
+const cookOptions = [
+  { value: '', label: t('filter.all') },
+  { value: '조미김', label: t('cooking_labels.조미김') },
+  { value: '무조미김', label: t('cooking_labels.무조미김') },
+];
+---
+<section class="max-w-7xl mx-auto px-6 mt-8">
+  <div
+    data-filterbar
+    class="flex flex-col sm:flex-row sm:items-end gap-4 py-4 px-5 bg-bg-card border border-border rounded-md shadow-sm"
+  >
+    <div class="flex flex-col gap-1.5 min-w-[10rem]">
+      <label for="filterType" class="text-xs font-medium text-text-secondary uppercase tracking-wider">{t('filter.type_label')}</label>
+      <select
+        id="filterType"
+        class="px-3 py-2 text-sm bg-bg-card border border-border rounded-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-kelp/20 focus:border-kelp transition-colors"
+      >
+        {typeOptions.map(o => <option value={o.value}>{o.label}</option>)}
+      </select>
+    </div>
+    <div class="flex flex-col gap-1.5 min-w-[10rem]">
+      <label for="filterCook" class="text-xs font-medium text-text-secondary uppercase tracking-wider">{t('filter.cooking_label')}</label>
+      <select
+        id="filterCook"
+        class="px-3 py-2 text-sm bg-bg-card border border-border rounded-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-kelp/20 focus:border-kelp transition-colors"
+      >
+        {cookOptions.map(o => <option value={o.value}>{o.label}</option>)}
+      </select>
+    </div>
+    <div class="flex flex-col gap-1.5 flex-1">
+      <label for="searchInput" class="text-xs font-medium text-text-secondary uppercase tracking-wider">{t('filter.search_label')}</label>
+      <input
+        id="searchInput"
+        type="text"
+        placeholder={t('filter.search_placeholder')}
+        class="px-3 py-2 text-sm bg-bg-card border border-border rounded-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-kelp/20 focus:border-kelp transition-colors"
+      />
+    </div>
+  </div>
+</section>
