@@ -78,8 +78,11 @@
     background: var(--color-bg-primary);
   }
 
-  html[lang="ko"] body {
-    font-family: var(--font-sans-kr);
+  /* 한국어 페이지: Fraunces/Inter 토큰을 Pretendard로 재정의해
+     컴포넌트의 font-serif/font-sans 유틸리티까지 모두 Pretendard 사용 */
+  html[lang="ko"] {
+    --font-serif: var(--font-sans-kr);
+    --font-sans: var(--font-sans-kr);
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -88,14 +91,12 @@
     letter-spacing: -0.01em;
   }
 
-  /* 한국어 헤드라인은 Fraunces 대신 sans-kr (Fraunces는 라틴 전용) */
   html[lang="ko"] h1,
   html[lang="ko"] h2,
   html[lang="ko"] h3,
   html[lang="ko"] h4,
   html[lang="ko"] h5,
   html[lang="ko"] h6 {
-    font-family: var(--font-sans-kr);
     font-weight: 600;
   }
 }
