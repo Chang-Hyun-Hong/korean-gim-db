@@ -51,6 +51,23 @@
     "cut": "N"
   },
   {
+    "name": "그시절 즉석 구이 김 파래전장",
+    "name_en": "",
+    "type": "재래김",
+    "cook": "조미김",
+    "oil": 8,
+    "salt": 8,
+    "score": "⭐️⭐️",
+    "scoreNum": 2,
+    "price": "₩12,160",
+    "priceNum": 12160,
+    "review": "시장에서 파는 맛있는 구이김 맛이 나지만 짜고 기름져서 단독으로 먹기는 부담스러울 수 있다. 밥반찬용으로 추천",
+    "review_en": "",
+    "desc": "한 봉지에 일반 전장김의 3배 정도 되는 양이 들어있음. 기름도 많고 염도도 높은 편. 처음에 개봉할 때 포장재에 기름이 묻어 있어서 개봉하기 불편했음. 시장에서 파는 구이김 특유의 맛이 있으나, 기름이 많고 염도가 높아서 한 번에 다 먹지는 못함. 밥반찬으로 적당하고 단독으로 먹으면 많이 짬",
+    "link": "https://www.coupang.com/vp/products/9291544069?itemId=27518544699&vendorItemId=94061808098&src=1191000&spec=10999999&addtag=400&ctag=9291544069&lptag=CFM11981631&itime=20260504171732&pageType=PRODUCT&pageValue=9291544069&wPcid=17724408576760377210222&wRef=&wTime=20260504171732&redirect=landing&abTestInfo=&mcid=92bbea2445e44f73875bd6b8210156db&sharesource=sharebutton&style=&isshortened=Y&settlement=N",
+    "cut": "N"
+  },
+  {
     "name": "기역이미음 일월의돌김 구운 무조미김",
     "name_en": "",
     "type": "돌김",
