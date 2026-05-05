@@ -35,5 +35,11 @@
   "cooking_labels": {
     "조미김": "조미김",
     "무조미김": "무조미김"
+  },
+  "articles": {
+    "index_title": "글",
+    "filter_all": "전체",
+    "cat_news": "소식",
+    "cat_recipe": "레시피"
   }
 }

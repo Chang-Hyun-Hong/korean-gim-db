@@ -1,0 +1,23 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  entry: CollectionEntry<'articles'>;
+  locale: 'en' | 'ko';
+}
+
+const { entry, locale } = Astro.props;
+const slug = entry.id.replace(/^(en|ko)\//, '');
+const href = locale === 'en' ? `/articles/${slug}` : `/ko/articles/${slug}`;
+---
+<a
+  href={href}
+  data-category={entry.data.category}
+  class="group block bg-bg-card rounded-md p-6 shadow-sm hover:shadow-md transition-shadow border border-border"
+>
+  <p class="text-text-muted text-xs uppercase tracking-wide mb-2">{entry.data.category}</p>
+  <h2 class="font-serif text-h3 text-text-primary mb-2 group-hover:text-kelp transition-colors">
+    {entry.data.title}
+  </h2>
+  <p class="text-text-secondary text-sm">{entry.data.description}</p>
+</a>

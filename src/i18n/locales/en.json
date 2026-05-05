@@ -35,5 +35,11 @@
   "cooking_labels": {
     "조미김": "Seasoned",
     "무조미김": "Unseasoned"
+  },
+  "articles": {
+    "index_title": "Articles",
+    "filter_all": "All",
+    "cat_news": "News",
+    "cat_recipe": "Recipes"
   }
 }

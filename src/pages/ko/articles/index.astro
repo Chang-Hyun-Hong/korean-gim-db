@@ -1,0 +1,47 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import ArticleCard from '../../../components/ArticleCard.astro';
+import { useTranslations } from '../../../i18n/utils';
+
+const locale = 'ko' as const;
+const all = await getCollection('articles', (e) => e.id.startsWith(`${locale}/`));
+const sorted = all.sort(
+  (a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf()
+);
+const t = useTranslations(locale);
+---
+<Layout title={t('articles.index_title')} lang={locale}>
+  <Header locale={locale} />
+  <main class="max-w-5xl mx-auto px-6 py-16">
+    <h1 class="font-serif text-h1 text-text-primary mb-8">{t('articles.index_title')}</h1>
+    <div class="flex gap-2 mb-12 flex-wrap" data-filter>
+      <button data-cat="all" class="filter-btn active">{t('articles.filter_all')}</button>
+      <button data-cat="news" class="filter-btn">{t('articles.cat_news')}</button>
+      <button data-cat="recipe" class="filter-btn">{t('articles.cat_recipe')}</button>
+    </div>
+    <div class="grid md:grid-cols-2 gap-6">
+      {sorted.map((e) => <ArticleCard entry={e} locale={locale} />)}
+    </div>
+  </main>
+  <Footer locale={locale} />
+</Layout>
+<script>
+  const cards = document.querySelectorAll<HTMLElement>('[data-category]');
+  document.querySelectorAll<HTMLButtonElement>('[data-filter] [data-cat]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const cat = btn.getAttribute('data-cat');
+      document
+        .querySelectorAll<HTMLButtonElement>('[data-filter] [data-cat]')
+        .forEach((b) => b.classList.toggle('active', b === btn));
+      cards.forEach((c) =>
+        c.classList.toggle(
+          'hidden',
+          cat !== 'all' && c.getAttribute('data-category') !== cat
+        )
+      );
+    });
+  });
+</script>
