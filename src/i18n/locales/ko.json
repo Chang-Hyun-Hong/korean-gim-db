@@ -41,5 +41,8 @@
     "filter_all": "전체",
     "cat_news": "소식",
     "cat_recipe": "레시피"
+  },
+  "home": {
+    "placeholder": "본격 랜딩은 Phase 2C에서."
   }
 }

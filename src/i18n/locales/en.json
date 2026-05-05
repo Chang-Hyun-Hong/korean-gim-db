@@ -41,5 +41,8 @@
     "filter_all": "All",
     "cat_news": "News",
     "cat_recipe": "Recipes"
+  },
+  "home": {
+    "placeholder": "Full landing in Phase 2C."
   }
 }
