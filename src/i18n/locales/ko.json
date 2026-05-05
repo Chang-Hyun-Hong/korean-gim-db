@@ -5,7 +5,15 @@
   },
   "nav": {
     "home": "홈",
-    "language": "언어"
+    "language": "언어",
+    "about": "김이란",
+    "articles": "글",
+    "reviews": "리뷰"
+  },
+  "about": {
+    "title": "김이란 무엇인가",
+    "placeholder": "본문은 Phase 2C에서 작성.",
+    "placeholder_meta": "한국 김에 대한 입문 가이드."
   },
   "filter": {
     "type_label": "김 종류",

@@ -8,17 +8,34 @@ interface Props {
 const { locale } = Astro.props;
 const t = useTranslations(locale);
 
-// 언어 토글: 현재 locale의 반대 언어로 가는 링크
 const otherLocale: Locale = locale === 'en' ? 'ko' : 'en';
 const otherLabel = otherLocale === 'en' ? 'English' : '한국어';
 const otherHref = localizedPath(otherLocale, '/');
+
+const navItems = [
+  { href: localizedPath(locale, '/what-is-gim'), label: t('nav.about') },
+  { href: localizedPath(locale, '/articles'), label: t('nav.articles') },
+  { href: localizedPath(locale, '/reviews'), label: t('nav.reviews') },
+];
 ---
 <header class="sticky top-0 z-50 border-b border-border/60 bg-bg-primary/80 backdrop-blur-md">
-  <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-    <a href={localizedPath(locale, '/')} class="font-serif text-xl font-medium tracking-tight text-text-primary hover:text-kelp transition-colors">
+  <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
+    <a
+      href={localizedPath(locale, '/')}
+      class="font-serif text-xl font-medium tracking-tight text-text-primary hover:text-kelp transition-colors shrink-0"
+    >
       {t('site.title')}
     </a>
-    <nav class="flex items-center gap-2 text-sm">
+    <nav class="flex items-center gap-1 text-sm">
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          class="px-3 py-1.5 rounded-sm text-text-secondary hover:text-kelp hover:bg-bg-secondary transition-colors"
+        >
+          {item.label}
+        </a>
+      ))}
+      <span class="hidden sm:inline-block w-px h-5 bg-border mx-1" aria-hidden="true"></span>
       <a
         href={otherHref}
         class="px-3 py-1.5 rounded-sm text-text-secondary hover:text-kelp hover:bg-bg-secondary transition-colors"
