@@ -2,16 +2,113 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import JsonLd from '../components/seo/JsonLd.astro';
 import { useTranslations } from '../i18n/utils';
 
 const locale = 'en' as const;
 const t = useTranslations(locale);
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: t('about.title'),
+  description: t('about.description'),
+  inLanguage: 'en-US',
+  author: { '@type': 'Person', name: 'Andy' },
+};
 ---
-<Layout title={t('about.title')} description={t('about.placeholder_meta')} lang={locale}>
+<Layout
+  title={t('about.title')}
+  description={t('about.description')}
+  lang={locale}
+  type="article"
+>
+  <JsonLd slot="head" schema={articleSchema} />
   <Header locale={locale} />
+
   <main class="max-w-3xl mx-auto px-6 py-16">
-    <h1 class="font-serif text-h1 text-text-primary mb-4">{t('about.title')}</h1>
-    <p class="text-text-secondary">{t('about.placeholder')}</p>
+    <h1 class="font-serif text-text-primary mb-4" style="font-size: var(--text-h1); line-height: var(--text-h1--line-height);">
+      {t('about.title')}
+    </h1>
+    <p class="text-text-secondary text-lg mb-12">{t('about.subtitle')}</p>
+
+    <div class="prose">
+      <p>
+        Korean gim is a thin, dried sheet of seaweed — made from species in
+        the genus <em>Pyropia</em>, the same one Japan calls <em>nori</em>. In
+        Korean kitchens it is everyday food: the foil that wraps lunch-box
+        rice, the crisp snack pulled from a school-bag pouch, the salty
+        crumble scattered over a hot bowl of bibim. This page is a short
+        introduction for English speakers who keep seeing "gim" on packaging
+        and want to know what they are actually buying.
+      </p>
+
+      <div class="aspect-[16/9] rounded-md bg-seafoam-light/60 flex items-center justify-center text-text-muted text-sm border border-dashed border-kelp/30 my-8">
+        Image — close-up of dried gim sheets (to be added)
+      </div>
+
+      <h2>How it's made</h2>
+      <p>
+        Most of Korea's commercial gim comes from a few coastal regions —
+        Wando, Sinan, Goheung — where farmers anchor long nets in shallow
+        water during the cold months and let young laver settle on them. The
+        basic flow is straightforward:
+      </p>
+      <ul>
+        <li><strong>Cultivation.</strong> Spores attach to nets stretched across tidal flats from late autumn through early spring.</li>
+        <li><strong>Harvest.</strong> The fronds are cut while still soft and dark green-purple.</li>
+        <li><strong>Wash and dry.</strong> The harvest is washed, chopped, and pressed into thin paper-like sheets, then dried.</li>
+        <li><strong>Process.</strong> Many sheets are then roasted briefly and brushed with sesame or perilla oil and salt — the classic <em>gim-gui</em> finish.</li>
+      </ul>
+      <p>
+        The practical difference from Japanese nori is mostly at the end of
+        that pipeline. Japanese nori is usually sold plain or lightly toasted;
+        Korean gim is more often roasted, oiled, and salted before it reaches
+        the shelf, which is why it tastes savory enough to eat on its own.
+      </p>
+
+      <h2>Common types</h2>
+      <p>Five forms cover most of what you will see in a Korean grocery aisle:</p>
+      <ul>
+        <li><strong>Kim-gui (구운 김).</strong> The default seasoned roasted laver, sold in stacks of full or half sheets. Wrap it around rice, eat it as-is.</li>
+        <li><strong>Dosirak-gim (도시락김).</strong> Smaller pre-cut sheets in single-serve foil packs — the classic snack and lunch-box format.</li>
+        <li><strong>Kim-jaban (김자반).</strong> Crumbled, seasoned flakes, usually with sesame and a touch of sugar. Sprinkled over hot rice.</li>
+        <li><strong>Kim-bugak (김부각).</strong> Sheets coated in glutinous-rice paste, dried, then deep-fried — a crunchy traditional snack.</li>
+        <li><strong>Gimbap-gim (김밥김).</strong> Larger unseasoned sheets meant for rolling rice and fillings into <em>gimbap</em>.</li>
+      </ul>
+
+      <h2>How to enjoy it</h2>
+      <p>
+        For a first taste, the easiest path is a pack of seasoned
+        <em>dosirak-gim</em>: tear the foil, eat the sheets straight, no
+        preparation needed. From there, three habits cover most of what
+        Koreans actually do at the table:
+      </p>
+      <ol>
+        <li><strong>Wrap rice.</strong> Place a small amount of warm rice on a sheet of <em>kim-gui</em>, fold, eat with one hand.</li>
+        <li><strong>Crumble over rice or noodles.</strong> A spoonful of <em>kim-jaban</em> turns plain rice into a meal.</li>
+        <li><strong>Roll <em>gimbap</em>.</strong> Once you are ready to cook, the larger <em>gimbap-gim</em> sheets are the wrapping for Korea's seaweed rice rolls — see the <a href="/articles/gimbap-basics">Gimbap Basics</a> recipe for the full method.</li>
+      </ol>
+      <p>
+        Once you open a pack, gim goes soggy quickly. Reseal it tightly, keep
+        it dry, and crisp it up in a dry pan for a few seconds if it ever
+        loses its snap. The <a href="/buying-guide">Buying Guide</a> walks
+        through what to look for at the store, and the
+        <a href="/reviews">Reviews</a> page lists individual products by
+        oiliness, saltiness, and overall rating.
+      </p>
+
+      <h2>Where to go next</h2>
+      <p>
+        If this is your first time picking up Korean gim, start with the
+        <a href="/buying-guide">Buying Guide</a>. If you already have a pack
+        at home and want something to do with it, jump to the
+        <a href="/articles/gimbap-basics">Gimbap Basics</a> recipe, or browse
+        <a href="/reviews">Reviews</a> to see how the products on Korean
+        shelves actually compare.
+      </p>
+    </div>
   </main>
+
   <Footer locale={locale} />
 </Layout>

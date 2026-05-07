@@ -122,4 +122,68 @@
     color: white;
     border-color: var(--color-kelp);
   }
+
+  /* prose — long-form body text (About, Buying Guide, articles) */
+  .prose {
+    color: var(--color-text-primary);
+    line-height: 1.7;
+  }
+  .prose h2 {
+    font-family: var(--font-serif);
+    font-size: var(--text-h2);
+    line-height: var(--text-h2--line-height);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+  }
+  .prose h2:first-child { margin-top: 0; }
+  .prose h3 {
+    font-family: var(--font-serif);
+    font-size: var(--text-h3);
+    line-height: var(--text-h3--line-height);
+    font-weight: 500;
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  .prose p { margin-bottom: 1.25rem; }
+  .prose ul, .prose ol {
+    padding-left: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .prose ul { list-style: disc; }
+  .prose ol { list-style: decimal; }
+  .prose li + li { margin-top: 0.5rem; }
+  .prose a {
+    color: var(--color-kelp);
+    text-decoration: underline;
+    text-decoration-color: var(--color-seafoam);
+    text-underline-offset: 3px;
+    transition: color 0.15s;
+  }
+  .prose a:hover { color: var(--color-kelp-dark); }
+  .prose strong { font-weight: 600; }
+  .prose em { font-style: italic; }
+  .prose blockquote {
+    border-left: 3px solid var(--color-seafoam);
+    padding-left: 1rem;
+    color: var(--color-text-secondary);
+    font-style: italic;
+    margin: 1.5rem 0;
+  }
+  .prose hr {
+    border: 0;
+    border-top: 1px solid var(--color-border);
+    margin: 2.5rem 0;
+  }
+  .prose img {
+    border-radius: var(--radius-md);
+    margin: 1.5rem 0;
+  }
+  .prose code {
+    background: var(--color-bg-secondary);
+    padding: 0.125rem 0.375rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9em;
+  }
 }

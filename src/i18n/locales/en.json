@@ -12,8 +12,8 @@
   },
   "about": {
     "title": "What is Korean Gim?",
-    "placeholder": "Full content in Phase 2C.",
-    "placeholder_meta": "An English-language guide to Korean gim (laver/seaweed)."
+    "subtitle": "A short, English-language introduction to Korean dried seaweed.",
+    "description": "What Korean gim is, how it's made, the most common types, and how to start eating it."
   },
   "filter": {
     "type_label": "Gim Type",
