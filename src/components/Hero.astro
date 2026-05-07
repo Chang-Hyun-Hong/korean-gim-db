@@ -1,0 +1,67 @@
+---
+import Button from './ui/Button.astro';
+import Image from './Image.astro';
+
+interface Cta {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  subtitle: string;
+  primaryCta: Cta;
+  secondaryCta?: Cta;
+  heroImage?: any;
+  heroAlt?: string;
+  imagePlaceholderLabel?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  subtitle,
+  primaryCta,
+  secondaryCta,
+  heroImage,
+  heroAlt = '',
+  imagePlaceholderLabel = 'Hero image — to be added',
+} = Astro.props;
+---
+<section class="relative bg-gradient-to-br from-bg-primary to-seafoam-light/40 px-6 py-24 md:py-32">
+  <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+    <div>
+      {eyebrow && (
+        <p class="text-xs uppercase tracking-[0.2em] text-kelp font-medium mb-4">{eyebrow}</p>
+      )}
+      <h1
+        class="font-serif font-medium text-text-primary leading-[1.05] tracking-tight mb-6"
+        style="font-size: var(--text-display);"
+      >
+        {title}
+      </h1>
+      <p class="text-h3 text-text-secondary mb-10 max-w-md">{subtitle}</p>
+      <div class="flex flex-wrap gap-3">
+        <Button href={primaryCta.href}>{primaryCta.label}</Button>
+        {secondaryCta && (
+          <Button variant="secondary" href={secondaryCta.href}>{secondaryCta.label}</Button>
+        )}
+      </div>
+    </div>
+    <div class="relative aspect-[4/5] md:aspect-square rounded-xl overflow-hidden shadow-lg">
+      {heroImage ? (
+        <Image
+          src={heroImage}
+          alt={heroAlt}
+          loading="eager"
+          class="w-full h-full object-cover"
+        />
+      ) : (
+        <div class="w-full h-full bg-seafoam-light/60 flex items-center justify-center text-text-muted text-sm border border-dashed border-kelp/30">
+          {imagePlaceholderLabel}
+        </div>
+      )}
+    </div>
+  </div>
+</section>
