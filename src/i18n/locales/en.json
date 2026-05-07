@@ -5,7 +5,15 @@
   },
   "nav": {
     "home": "Home",
-    "language": "Language"
+    "language": "Language",
+    "about": "About",
+    "articles": "Articles",
+    "reviews": "Reviews"
+  },
+  "about": {
+    "title": "What is Korean Gim?",
+    "placeholder": "Full content in Phase 2C.",
+    "placeholder_meta": "An English-language guide to Korean gim (laver/seaweed)."
   },
   "filter": {
     "type_label": "Gim Type",
@@ -35,5 +43,14 @@
   "cooking_labels": {
     "조미김": "Seasoned",
     "무조미김": "Unseasoned"
+  },
+  "articles": {
+    "index_title": "Articles",
+    "filter_all": "All",
+    "cat_news": "News",
+    "cat_recipe": "Recipes"
+  },
+  "home": {
+    "placeholder": "Full landing in Phase 2C."
   }
 }
