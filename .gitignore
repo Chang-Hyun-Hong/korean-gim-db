@@ -3,6 +3,10 @@ dist/
 # generated types
 .astro/
 
+# tinacms generated artifacts
+tina/__generated__/
+public/admin/
+
 # dependencies
 node_modules/
 
