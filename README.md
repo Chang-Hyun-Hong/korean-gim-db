@@ -1,6 +1,6 @@
-# Korean GIM Database 🍙
+# Korean GIM 🍙
 
-Korean seaweed (김/gim) review database with filterable ratings.
+Korean seaweed (김/gim) site — review database, articles, and a guide to Korean gim.
 
 **Live**: https://korean-gim-db.vercel.app/
 
@@ -10,42 +10,122 @@ Korean seaweed (김/gim) review database with filterable ratings.
 - **Styling**: Tailwind CSS v4 (CSS-first via `@theme` block, no config file)
 - **Typography**: Fraunces (serif headlines, en) + Inter (sans body, en) + Pretendard (sans, ko — system fallback for now)
 - **i18n**: Astro built-in routing (`/` = en default, `/ko/` = Korean) + JSON dictionaries
-- **Data**: Notion DB → Python sync → JSON → Astro build-time prerender
+- **Content**: Astro Content Collections (`articles`) with Zod schema
+- **CMS**: TinaCMS (local dev only) — markdown editor at `/admin`
+- **Data (reviews)**: Notion DB → Python sync → JSON → Astro build-time prerender
 - **Deploy**: Vercel
+
+## Site Map
+
+```
+/                       Landing placeholder (Phase 2C)
+/what-is-gim            About — "What is Korean Gim?" (stub)
+/articles               Articles index (category filter)
+/articles/[slug]        Article detail
+/reviews                Gim review table (Notion-backed)
+/admin                  TinaCMS admin (local dev only)
+```
+
+Korean mirror: every route under `/ko/` (slugs stay English).
 
 ## Features
 
-- Filterable & sortable seaweed review table
+- Filterable & sortable seaweed review table at `/reviews`
+- Articles section (`news`, `recipe` to start; more categories planned)
+- TinaCMS admin UI for editing markdown without git
 - English (default) + Korean routes with URL-based language toggle
 - Oiliness & saltiness ratings with visual bars (kelp / ocean gradients)
-- Editor's Picks card grid above the database
+- Editor's Picks card grid on `/reviews`
 - Cool ocean palette with kelp-green signature
 - Purchase links to Coupang & Naver SmartStore
 
 ## How It Works
+
+### Reviews (Notion-backed)
 
 ```
 Notion DB → GitHub Actions (daily 9AM KST) → public/data.json → Vercel auto-redeploy
 ```
 
 1. Seaweed data is managed in a Notion database
-2. GitHub Actions runs `scripts/fetch_notion.py` daily to sync data to `public/data.json`
-3. Astro reads `public/data.json` at build time and prerenders both `/` and `/ko/`
-4. Vercel detects the commit and redeploys
+2. GitHub Actions runs `scripts/fetch_notion.py` daily to sync to `public/data.json`
+3. Astro reads `public/data.json` at build time and prerenders `/reviews` (en) and `/ko/reviews`
 
 ### Notion DB columns
 
 Required: `Name`, `Description`, `한줄평`, `총점`, `구매가격`, `구매링크`, `기름진 정도(0~10)`, `짠 정도(0~10)`, `김 종류`, `조리상태`, `등분 여부`.
 
-For English-first content (Phase 2A+): add `Name_EN` (Text) and `Review_EN` (Text). When empty, the English page falls back to the Korean text.
+For English-first content: `Name_EN` (Text), `Review_EN` (Text). Empty → falls back to Korean text.
+
+### Articles (Content Collections + TinaCMS)
+
+```
+src/content/articles/{en,ko}/<slug>.md
+   ↓ Astro Content Collection (Zod schema in src/content.config.ts)
+   ↓ getCollection() in /articles index + [slug]
+   ↓ Astro build → static HTML
+```
+
+Editing flow: `npm run tina:dev` → http://localhost:4321/admin → save → file written to disk → `git diff` → commit.
+
+## Articles Workflow
+
+### Folder structure
+
+```
+src/content/articles/
+├── en/
+│   ├── _news-stub.md
+│   └── _recipe-stub.md
+└── ko/
+    ├── _news-stub.md
+    └── _recipe-stub.md
+```
+
+Flat folder per locale. Same slug for en/ko pairs (e.g. `gimbap-basics.md` in both `en/` and `ko/`).
+
+### Frontmatter fields
+
+| Field | Type | Required | Notes |
+|-------|------|----------|-------|
+| `title` | string | ✅ | |
+| `description` | string | ✅ | Used for `<meta>` and card preview |
+| `publishedAt` | date | ✅ | `YYYY-MM-DD` |
+| `updatedAt` | date | | |
+| `category` | enum | ✅ | `news` \| `recipe` (extend in `src/content.config.ts` + `tina/config.ts`) |
+| `author` | string | | Default `"Andy"` |
+| `cover` | string | | Image path |
+| `tags` | string[] | | |
+| `draft` | boolean | | Default `false` |
+| `cookTime` | number | | Recipe only — minutes |
+| `servings` | number | | Recipe only |
+| `difficulty` | enum | | Recipe only — `easy` \| `medium` \| `hard` |
+
+### TinaCMS admin
+
+```bash
+npm run tina:dev    # starts TinaCMS + astro dev together
+```
+
+Open http://localhost:4321/admin → two collections (`Articles (English)`, `Articles (Korean)`) → edit/create → save writes markdown directly. Then `git add`, `git commit`. Admin is **local dev only** — not deployed to production.
+
+### Adding a new category
+
+Two places must change in lockstep:
+
+1. `src/content.config.ts` — extend `category: z.enum([...])`
+2. `tina/config.ts` — extend `category` field's `options: [...]`
+
+Optionally add category-specific optional fields to both (e.g. `readingTime` for `guide`).
 
 ## Local Development
 
 ```bash
 npm install
-npm run dev       # http://localhost:4321
-npm run build     # production build to dist/
-npm run preview   # preview production build
+npm run dev         # http://localhost:4321
+npm run tina:dev    # adds /admin (TinaCMS)
+npm run build       # production build to dist/
+npm run preview     # preview production build
 ```
 
 ## Where to Edit
@@ -53,13 +133,16 @@ npm run preview   # preview production build
 | What | Where |
 |------|-------|
 | Design tokens (colors, typography, radius, shadow) | `src/styles/global.css` (`@theme` block) |
-| UI translations (labels, filters, table headers) | `src/i18n/locales/{en,ko}.json` |
+| UI translations (labels, filters, table headers, nav) | `src/i18n/locales/{en,ko}.json` |
 | i18n helpers (`getLocaleFromUrl`, `useTranslations`, `localizedPath`) | `src/i18n/utils.ts` |
-| Page composition | `src/pages/index.astro` (en), `src/pages/ko/index.astro` |
-| Components | `src/components/*.astro` (Header, FilterBar, EditorsPicks, ReviewTable, Footer) |
+| Articles schema | `src/content.config.ts` |
+| TinaCMS admin schema | `tina/config.ts` |
+| Article markdown | `src/content/articles/{en,ko}/*.md` |
+| Page composition | `src/pages/{index,what-is-gim}.astro`, `src/pages/{articles,reviews}/`, `src/pages/ko/...` |
+| Components | `src/components/*.astro` (Header, FilterBar, EditorsPicks, ReviewTable, ArticleCard, Footer) |
 | Reusable UI primitives | `src/components/ui/*.astro` (Button) |
 
-## Manual Data Refresh
+## Manual Data Refresh (Reviews)
 
 GitHub → Actions tab → "Update GIM Data from Notion" → "Run workflow"
 
@@ -77,16 +160,26 @@ NOTION_API_KEY=<key> NOTION_DATABASE_ID=<id> python3 scripts/fetch_notion.py
 │   └── fetch_notion.py         # Notion API → public/data.json
 ├── src/
 │   ├── styles/global.css       # Tailwind import + @theme tokens
-│   ├── layouts/Layout.astro    # Shared HTML shell
-│   ├── components/             # Header, FilterBar, EditorsPicks, ReviewTable, Footer
+│   ├── layouts/Layout.astro
+│   ├── components/             # Header, FilterBar, EditorsPicks, ReviewTable, ArticleCard, Footer
 │   ├── i18n/
 │   │   ├── locales/{en,ko}.json
 │   │   └── utils.ts
+│   ├── content.config.ts       # Astro Content Collection schema (articles)
+│   ├── content/articles/
+│   │   ├── en/
+│   │   └── ko/
 │   └── pages/
-│       ├── index.astro         # English (default route)
-│       └── ko/index.astro
+│       ├── index.astro                    # Landing placeholder
+│       ├── what-is-gim.astro              # About stub
+│       ├── articles/{index,[...slug]}.astro
+│       ├── reviews/index.astro            # Gim DB
+│       └── ko/...                         # Korean mirror
+├── tina/
+│   ├── config.ts               # TinaCMS schema (articles_en, articles_ko)
+│   └── tina-lock.json          # Schema lock (committed)
 ├── public/
-│   └── data.json               # Auto-generated from Notion
+│   └── data.json               # Auto-generated from Notion (reviews)
 ├── astro.config.mjs            # i18n + Tailwind Vite plugin
 ├── vercel.json
 └── package.json
@@ -98,6 +191,6 @@ See [`../docs/plans/00-overview.md`](../docs/plans/00-overview.md) for the full 
 
 - [x] Phase 1 — Astro migration (Vercel live)
 - [x] Phase 2A — Tailwind + cool-ocean tokens + i18n foundation
-- [ ] Phase 2B — TinaCMS + Content Collections
+- [~] Phase 2B — Content architecture + TinaCMS (in progress)
 - [ ] Phase 2C — Core content pages (intro / types / buying guide / recipes)
 - [ ] Phase 3 — Brand identity + custom domain + analytics
