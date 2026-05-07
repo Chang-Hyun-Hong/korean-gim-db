@@ -1,0 +1,184 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import JsonLd from '../components/seo/JsonLd.astro';
+import { useTranslations } from '../i18n/utils';
+
+const locale = 'en' as const;
+const t = useTranslations(locale);
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: t('buying.title'),
+  description: t('buying.description'),
+  inLanguage: 'en-US',
+  author: { '@type': 'Person', name: 'Andy' },
+};
+---
+<Layout
+  title={t('buying.title')}
+  description={t('buying.description')}
+  lang={locale}
+  type="article"
+>
+  <JsonLd slot="head" schema={articleSchema} />
+  <Header locale={locale} />
+
+  <main class="max-w-3xl mx-auto px-6 py-16">
+    <h1 class="font-serif text-text-primary mb-4" style="font-size: var(--text-h1); line-height: var(--text-h1--line-height);">
+      {t('buying.title')}
+    </h1>
+    <p class="text-text-secondary text-lg mb-12">{t('buying.subtitle')}</p>
+
+    <div class="prose">
+      <p>
+        The gim aisle at a Korean market looks like a wall of nearly identical
+        black-and-green packets. Most of the time the differences come down to
+        three things: <strong>what form it's in</strong>, <strong>whether
+        it's seasoned</strong>, and <strong>which oil they used</strong>.
+        This page is the short version — enough to walk into H Mart, pick a
+        pack with intent, and leave in five minutes.
+      </p>
+
+      <div class="aspect-[16/9] rounded-md bg-seafoam-light/60 flex items-center justify-center text-text-muted text-sm border border-dashed border-kelp/30 my-8">
+        Image — packaged gim on a Korean market shelf (to be added)
+      </div>
+
+      <h2>What to buy first</h2>
+      <p>
+        If this is your first pack, narrow the wall down to three formats —
+        each does one thing well, and together they cover most of how Koreans
+        actually eat gim:
+      </p>
+      <ul>
+        <li>
+          <strong>Dosirak-gim (도시락김).</strong> Small, pre-cut, single-serve
+          foil packs of seasoned roasted laver. Tear, eat, done. The single
+          easiest entry point. Most kids in Korea know gim through this format
+          first.
+        </li>
+        <li>
+          <strong>Kim-jaban (김자반).</strong> Crumbled, seasoned flakes in a
+          bottle or pouch — usually with sesame and a small amount of sugar.
+          Sprinkle a spoonful on a bowl of rice and you have a meal. Keeps for
+          weeks once opened, unlike sheets.
+        </li>
+        <li>
+          <strong>Gimbap-gim (김밥김).</strong> Full-size unseasoned sheets,
+          built for rolling. Skip this until you're ready to cook, then jump
+          to the <a href="/articles/gimbap-basics">Gimbap Basics</a> recipe.
+        </li>
+      </ul>
+      <p>
+        The seasoned full sheets (<em>kim-gui</em>) and the deep-fried snack
+        (<em>kim-bugak</em>) are great too, but they aren't the place to
+        start. The three above will tell you whether you actually like gim
+        before you commit to a stack of full sheets.
+      </p>
+
+      <h2>How to read the label</h2>
+      <p>
+        Korean labels are mostly in Hangul, but the four things that matter
+        are easy to spot once you know what you're looking at.
+      </p>
+      <ul>
+        <li>
+          <strong>Seasoned vs. unseasoned.</strong> <em>조미김</em> is
+          seasoned (oil + salt, ready to eat). <em>무조미김</em> or just
+          plain <em>김</em> with no roasting language is unseasoned — the
+          format you want for cooking. If the front of the pack is glossy and
+          dotted with salt, it's seasoned.
+        </li>
+        <li>
+          <strong>Which oil.</strong> Look at the ingredients list:
+          <em>참기름</em> (sesame), <em>들기름</em> (perilla), or a generic
+          <em>식용유</em> (vegetable oil). Sesame is the classic, mild and
+          nutty. Perilla is grassier and slightly more savory — a Korean
+          favorite. Generic vegetable oil is what you usually find in the
+          cheapest packs and tends to taste flat. The oil is most of the
+          flavor in seasoned gim, so this matters more than the brand.
+        </li>
+        <li>
+          <strong>How salty.</strong> Salt content varies more than the
+          packaging suggests. Two seasoned packs from the same shelf can sit
+          a full grade apart. The <a href="/reviews">Reviews page</a> rates
+          every gim we've opened on a 0–3 scale for both oiliness and
+          saltiness, so you can sort for the profile you want.
+        </li>
+        <li>
+          <strong>Origin.</strong> Most Korean gim comes from one of three
+          coastal regions — <em>Wando (완도)</em>, <em>Sinan (신안)</em>, or
+          <em>Goheung (고흥)</em>. All three produce well-regarded laver;
+          you don't need to chase a specific one. It's mostly a marker that
+          the product is genuinely Korean rather than re-packed elsewhere.
+        </li>
+      </ul>
+
+      <h2>Where to buy</h2>
+      <p>
+        In the United States, the path of least resistance is a Korean
+        grocery chain — <strong>H Mart</strong> and <strong>Hannam
+        Chain</strong> stock the widest range and rotate fresh inventory.
+        Most metro areas have at least one branch, and the gim aisle is
+        usually near the dried goods or the side-dish refrigerator.
+      </p>
+      <p>
+        For online, three options cover most cases: <strong>Amazon</strong>
+        (fast, but the selection skews toward Korean-American brands like
+        Nori or CJ rather than the kinds of gim you'd find on a Korean
+        shelf), <strong>Weee!</strong> (closer to a real Korean-mart
+        selection, ships chilled and frozen), and <strong>HMart.com</strong>
+        (the in-store catalog, online). For specific Korean brands that
+        aren't carried locally, the Korean direct-export sites — Coupang
+        Global and Gmarket Global — work, but shipping eats into the price.
+      </p>
+
+      <h2>Price range</h2>
+      <p>
+        Rough US prices in 2026, useful as a sanity check:
+      </p>
+      <ul>
+        <li><strong>Dosirak-gim, 8-pack:</strong> $5–8.</li>
+        <li><strong>Kim-jaban, 50–80g jar or pouch:</strong> $4–7.</li>
+        <li><strong>Gimbap-gim, 10 full sheets:</strong> $4–6.</li>
+        <li><strong>Premium seasoned full sheets (kim-gui):</strong> $7–12 for a stack.</li>
+      </ul>
+      <p>
+        If you see a dosirak pack for under $3 or a kim-jaban for under $3,
+        check the oil. Cheap packs almost always use generic vegetable oil
+        and lean heavily on salt to compensate. Not necessarily bad, but
+        worth knowing what you're trading off.
+      </p>
+
+      <h2>Storage</h2>
+      <p>
+        Sealed, gim keeps for the better part of a year — moisture is the
+        enemy, not time. Once you open a pack, it goes soggy in a day or two
+        if left out. The fix is simple: reseal tightly, push the air out, and
+        keep it in a dry cupboard. For long-term storage, a zip bag in the
+        freezer works fine; thaw the sheets at room temperature for a few
+        minutes before eating.
+      </p>
+      <p>
+        If a sheet has lost its snap, drag it across a dry pan over low heat
+        for three or four seconds per side. The crispness comes back almost
+        instantly.
+      </p>
+
+      <h2>Where to go next</h2>
+      <p>
+        Once you have a pack at home, the next two stops:
+        <a href="/reviews">Reviews</a> sorts the gim we've actually opened by
+        oiliness, saltiness, and overall rating, so you can pick the next
+        pack with more intent. <a href="/articles/gimbap-basics">Gimbap
+        Basics</a> walks through the rolling method when you're ready to
+        cook. Or back up a step to <a href="/what-is-gim">What is Korean
+        Gim?</a> for the longer story behind the product.
+      </p>
+    </div>
+  </main>
+
+  <Footer locale={locale} />
+</Layout>

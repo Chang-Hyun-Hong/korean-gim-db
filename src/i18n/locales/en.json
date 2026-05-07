@@ -15,6 +15,11 @@
     "subtitle": "A short, English-language introduction to Korean dried seaweed.",
     "description": "What Korean gim is, how it's made, the most common types, and how to start eating it."
   },
+  "buying": {
+    "title": "Korean Gim Buying Guide",
+    "subtitle": "A five-minute guide to picking gim at a Korean market.",
+    "description": "How to choose Korean gim at the store — what to buy first, how to read the label, where to find it, and what it should cost."
+  },
   "filter": {
     "type_label": "Gim Type",
     "cooking_label": "Seasoning",

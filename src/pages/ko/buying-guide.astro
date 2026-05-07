@@ -1,0 +1,176 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import JsonLd from '../../components/seo/JsonLd.astro';
+import { useTranslations } from '../../i18n/utils';
+
+const locale = 'ko' as const;
+const t = useTranslations(locale);
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: t('buying.title'),
+  description: t('buying.description'),
+  inLanguage: 'ko-KR',
+  author: { '@type': 'Person', name: 'Andy' },
+};
+---
+<Layout
+  title={t('buying.title')}
+  description={t('buying.description')}
+  lang={locale}
+  type="article"
+>
+  <JsonLd slot="head" schema={articleSchema} />
+  <Header locale={locale} />
+
+  <main class="max-w-3xl mx-auto px-6 py-16">
+    <h1 class="text-text-primary mb-4 font-medium" style="font-size: var(--text-h1); line-height: var(--text-h1--line-height);">
+      {t('buying.title')}
+    </h1>
+    <p class="text-text-secondary text-lg mb-12">{t('buying.subtitle')}</p>
+
+    <div class="prose">
+      <p>
+        한국 마트의 김 코너는 처음 보면 거의 똑같은 검녹색 봉지가 한쪽 벽을
+        가득 채운 것처럼 보입니다. 실제로 차이는 대부분 세 가지에서 갈립니다 —
+        <strong>형태</strong>, <strong>조미 여부</strong>, 그리고
+        <strong>어떤 기름을 썼는가</strong>. 이 페이지는 그 짧은 버전입니다.
+        마트에서 5분 안에 의도를 가지고 한 봉지 골라 나오기 위한 가이드.
+      </p>
+
+      <div class="aspect-[16/9] rounded-md bg-seafoam-light/60 flex items-center justify-center text-text-muted text-sm border border-dashed border-kelp/30 my-8">
+        이미지 — 마트 매대의 포장된 김 (추가 예정)
+      </div>
+
+      <h2>무엇부터 살까</h2>
+      <p>
+        처음이라면 김 매대를 세 가지 형태로만 좁혀도 충분합니다. 각자 한 가지
+        용도에 잘 맞고, 셋을 합치면 한국 식탁에서 김을 다루는 방식 대부분이
+        커버됩니다.
+      </p>
+      <ul>
+        <li>
+          <strong>도시락김 (Dosirak-gim).</strong> 작게 잘려 1회분씩 포일로
+          포장된 조미 김. 뜯고 그대로 먹으면 됩니다. 가장 진입장벽이 낮은
+          형태이고, 한국에서도 김을 처음 접하는 통로는 대개 이 도시락김입니다.
+        </li>
+        <li>
+          <strong>김자반 (Kim-jaban).</strong> 잘게 부순 조미 김. 보통 깨와
+          약간의 설탕이 들어 있고, 따뜻한 밥에 한 숟갈만 뿌려도 한 끼가 됩니다.
+          개봉 후에도 시트형보다 보존이 길어 부담이 적습니다.
+        </li>
+        <li>
+          <strong>김밥김 (Gimbap-gim).</strong> 조미하지 않은 큰 시트.
+          김밥용입니다. 직접 만들 준비가 됐을 때만 사고, 그때는
+          <a href="/ko/articles/gimbap-basics">김밥 기본</a> 레시피로 바로
+          넘어가시면 됩니다.
+        </li>
+      </ul>
+      <p>
+        조미 전장 시트(<em>구운 김</em>)나 김부각도 좋지만, 시작점으로는 위
+        세 가지가 더 합리적입니다. 김을 본격적으로 좋아하는지부터 가볍게
+        확인하고 나서 묶음 시트로 넘어가는 흐름을 권합니다.
+      </p>
+
+      <h2>라벨 읽는 법</h2>
+      <p>
+        한국 라벨은 정보가 많지만, 정작 중요한 건 네 가지입니다. 한 번
+        익혀두면 어느 봉지든 같은 기준으로 비교할 수 있습니다.
+      </p>
+      <ul>
+        <li>
+          <strong>조미 vs 무조미.</strong> <em>조미김</em>은 기름과 소금으로
+          마무리해 그대로 먹는 형태, <em>무조미김</em>(또는 별다른 표시 없는
+          그냥 <em>김</em>)은 요리용입니다. 봉지 표면이 윤기가 돌고 소금이
+          살짝 보이면 조미.
+        </li>
+        <li>
+          <strong>어떤 기름.</strong> 원재료명에서 확인합니다. <em>참기름</em>
+          은 클래식한 고소함, <em>들기름</em>은 더 풀 향이 강하고 한국에서
+          특히 사랑받는 풍미. <em>식용유</em>(일반 식물성유)는 저가 봉지에
+          많고 풍미가 평이한 편입니다. 조미김의 맛은 사실상 기름이 결정하므로,
+          이 항목이 브랜드보다 중요합니다.
+        </li>
+        <li>
+          <strong>짠 정도.</strong> 봉지만 봐서는 잘 드러나지 않지만 같은 매대
+          안에서도 짠 정도가 한 단계씩 차이 납니다.
+          <a href="/ko/reviews">리뷰</a> 페이지에서 직접 먹어본 김을 기름진
+          정도·짠 정도 0–3 척도로 정리해두었으니, 원하는 프로필로 골라보실
+          수 있습니다.
+        </li>
+        <li>
+          <strong>원산지.</strong> 한국 김은 대부분 <em>완도</em>,
+          <em>신안</em>, <em>고흥</em> 셋 중 한 곳에서 옵니다. 셋 다 평이
+          좋아 어디로 가도 큰 차이는 없습니다. 한국산 표시가 있다는 자체가
+          어디선가 재포장된 제품이 아니라는 의미 정도로 보시면 됩니다.
+        </li>
+      </ul>
+
+      <h2>어디서 살까</h2>
+      <p>
+        해외(특히 미국) 거주 영어 사용자 기준으로는 한국계 마트 체인이 가장
+        쉬운 길입니다. <strong>H Mart</strong>와 <strong>한남체인</strong>은
+        선택지가 가장 넓고 회전이 빠릅니다. 김 코너는 보통 건어물 매대 또는
+        반찬 냉장고 근처에 있습니다.
+      </p>
+      <p>
+        한국 거주자라면 동네 마트만으로 충분히 다양하게 살 수 있습니다.
+        대형마트(이마트·롯데마트·홈플러스), 로컬 슈퍼, 그리고 쿠팡·SSG·마켓컬리
+        같은 온라인 채널이 가격·신선도 면에서 모두 무난합니다. 산지 직배(완도,
+        신안 등 어촌계 직판)는 풍미와 가격 모두 좋지만 진입장벽이 약간 있습니다.
+      </p>
+      <p>
+        해외 온라인은 <strong>Amazon</strong>(빠르지만 한인 마트보다 한국
+        브랜드 비중이 적음), <strong>Weee!</strong>(한인 마트에 가까운 구색,
+        냉장·냉동 발송), <strong>HMart.com</strong>(매장 카탈로그 그대로) 셋이
+        대부분의 경우를 커버합니다. 특정 한국 브랜드만 따로 사야 한다면 쿠팡
+        글로벌, G마켓 글로벌이 가능하지만 배송비가 상품가에 가깝게 붙습니다.
+      </p>
+
+      <h2>가격대</h2>
+      <p>
+        대략적인 가격대(2026년 기준, 미국 마트가). 한국 마트는 환율과 상관없이
+        대체로 더 저렴합니다.
+      </p>
+      <ul>
+        <li><strong>도시락김 8개입:</strong> $5–8 (한국 마트 약 3,000–6,000원)</li>
+        <li><strong>김자반 50–80g 병/봉지:</strong> $4–7 (한국 약 3,000–7,000원)</li>
+        <li><strong>김밥김 전장 10매:</strong> $4–6 (한국 약 2,500–5,000원)</li>
+        <li><strong>프리미엄 조미 전장 김(구운 김) 묶음:</strong> $7–12 (한국 5,000–10,000원대)</li>
+      </ul>
+      <p>
+        도시락김이 $3 미만, 김자반이 $3 미만이면 원재료의 기름을 확인해보세요.
+        저가 봉지는 대부분 일반 식용유에 소금을 더 쓴 구성입니다. 무조건
+        나쁘진 않지만, 무엇을 양보하고 있는지는 알고 사는 편이 좋습니다.
+      </p>
+
+      <h2>보관</h2>
+      <p>
+        밀봉 상태에서 김은 거의 1년 가까이 갑니다. 적은 시간이 아니라
+        <strong>습기</strong>가 적입니다. 한 번 개봉하면 하루 이틀 만에 눅눅해지는데,
+        대응법은 단순합니다 — 공기를 빼고 단단히 밀봉, 건조한 찬장에 보관.
+        장기 보관은 지퍼백에 넣어 냉동실에 두고, 먹기 전 실온에서 몇 분 두면
+        됩니다.
+      </p>
+      <p>
+        바삭함이 사라진 시트는 마른 팬에 약불로 양면 3–4초씩만 살짝 굽으면
+        거의 즉시 살아납니다.
+      </p>
+
+      <h2>다음 단계</h2>
+      <p>
+        한 봉지 사 오셨다면 다음 두 가지 흐름이 자연스럽습니다.
+        <a href="/ko/reviews">리뷰</a>에서 직접 먹어본 김을 기름진 정도·짠
+        정도·총점으로 정리해두었으니 다음 봉지 고를 때 참고하실 수 있고,
+        <a href="/ko/articles/gimbap-basics">김밥 기본</a>은 직접 말기 시작할
+        때의 가이드입니다. 한 단계 위에서 김 자체에 대한 긴 글이 필요하면
+        <a href="/ko/what-is-gim">김이란 무엇인가</a>로 돌아가시면 됩니다.
+      </p>
+    </div>
+  </main>
+
+  <Footer locale={locale} />
+</Layout>
