@@ -55,6 +55,16 @@
     "cat_news": "News",
     "cat_recipe": "Recipes"
   },
+  "recipe": {
+    "cook_time": "Cook time",
+    "servings": "Servings",
+    "difficulty": "Difficulty",
+    "minutes_suffix": " min",
+    "servings_suffix": "",
+    "easy": "Easy",
+    "medium": "Medium",
+    "hard": "Hard"
+  },
   "home": {
     "meta_description": "An English-friendly guide to Korean gim (laver/seaweed) — types, how to buy, recipes, and reviews you can trust.",
     "hero_eyebrow": "Korean GIM",

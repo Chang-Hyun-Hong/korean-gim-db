@@ -55,6 +55,16 @@
     "cat_news": "소식",
     "cat_recipe": "레시피"
   },
+  "recipe": {
+    "cook_time": "조리 시간",
+    "servings": "분량",
+    "difficulty": "난이도",
+    "minutes_suffix": "분",
+    "servings_suffix": "인분",
+    "easy": "쉬움",
+    "medium": "보통",
+    "hard": "어려움"
+  },
   "home": {
     "meta_description": "한국 김에 대한 영어권 친화 가이드 — 종류, 구매법, 레시피, 솔직한 리뷰.",
     "hero_eyebrow": "Korean GIM",
