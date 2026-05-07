@@ -1,0 +1,119 @@
+---
+import type { Locale } from '../i18n/utils';
+import { localizedPath, useTranslations } from '../i18n/utils';
+
+interface ArticleLink {
+  slug: string;
+  title: string;
+}
+interface Props {
+  locale: Locale;
+  latestNews: ArticleLink | null;
+  latestRecipe: ArticleLink | null;
+}
+const { locale, latestNews, latestRecipe } = Astro.props;
+const t = useTranslations(locale);
+
+const articlesHref = localizedPath(locale, '/articles');
+const gimbapHref = localizedPath(locale, '/articles/gimbap-basics');
+---
+<li class="relative group" data-mega>
+  <a
+    href={articlesHref}
+    class="flex items-center gap-1 px-3 py-1.5 rounded-sm text-text-secondary hover:text-kelp hover:bg-bg-secondary transition-colors"
+    aria-haspopup="true"
+    aria-expanded="false"
+  >
+    {t('nav.articles')}
+    <svg
+      class="w-3 h-3 opacity-60 transition-transform group-hover:rotate-180 group-focus-within:rotate-180"
+      viewBox="0 0 12 12"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      aria-hidden="true"
+    >
+      <path d="M3 4.5L6 7.5L9 4.5" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </a>
+
+  <div
+    class="absolute right-0 top-full pt-3 w-[640px] max-w-[calc(100vw-3rem)]
+           opacity-0 invisible pointer-events-none translate-y-1
+           group-hover:opacity-100 group-hover:visible group-hover:pointer-events-auto group-hover:translate-y-0
+           group-focus-within:opacity-100 group-focus-within:visible group-focus-within:pointer-events-auto group-focus-within:translate-y-0
+           transition-all duration-200"
+    role="menu"
+  >
+    <div class="rounded-lg border border-border/60 bg-bg-primary/95 backdrop-blur-md shadow-lg overflow-hidden">
+      <div class="grid grid-cols-5 gap-0">
+        <a
+          href={gimbapHref}
+          class="col-span-2 group/cta p-6 bg-gradient-to-br from-seafoam-light to-bg-primary border-r border-border/40 hover:bg-seafoam-light/80 transition-colors"
+          role="menuitem"
+        >
+          <p class="font-serif text-text-primary text-lg leading-tight mb-2">
+            {t('mega.start_title')}
+          </p>
+          <p class="text-text-secondary text-sm leading-relaxed mb-4">
+            {t('mega.start_copy')}
+          </p>
+          <span class="inline-flex items-center gap-1 text-kelp text-sm font-medium">
+            {t('mega.start_cta')}
+            <svg class="w-3.5 h-3.5 transition-transform group-hover/cta:translate-x-0.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M3 7H11M11 7L7.5 3.5M11 7L7.5 10.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
+        </a>
+
+        <div class="col-span-3 p-6 grid grid-cols-2 gap-6">
+          <div>
+            <p class="text-text-muted text-xs uppercase tracking-wide mb-3">
+              {t('articles.cat_news')}
+            </p>
+            {latestNews ? (
+              <a
+                href={localizedPath(locale, `/articles/${latestNews.slug}`)}
+                class="block text-text-primary text-sm leading-snug hover:text-kelp transition-colors"
+                role="menuitem"
+              >
+                {latestNews.title}
+              </a>
+            ) : (
+              <p class="text-text-muted text-sm">—</p>
+            )}
+          </div>
+          <div>
+            <p class="text-text-muted text-xs uppercase tracking-wide mb-3">
+              {t('articles.cat_recipe')}
+            </p>
+            {latestRecipe ? (
+              <a
+                href={localizedPath(locale, `/articles/${latestRecipe.slug}`)}
+                class="block text-text-primary text-sm leading-snug hover:text-kelp transition-colors"
+                role="menuitem"
+              >
+                {latestRecipe.title}
+              </a>
+            ) : (
+              <p class="text-text-muted text-sm">—</p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-border/40 px-6 py-3 bg-bg-secondary/30">
+        <a
+          href={articlesHref}
+          class="inline-flex items-center gap-1 text-sm text-text-secondary hover:text-kelp transition-colors"
+          role="menuitem"
+        >
+          {t('mega.view_all')}
+          <svg class="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M3 7H11M11 7L7.5 3.5M11 7L7.5 10.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</li>

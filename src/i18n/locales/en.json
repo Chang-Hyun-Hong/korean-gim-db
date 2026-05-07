@@ -7,8 +7,17 @@
     "home": "Home",
     "language": "Language",
     "about": "About",
+    "guides": "Guides",
     "articles": "Articles",
-    "reviews": "Reviews"
+    "reviews": "Reviews",
+    "menu": "Menu",
+    "close": "Close"
+  },
+  "mega": {
+    "start_title": "Start with Gimbap",
+    "start_copy": "Roll your first Korean seaweed rice rolls with the beginner-friendly recipe.",
+    "start_cta": "Read the recipe",
+    "view_all": "View all articles"
   },
   "about": {
     "title": "What is Korean Gim?",

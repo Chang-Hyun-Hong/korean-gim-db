@@ -7,8 +7,17 @@
     "home": "홈",
     "language": "언어",
     "about": "김이란",
+    "guides": "가이드",
     "articles": "글",
-    "reviews": "리뷰"
+    "reviews": "리뷰",
+    "menu": "메뉴",
+    "close": "닫기"
+  },
+  "mega": {
+    "start_title": "김밥부터 시작하기",
+    "start_copy": "초보자 친화 레시피로 첫 김밥을 직접 말아보세요.",
+    "start_cta": "레시피 보기",
+    "view_all": "전체 글 보기"
   },
   "about": {
     "title": "김이란 무엇인가",
