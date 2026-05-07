@@ -1,21 +1,32 @@
 ---
 import '../styles/global.css';
+import MetaTags from '../components/seo/MetaTags.astro';
 
 interface Props {
   title: string;
   description?: string;
   lang?: 'en' | 'ko';
+  ogImage?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
 }
 
-const { title, description = '', lang = 'en' } = Astro.props;
+const {
+  title,
+  description = '',
+  lang = 'en',
+  ogImage,
+  type,
+  noindex,
+} = Astro.props;
 ---
 <!doctype html>
 <html lang={lang}>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{title}</title>
-  <meta name="description" content={description} />
+  <MetaTags {title} {description} {ogImage} {type} locale={lang} {noindex} />
+  <slot name="head" />
 </head>
 <body>
   <slot />
