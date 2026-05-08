@@ -60,9 +60,14 @@
   },
   "articles": {
     "index_title": "글",
+    "meta_description": "한국 김에 대한 글, 레시피, 메모 — 영어권 사용자 친화 톤으로 정리.",
     "filter_all": "전체",
     "cat_news": "소식",
     "cat_recipe": "레시피"
+  },
+  "reviews_page": {
+    "title": "한국 김 리뷰",
+    "meta_description": "직접 뜯어 먹어본 한국 김을 기름진 정도, 짠 정도, 총점으로 정리한 목록."
   },
   "recipe": {
     "cook_time": "조리 시간",

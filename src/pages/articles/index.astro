@@ -13,7 +13,7 @@ const sorted = all.sort(
 );
 const t = useTranslations(locale);
 ---
-<Layout title={t('articles.index_title')} lang={locale}>
+<Layout title={t('articles.index_title')} description={t('articles.meta_description')} lang={locale}>
   <Header locale={locale} />
   <main class="max-w-5xl mx-auto px-6 py-16">
     <h1 class="font-serif text-h1 text-text-primary mb-8">{t('articles.index_title')}</h1>

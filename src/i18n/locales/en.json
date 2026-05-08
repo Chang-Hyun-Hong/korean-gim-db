@@ -60,9 +60,14 @@
   },
   "articles": {
     "index_title": "Articles",
+    "meta_description": "Articles, recipes, and notes on Korean gim — written for English-speaking eaters.",
     "filter_all": "All",
     "cat_news": "News",
     "cat_recipe": "Recipes"
+  },
+  "reviews_page": {
+    "title": "Korean Gim Reviews",
+    "meta_description": "Every Korean gim I've actually opened, scored on oiliness, saltiness, and an overall rating."
   },
   "recipe": {
     "cook_time": "Cook time",
