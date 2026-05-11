@@ -1,0 +1,28 @@
+---
+import { Image as AstroImage } from 'astro:assets';
+
+interface Props {
+  src: any;
+  alt: string;
+  width?: number;
+  height?: number;
+  loading?: 'lazy' | 'eager';
+  class?: string;
+  sizes?: string;
+}
+
+const {
+  src,
+  alt,
+  width,
+  height,
+  loading = 'lazy',
+  class: cls,
+  sizes,
+} = Astro.props;
+
+if (alt === undefined || alt === null) {
+  throw new Error('Image component requires an alt prop (use empty string for decorative images).');
+}
+---
+<AstroImage {src} {alt} {width} {height} {loading} class={cls} {sizes} />

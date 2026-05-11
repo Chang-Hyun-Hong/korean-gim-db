@@ -1,21 +1,103 @@
 ---
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { getCollection } from 'astro:content';
+
 import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import Hero from '../../components/Hero.astro';
+import HighlightStrip from '../../components/HighlightStrip.astro';
+import EditorsPicks from '../../components/EditorsPicks.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import Button from '../../components/ui/Button.astro';
 import { useTranslations } from '../../i18n/utils';
 
 const locale = 'ko' as const;
 const t = useTranslations(locale);
+
+const dataPath = resolve(process.cwd(), 'public/data.json');
+const reviews = JSON.parse(readFileSync(dataPath, 'utf-8'));
+const picks = reviews.slice(0, 3);
+
+const allArticles = await getCollection('articles');
+const latestArticles = allArticles
+  .filter(e => e.id.startsWith('ko/') && !e.data.draft)
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf())
+  .slice(0, 3);
 ---
-<Layout title={t('site.title')} description={t('site.tagline')} lang={locale}>
+<Layout title={t('site.title')} description={t('home.meta_description')} lang={locale}>
   <Header locale={locale} />
-  <main class="max-w-4xl mx-auto px-6 py-24">
-    <p class="text-xs uppercase tracking-[0.2em] text-kelp font-medium mb-3">Korean GIM</p>
-    <h1 class="font-medium text-text-primary leading-[1.1] tracking-tight mb-6" style="font-size: var(--text-h1);">
-      {t('site.title')}
-    </h1>
-    <p class="text-h3 text-text-secondary mb-12">{t('site.tagline')}</p>
-    <p class="text-text-muted">{t('home.placeholder')}</p>
+
+  <main>
+    <Hero
+      eyebrow={t('home.hero_eyebrow')}
+      title={t('home.hero_title')}
+      subtitle={t('home.hero_subtitle')}
+      primaryCta={{ label: t('home.hero_cta_about'), href: '/ko/what-is-gim' }}
+      secondaryCta={{ label: t('home.hero_cta_buying'), href: '/ko/buying-guide' }}
+      heroAlt={t('home.hero_image_alt')}
+      imagePlaceholderLabel={t('home.hero_image_placeholder')}
+    />
+
+    <HighlightStrip
+      heading={t('home.highlights_heading')}
+      items={[
+        { keyword: t('home.h1_keyword'), copy: t('home.h1_copy'), imagePlaceholderLabel: t('home.h1_image_placeholder') },
+        { keyword: t('home.h2_keyword'), copy: t('home.h2_copy'), imagePlaceholderLabel: t('home.h2_image_placeholder') },
+        { keyword: t('home.h3_keyword'), copy: t('home.h3_copy'), imagePlaceholderLabel: t('home.h3_image_placeholder') },
+      ]}
+    />
+
+    <EditorsPicks locale={locale} picks={picks} />
+    <div class="max-w-7xl mx-auto px-6 mt-6 mb-20">
+      <Button variant="ghost" href="/ko/reviews">{t('home.reviews_cta')} →</Button>
+    </div>
+
+    {latestArticles.length > 0 && (
+      <section class="max-w-7xl mx-auto px-6 mb-20">
+        <div class="mb-6">
+          <h2 class="text-h2 font-serif font-medium text-text-primary tracking-tight">{t('home.articles_heading')}</h2>
+          <p class="text-text-secondary text-sm mt-1">{t('home.articles_sub')}</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-4">
+          {latestArticles.map(e => <ArticleCard entry={e} locale={locale} />)}
+        </div>
+        <div class="mt-6">
+          <Button variant="ghost" href="/ko/articles">{t('home.articles_cta')} →</Button>
+        </div>
+      </section>
+    )}
+
+    <section class="bg-bg-secondary px-6 py-24">
+      <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <p class="text-xs uppercase tracking-[0.2em] text-kelp font-medium mb-4">{t('home.about_eyebrow')}</p>
+          <h2 class="font-serif font-medium text-text-primary leading-[1.1] tracking-tight mb-6 text-h2">
+            {t('home.about_heading')}
+          </h2>
+          <p class="text-text-secondary mb-8 leading-relaxed">{t('home.about_copy')}</p>
+          <Button href="/ko/what-is-gim">{t('home.about_cta')}</Button>
+        </div>
+        <div class="aspect-square rounded-xl bg-seafoam-light/60 flex items-center justify-center text-text-muted text-sm border border-dashed border-kelp/30 text-center px-6">
+          About 티저 이미지 — 추가 예정
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-kelp text-white px-6 py-20">
+      <div class="max-w-3xl mx-auto text-center">
+        <h2 class="font-serif font-medium tracking-tight mb-4 text-h2">{t('home.cta_heading')}</h2>
+        <p class="text-white/80 mb-8">{t('home.cta_sub')}</p>
+        <a
+          href="/ko/buying-guide"
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-md font-medium bg-white text-kelp hover:bg-seafoam-light transition-colors"
+        >
+          {t('home.cta_button')} <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
   </main>
+
   <Footer locale={locale} />
 </Layout>

@@ -1,0 +1,22 @@
+---
+import type { Locale } from '../i18n/utils';
+import { useTranslations } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+<button
+  type="button"
+  class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-sm text-text-secondary hover:text-kelp hover:bg-bg-secondary transition-colors"
+  aria-label={t('nav.menu')}
+  aria-controls="mobile-nav-panel"
+  aria-expanded="false"
+  data-mobile-nav-toggle
+>
+  <svg class="w-5 h-5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+    <path d="M3 6h14M3 10h14M3 14h14" stroke-linecap="round" />
+  </svg>
+</button>

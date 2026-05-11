@@ -1,0 +1,116 @@
+---
+import type { Locale } from '../i18n/utils';
+import { localizedPath, useTranslations } from '../i18n/utils';
+
+interface NavItem {
+  href: string;
+  label: string;
+}
+interface Props {
+  locale: Locale;
+  navItems: NavItem[];
+  otherLocaleHref: string;
+  otherLocaleLabel: string;
+}
+const { locale, navItems, otherLocaleHref, otherLocaleLabel } = Astro.props;
+const t = useTranslations(locale);
+
+const gimbapHref = localizedPath(locale, '/articles/gimbap-basics');
+const articlesHref = localizedPath(locale, '/articles');
+---
+<div
+  id="mobile-nav-panel"
+  class="md:hidden fixed inset-0 z-[60] bg-bg-primary opacity-0 invisible pointer-events-none transition-opacity duration-200"
+  data-mobile-nav-panel
+  aria-hidden="true"
+>
+  <div class="flex items-center justify-between h-16 px-6 border-b border-border/60">
+    <a
+      href={localizedPath(locale, '/')}
+      class="font-serif text-xl font-medium tracking-tight text-text-primary"
+    >
+      {t('site.title')}
+    </a>
+    <button
+      type="button"
+      class="inline-flex items-center justify-center w-10 h-10 rounded-sm text-text-secondary hover:text-kelp hover:bg-bg-secondary transition-colors"
+      aria-label={t('nav.close')}
+      data-mobile-nav-close
+    >
+      <svg class="w-5 h-5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <path d="M5 5L15 15M15 5L5 15" stroke-linecap="round" />
+      </svg>
+    </button>
+  </div>
+
+  <nav class="px-6 py-8 overflow-y-auto h-[calc(100vh-4rem)]">
+    <ul class="flex flex-col gap-1">
+      {navItems.map((item) => (
+        <li>
+          <a
+            href={item.href}
+            class="block py-3 text-h3 font-serif text-text-primary hover:text-kelp transition-colors"
+          >
+            {item.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <div class="mt-8 pt-6 border-t border-border/60">
+      <p class="text-text-muted text-xs uppercase tracking-wide mb-4">
+        {t('articles.index_title')}
+      </p>
+      <ul class="flex flex-col gap-3">
+        <li>
+          <a href={gimbapHref} class="block text-text-primary hover:text-kelp transition-colors">
+            {t('mega.start_title')}
+          </a>
+        </li>
+        <li>
+          <a href={articlesHref} class="block text-text-secondary text-sm hover:text-kelp transition-colors">
+            {t('mega.view_all')}
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="mt-8 pt-6 border-t border-border/60">
+      <a
+        href={otherLocaleHref}
+        class="inline-block text-text-secondary hover:text-kelp transition-colors"
+      >
+        {otherLocaleLabel}
+      </a>
+    </div>
+  </nav>
+</div>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-mobile-nav-toggle]');
+  const panel = document.querySelector<HTMLElement>('[data-mobile-nav-panel]');
+  const closeBtn = document.querySelector<HTMLButtonElement>('[data-mobile-nav-close]');
+
+  function open() {
+    if (!panel || !toggle) return;
+    panel.classList.remove('opacity-0', 'invisible', 'pointer-events-none');
+    panel.setAttribute('aria-hidden', 'false');
+    toggle.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function close() {
+    if (!panel || !toggle) return;
+    panel.classList.add('opacity-0', 'invisible', 'pointer-events-none');
+    panel.setAttribute('aria-hidden', 'true');
+    toggle.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+
+  toggle?.addEventListener('click', open);
+  closeBtn?.addEventListener('click', close);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && panel?.getAttribute('aria-hidden') === 'false') close();
+  });
+</script>

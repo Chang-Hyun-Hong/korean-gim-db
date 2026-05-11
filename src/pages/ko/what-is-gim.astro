@@ -2,16 +2,107 @@
 import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import JsonLd from '../../components/seo/JsonLd.astro';
 import { useTranslations } from '../../i18n/utils';
 
 const locale = 'ko' as const;
 const t = useTranslations(locale);
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: t('about.title'),
+  description: t('about.description'),
+  inLanguage: 'ko-KR',
+  author: { '@type': 'Person', name: 'Andy' },
+};
 ---
-<Layout title={t('about.title')} description={t('about.placeholder_meta')} lang={locale}>
+<Layout
+  title={t('about.title')}
+  description={t('about.description')}
+  lang={locale}
+  type="article"
+>
+  <JsonLd slot="head" schema={articleSchema} />
   <Header locale={locale} />
+
   <main class="max-w-3xl mx-auto px-6 py-16">
-    <h1 class="font-medium text-text-primary mb-4" style="font-size: var(--text-h1);">{t('about.title')}</h1>
-    <p class="text-text-secondary">{t('about.placeholder')}</p>
+    <h1 class="text-text-primary mb-4 font-medium" style="font-size: var(--text-h1); line-height: var(--text-h1--line-height);">
+      {t('about.title')}
+    </h1>
+    <p class="text-text-secondary text-lg mb-12">{t('about.subtitle')}</p>
+
+    <div class="prose">
+      <p>
+        한국의 김은 얇게 말린 해조류 시트입니다. 학명으로는 <em>Pyropia</em> 속에
+        속하며, 일본에서 노리(<em>nori</em>)라 부르는 것과 같은 종류입니다.
+        한국 식탁에서 김은 일상의 식재료입니다 — 도시락 밥을 싸는 포일,
+        책가방에서 꺼내 먹는 바삭한 간식, 비빔밥 위에 뿌리는 짭조름한 가루.
+        이 페이지는 포장지에서 자꾸 보이는 "GIM"이 대체 무엇을 가리키는지
+        영어 사용자에게 짧게 설명하기 위한 글의 한국어판입니다.
+      </p>
+
+      <div class="aspect-[16/9] rounded-md bg-seafoam-light/60 flex items-center justify-center text-text-muted text-sm border border-dashed border-kelp/30 my-8">
+        이미지 — 마른 김 시트 클로즈업 (추가 예정)
+      </div>
+
+      <h2>어떻게 만드는가</h2>
+      <p>
+        한국의 시판 김은 대부분 완도, 신안, 고흥 같은 남해안 양식장에서 옵니다.
+        추운 계절에 농가가 갯벌에 긴 양식망을 고정하면, 어린 김 포자가 그 위에
+        자리를 잡고 자랍니다. 흐름은 단순합니다:
+      </p>
+      <ul>
+        <li><strong>양식.</strong> 늦가을부터 초봄까지 갯벌에 친 망에 김 포자가 부착되어 자랍니다.</li>
+        <li><strong>채취.</strong> 아직 부드러운 진녹색·자주색 잎을 잘라냅니다.</li>
+        <li><strong>세척과 건조.</strong> 채취한 김을 씻고 잘게 자른 뒤, 종이처럼 얇게 펴 건조합니다.</li>
+        <li><strong>가공.</strong> 많은 시트는 짧게 구운 뒤 참기름·들기름과 소금을 발라 마무리합니다 — 한국에서 흔한 <em>김구이</em> 형태입니다.</li>
+      </ul>
+      <p>
+        일본 노리와의 가장 큰 차이는 마지막 가공 단계에 있습니다. 노리는 보통
+        그대로 또는 가볍게 구운 상태로 판매되지만, 한국 김은 매대에 오르기
+        전에 굽고 기름·소금으로 조미되어 그대로도 짭짤하게 먹을 수 있는
+        경우가 많습니다.
+      </p>
+
+      <h2>주요 종류</h2>
+      <p>한국 마트의 김 코너에서 볼 수 있는 다섯 가지 형태입니다:</p>
+      <ul>
+        <li><strong>구운 김 (Kim-gui).</strong> 기본형 조미 김. 전장 또는 반장 시트가 묶음으로 들어 있습니다. 밥에 싸 먹거나 그대로 먹습니다.</li>
+        <li><strong>도시락김 (Dosirak-gim).</strong> 작게 잘려 1회분씩 포일로 포장된 김. 간식·도시락의 대표 형태입니다.</li>
+        <li><strong>김자반 (Kim-jaban).</strong> 잘게 부순 조미 김. 보통 깨와 약간의 설탕이 들어가며, 따뜻한 밥에 뿌려 먹습니다.</li>
+        <li><strong>김부각 (Kim-bugak).</strong> 김 시트에 찹쌀풀을 발라 말린 뒤 튀긴 전통 간식. 바삭함이 특징입니다.</li>
+        <li><strong>김밥김 (Gimbap-gim).</strong> 조미하지 않은 큰 시트. 김밥을 마는 데 씁니다.</li>
+      </ul>
+
+      <h2>어떻게 즐기는가</h2>
+      <p>
+        처음 시도한다면 <em>도시락김</em> 한 봉지가 가장 쉬운 시작입니다 —
+        포일을 뜯고 그대로 먹으면 됩니다. 거기서 한 단계 더 가면, 한국 식탁에서
+        김을 다루는 방식은 대체로 세 가지입니다:
+      </p>
+      <ol>
+        <li><strong>밥을 싼다.</strong> <em>구운 김</em> 한 장에 따뜻한 밥을 조금 올리고 접어 한입에.</li>
+        <li><strong>밥·면에 뿌린다.</strong> <em>김자반</em> 한 숟갈만으로 흰밥이 한 끼가 됩니다.</li>
+        <li><strong>김밥을 만다.</strong> 직접 만들 준비가 됐다면 <em>김밥김</em>은 한국식 김밥의 외피입니다 — 자세한 방법은 <a href="/ko/articles/gimbap-basics">김밥 기본</a> 레시피를 참고하세요.</li>
+      </ol>
+      <p>
+        한 번 개봉한 김은 빠르게 눅눅해집니다. 단단히 밀봉하고 건조하게
+        보관하세요. 바삭함이 사라지면 마른 팬에 몇 초 굽는 것만으로 살아납니다.
+        <a href="/ko/buying-guide">구매 가이드</a>는 마트에서 무엇을 보고
+        골라야 하는지를, <a href="/ko/reviews">리뷰</a> 페이지는 개별 제품을
+        기름진 정도·짠 정도·총점으로 정리합니다.
+      </p>
+
+      <h2>다음 단계</h2>
+      <p>
+        처음이라면 <a href="/ko/buying-guide">구매 가이드</a>부터, 이미 김 한
+        봉지가 있다면 <a href="/ko/articles/gimbap-basics">김밥 기본</a>
+        레시피로, 한국 매대의 실제 제품들이 어떻게 다른지 보고 싶다면
+        <a href="/ko/reviews">리뷰</a>로 가시면 됩니다.
+      </p>
+    </div>
   </main>
+
   <Footer locale={locale} />
 </Layout>

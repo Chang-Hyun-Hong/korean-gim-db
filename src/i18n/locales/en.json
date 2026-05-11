@@ -7,13 +7,27 @@
     "home": "Home",
     "language": "Language",
     "about": "About",
+    "guides": "Guides",
     "articles": "Articles",
-    "reviews": "Reviews"
+    "reviews": "Reviews",
+    "menu": "Menu",
+    "close": "Close"
+  },
+  "mega": {
+    "start_title": "Start with Gimbap",
+    "start_copy": "Roll your first Korean seaweed rice rolls with the beginner-friendly recipe.",
+    "start_cta": "Read the recipe",
+    "view_all": "View all articles"
   },
   "about": {
     "title": "What is Korean Gim?",
-    "placeholder": "Full content in Phase 2C.",
-    "placeholder_meta": "An English-language guide to Korean gim (laver/seaweed)."
+    "subtitle": "A short, English-language introduction to Korean dried seaweed.",
+    "description": "What Korean gim is, how it's made, the most common types, and how to start eating it."
+  },
+  "buying": {
+    "title": "Korean Gim Buying Guide",
+    "subtitle": "A five-minute guide to picking gim at a Korean market.",
+    "description": "How to choose Korean gim at the store — what to buy first, how to read the label, where to find it, and what it should cost."
   },
   "filter": {
     "type_label": "Gim Type",
@@ -46,11 +60,57 @@
   },
   "articles": {
     "index_title": "Articles",
+    "meta_description": "Articles, recipes, and notes on Korean gim — written for English-speaking eaters.",
     "filter_all": "All",
     "cat_news": "News",
     "cat_recipe": "Recipes"
   },
+  "reviews_page": {
+    "title": "Korean Gim Reviews",
+    "meta_description": "Every Korean gim I've actually opened, scored on oiliness, saltiness, and an overall rating."
+  },
+  "recipe": {
+    "cook_time": "Cook time",
+    "servings": "Servings",
+    "difficulty": "Difficulty",
+    "minutes_suffix": " min",
+    "servings_suffix": "",
+    "easy": "Easy",
+    "medium": "Medium",
+    "hard": "Hard"
+  },
   "home": {
+    "meta_description": "An English-friendly guide to Korean gim (laver/seaweed) — types, how to buy, recipes, and reviews you can trust.",
+    "hero_eyebrow": "Korean GIM",
+    "hero_title": "Find your perfect gim.",
+    "hero_subtitle": "An English-friendly guide to Korea's beloved seaweed — types, how to buy, recipes, and honest reviews.",
+    "hero_cta_about": "What is gim?",
+    "hero_cta_buying": "How to buy",
+    "hero_image_alt": "Close-up of dried Korean gim sheets",
+    "hero_image_placeholder": "Hero image — close-up of dried gim",
+    "highlights_heading": "Why this site",
+    "h1_keyword": "Plain-spoken.",
+    "h1_copy": "No marketing fluff — just what gim is, what to buy, and how to eat it.",
+    "h1_image_placeholder": "Macro of gim texture",
+    "h2_keyword": "Tasted firsthand.",
+    "h2_copy": "Every review is a product I actually opened, ate, and rated.",
+    "h2_image_placeholder": "Hand holding a gim sheet",
+    "h3_keyword": "Beginner-friendly.",
+    "h3_copy": "Built for English speakers new to gim — labels, types, and simple recipes explained.",
+    "h3_image_placeholder": "Seasoned gim snack on a plate",
+    "reviews_heading": "Editor's Picks",
+    "reviews_sub": "A handful of gim worth trying first.",
+    "reviews_cta": "See all reviews",
+    "articles_heading": "Latest articles",
+    "articles_sub": "Fresh writing on gim, recipes, and site updates.",
+    "articles_cta": "Read all articles",
+    "about_eyebrow": "About",
+    "about_heading": "Korea's everyday seaweed, finally explained in English.",
+    "about_copy": "Gim has been part of Korean tables for centuries — but most English guides skim the surface. This site goes deeper, in plain language.",
+    "about_cta": "Read the intro",
+    "cta_heading": "Start with the buying guide.",
+    "cta_sub": "Two minutes — saves a lot of supermarket guesswork.",
+    "cta_button": "Open the buying guide",
     "placeholder": "Full landing in Phase 2C."
   }
 }

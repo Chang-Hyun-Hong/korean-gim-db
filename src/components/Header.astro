@@ -1,6 +1,10 @@
 ---
+import { getCollection } from 'astro:content';
 import type { Locale } from '../i18n/utils';
 import { localizedPath, useTranslations } from '../i18n/utils';
+import MegaMenu from './MegaMenu.astro';
+import MobileNavToggle from './MobileNavToggle.astro';
+import MobileNavPanel from './MobileNavPanel.astro';
 
 interface Props {
   locale: Locale;
@@ -9,16 +13,31 @@ const { locale } = Astro.props;
 const t = useTranslations(locale);
 
 const otherLocale: Locale = locale === 'en' ? 'ko' : 'en';
-const otherLabel = otherLocale === 'en' ? 'English' : '한국어';
-const otherHref = localizedPath(otherLocale, '/');
+const otherLocaleLabel = otherLocale === 'en' ? 'English' : '한국어';
+const otherLocaleHref = localizedPath(otherLocale, '/');
+
+const all = await getCollection('articles', (e) => !e.data.draft);
+const localePrefix = `${locale}/`;
+const localized = all.filter((e) => e.id.startsWith(localePrefix));
+const sorted = localized.sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
+);
+const slugOf = (id: string) => id.replace(localePrefix, '').replace(/\.md$/, '');
+const pickLatest = (cat: 'news' | 'recipe') => {
+  const e = sorted.find((x) => x.data.category === cat);
+  return e ? { slug: slugOf(e.id), title: e.data.title } : null;
+};
+const latestNews = pickLatest('news');
+const latestRecipe = pickLatest('recipe');
 
 const navItems = [
   { href: localizedPath(locale, '/what-is-gim'), label: t('nav.about') },
+  { href: localizedPath(locale, '/buying-guide'), label: t('nav.guides') },
   { href: localizedPath(locale, '/articles'), label: t('nav.articles') },
   { href: localizedPath(locale, '/reviews'), label: t('nav.reviews') },
 ];
 ---
-<header class="sticky top-0 z-50 border-b border-border/60 bg-bg-primary/80 backdrop-blur-md">
+<header class="sticky top-0 z-40 border-b border-border/60 bg-bg-primary/80 backdrop-blur-md">
   <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
     <a
       href={localizedPath(locale, '/')}
@@ -26,23 +45,61 @@ const navItems = [
     >
       {t('site.title')}
     </a>
-    <nav class="flex items-center gap-1 text-sm">
-      {navItems.map((item) => (
-        <a
-          href={item.href}
-          class="px-3 py-1.5 rounded-sm text-text-secondary hover:text-kelp hover:bg-bg-secondary transition-colors"
-        >
-          {item.label}
-        </a>
-      ))}
-      <span class="hidden sm:inline-block w-px h-5 bg-border mx-1" aria-hidden="true"></span>
+
+    <nav class="hidden md:flex items-center gap-1 text-sm" aria-label="Primary">
+      <ul class="flex items-center gap-1" data-desktop-nav>
+        <li>
+          <a
+            href={localizedPath(locale, '/what-is-gim')}
+            class="block px-3 py-1.5 rounded-sm text-text-secondary hover:text-kelp hover:bg-bg-secondary transition-colors"
+          >
+            {t('nav.about')}
+          </a>
+        </li>
+        <li>
+          <a
+            href={localizedPath(locale, '/buying-guide')}
+            class="block px-3 py-1.5 rounded-sm text-text-secondary hover:text-kelp hover:bg-bg-secondary transition-colors"
+          >
+            {t('nav.guides')}
+          </a>
+        </li>
+        <MegaMenu locale={locale} latestNews={latestNews} latestRecipe={latestRecipe} />
+        <li>
+          <a
+            href={localizedPath(locale, '/reviews')}
+            class="block px-3 py-1.5 rounded-sm text-text-secondary hover:text-kelp hover:bg-bg-secondary transition-colors"
+          >
+            {t('nav.reviews')}
+          </a>
+        </li>
+      </ul>
+      <span class="inline-block w-px h-5 bg-border mx-1" aria-hidden="true"></span>
       <a
-        href={otherHref}
+        href={otherLocaleHref}
         class="px-3 py-1.5 rounded-sm text-text-secondary hover:text-kelp hover:bg-bg-secondary transition-colors"
-        aria-label={`Switch to ${otherLabel}`}
+        aria-label={`Switch to ${otherLocaleLabel}`}
       >
-        {otherLabel}
+        {otherLocaleLabel}
       </a>
     </nav>
+
+    <MobileNavToggle locale={locale} />
   </div>
 </header>
+
+<MobileNavPanel
+  locale={locale}
+  navItems={navItems}
+  otherLocaleHref={otherLocaleHref}
+  otherLocaleLabel={otherLocaleLabel}
+/>
+
+<script>
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    const active = document.activeElement as HTMLElement | null;
+    const inMega = active?.closest('[data-mega]');
+    if (inMega && active && 'blur' in active) active.blur();
+  });
+</script>
