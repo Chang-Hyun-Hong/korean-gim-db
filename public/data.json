@@ -102,6 +102,23 @@
     "cut": "Y"
   },
   {
+    "name": "대천김 곱창김 캔",
+    "name_en": "",
+    "type": "재래김",
+    "cook": "조미김",
+    "oil": 2,
+    "salt": 4,
+    "score": "⭐️⭐️⭐️⭐️⭐️",
+    "scoreNum": 5,
+    "price": "₩20,000",
+    "priceNum": 20000,
+    "review": "적당히 짜고 바삭하고 고소한 곱창김으로, 단독으로 먹기에 아주 좋다.",
+    "review_en": "",
+    "desc": "너무 딱딱하지 않은, 딱 적당한 정도의 바삭함을 가진 곱창김. 염도도 단독으로 먹기에 딱 적당한 염도. 가격이 좀 비싼 편이긴 하지만 비싼 만큼 바삭함과 고소함이 우수하다. 등분되어 있어서 먹기에도 편하다.",
+    "link": "https://www.coupang.com/vp/products/7449544893?itemId=21426181182&vendorItemId=87074094071&q=%EA%B3%B1%EC%B0%BD%EA%B9%80%20%EC%BA%94%EA%B9%80&searchId=d3acd1d14087516&sourceType=search&itemsCount=60&searchRank=9&rank=9&traceId=mp0i1yk1",
+    "cut": "Y"
+  },
+  {
     "name": "민속물산 솔잎김 재래김",
     "name_en": "",
     "type": "재래김",
