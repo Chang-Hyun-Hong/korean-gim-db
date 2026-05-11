@@ -1,4 +1,4 @@
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+/* Pretendard is loaded conditionally for lang="ko" pages via Layout.astro */
 @import "@fontsource-variable/fraunces";
 @import "@fontsource-variable/inter";
 @import "tailwindcss";
@@ -16,7 +16,7 @@
   /* 텍스트 */
   --color-text-primary: #0F1F1C;   /* 김의 딥 그린-블랙 */
   --color-text-secondary: #4A5C58; /* 쿨 그레이 */
-  --color-text-muted: #8A9994;     /* 서브 정보 */
+  --color-text-muted: #5C6E69;     /* 서브 정보 (WCAG AA contrast on bg-primary/seafoam-light) */
 
   /* 브랜드 */
   --color-kelp: #1F4E47;           /* 메인 시그니처 */

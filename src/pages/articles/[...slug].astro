@@ -56,6 +56,7 @@ const difficultyLabel = entry.data.difficulty ? t(`recipe.${entry.data.difficult
 >
   <JsonLd slot="head" schema={schema} />
   <Header locale={locale} />
+  <main>
   <article class="max-w-3xl mx-auto px-6 py-16">
     <p class="text-text-muted text-sm uppercase tracking-wide mb-3">
       {entry.data.category} · {dateStr}
@@ -90,5 +91,6 @@ const difficultyLabel = entry.data.difficulty ? t(`recipe.${entry.data.difficult
       <Content />
     </div>
   </article>
+  </main>
   <Footer locale={locale} />
 </Layout>
