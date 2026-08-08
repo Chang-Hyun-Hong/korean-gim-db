@@ -56,8 +56,14 @@ const difficultyLabel = entry.data.difficulty ? t(`recipe.${entry.data.difficult
 >
   <JsonLd slot="head" schema={schema} />
   <Header locale={locale} />
-  <main>
+  <main id="main" tabindex="-1">
   <article class="max-w-3xl mx-auto px-6 py-16">
+    <a
+      href="/ko/articles"
+      class="inline-flex items-center gap-1.5 text-sm text-text-secondary hover:text-kelp transition-colors mb-8"
+    >
+      <span aria-hidden="true">&larr;</span> {t('articles.back')}
+    </a>
     <p class="text-text-muted text-sm uppercase tracking-wide mb-3">
       {entry.data.category} · {dateStr}
     </p>

@@ -1,7 +1,8 @@
 {
   "site": {
     "title": "Korean GIM Database",
-    "tagline": "Seaweed review database — find your perfect gim by oiliness, saltiness & rating."
+    "tagline": "Seaweed review database — find your perfect gim by oiliness, saltiness & rating.",
+    "footer_tagline": "Korean seaweed, reviewed."
   },
   "nav": {
     "home": "Home",
@@ -11,7 +12,8 @@
     "articles": "Articles",
     "reviews": "Reviews",
     "menu": "Menu",
-    "close": "Close"
+    "close": "Close",
+    "skip": "Skip to content"
   },
   "mega": {
     "start_title": "Start with Gimbap",
@@ -47,7 +49,9 @@
     "price": "Price",
     "link": "Link",
     "buy": "Buy",
-    "count_suffix": " results"
+    "count_suffix": " results",
+    "empty": "No gim matches these filters.",
+    "reset": "Clear filters"
   },
   "type_labels": {
     "재래김": "Traditional",
@@ -63,11 +67,20 @@
     "meta_description": "Articles, recipes, and notes on Korean gim — written for English-speaking eaters.",
     "filter_all": "All",
     "cat_news": "News",
-    "cat_recipe": "Recipes"
+    "cat_recipe": "Recipes",
+    "empty": "No articles in this category yet.",
+    "back": "Back to articles"
   },
   "reviews_page": {
     "title": "Korean Gim Reviews",
     "meta_description": "Every Korean gim I've actually opened, scored on oiliness, saltiness, and an overall rating."
+  },
+  "notfound": {
+    "title": "Page not found",
+    "body": "That page doesn't exist — it may have been moved or renamed.",
+    "home": "Go to the homepage",
+    "reviews": "Browse the reviews",
+    "articles": "Read the articles"
   },
   "recipe": {
     "cook_time": "Cook time",

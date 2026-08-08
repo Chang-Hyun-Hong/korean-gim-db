@@ -50,7 +50,7 @@ const sortableCols = [
 ---
 <section class="max-w-7xl mx-auto px-6 mt-16">
   <div class="flex items-baseline justify-between mb-4">
-    <h2 class="text-h2 font-serif font-medium text-text-primary tracking-tight">
+    <h2 id="review-table-heading" class="text-h2 font-serif font-medium text-text-primary tracking-tight">
       {locale === 'en' ? 'Full Database' : '전체 데이터베이스'}
     </h2>
     <p class="text-sm text-text-muted">
@@ -58,7 +58,14 @@ const sortableCols = [
     </p>
   </div>
 
-  <div class="bg-bg-card border border-border rounded-lg shadow-sm overflow-x-auto">
+  <!-- 가로 스크롤 영역: 키보드로도 스크롤할 수 있도록 포커스 가능한 region -->
+  <div
+    role="region"
+    aria-labelledby="review-table-heading"
+    tabindex="0"
+    data-table-wrap
+    class="bg-bg-card border border-border rounded-lg shadow-sm overflow-x-auto"
+  >
     <table class="w-full text-sm table-fixed min-w-[64rem]" data-review-table>
       <colgroup>
         <col style="width: 14%" /> {/* name */}
@@ -75,14 +82,25 @@ const sortableCols = [
         <tr>
           {sortableCols.map(c => (
             <th
+              scope="col"
               class:list={[
-                'px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider whitespace-nowrap',
-                c.sortKey ? 'cursor-pointer select-none hover:bg-seafoam-light transition-colors' : '',
+                'text-left text-xs font-semibold uppercase tracking-wider whitespace-nowrap',
+                c.sortKey ? '' : 'px-4 py-3',
               ]}
-              data-sort-key={c.sortKey ?? undefined}
+              aria-sort={c.sortKey ? 'none' : undefined}
             >
-              <span>{c.label}</span>
-              {c.sortKey && <span class="ml-1 text-text-secondary text-sm" data-sort-arrow>↕︎</span>}
+              {c.sortKey ? (
+                <button
+                  type="button"
+                  data-sort-key={c.sortKey}
+                  class="w-full px-4 py-3 flex items-center text-left text-xs font-semibold uppercase tracking-wider cursor-pointer select-none hover:bg-seafoam-light transition-colors"
+                >
+                  <span>{c.label}</span>
+                  <span class="ml-1 text-text-secondary text-sm" data-sort-arrow>↕︎</span>
+                </button>
+              ) : (
+                <span>{c.label}</span>
+              )}
             </th>
           ))}
         </tr>
@@ -96,6 +114,9 @@ const sortableCols = [
             data-name-en={d.name_en || ''}
             data-type={d.type}
             data-cook={d.cook}
+            {/* 필터는 원본 값(data-type/cook), 정렬은 화면에 보이는 라벨 기준 */}
+            data-type-label={t(`type_labels.${d.type}`, d.type)}
+            data-cook-label={t(`cooking_labels.${d.cook}`, d.cook)}
             data-oil={d.oil ?? ''}
             data-salt={d.salt ?? ''}
             data-score-num={d.scoreNum}
@@ -106,12 +127,12 @@ const sortableCols = [
             <td class="relative px-4 py-3 font-medium text-text-primary break-words before:content-[''] before:absolute before:inset-y-0 before:left-0 before:w-1 before:bg-kelp before:scale-y-0 group-hover:before:scale-y-100 before:transition-transform before:duration-200 before:origin-center">{displayName(d)}</td>
             <td class="px-4 py-3">
               <span class="inline-block px-2 py-0.5 rounded-sm text-xs font-medium bg-bg-secondary text-text-primary">
-                {t(`type_labels.${d.type}`) || d.type}
+                {t(`type_labels.${d.type}`, d.type)}
               </span>
             </td>
             <td class="px-4 py-3">
               <span class="inline-block px-2 py-0.5 rounded-sm text-xs font-medium bg-bg-secondary text-text-secondary">
-                {t(`cooking_labels.${d.cook}`) || d.cook}
+                {t(`cooking_labels.${d.cook}`, d.cook)}
               </span>
             </td>
             <td class="px-4 py-3">
@@ -161,7 +182,7 @@ const sortableCols = [
                 <a
                   href={d.link}
                   target="_blank"
-                  rel="noopener"
+                  rel="noopener sponsored"
                   class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-sm bg-seafoam-light text-text-primary hover:bg-seafoam transition-colors"
                 >
                   {t('table.buy')}
@@ -172,6 +193,22 @@ const sortableCols = [
         ))}
       </tbody>
     </table>
+  </div>
+
+  <!-- 빈 상태: 필터 결과가 0건일 때 표 대신 노출 -->
+  <div
+    data-empty-state
+    hidden
+    class="bg-bg-card border border-border rounded-lg shadow-sm px-6 py-16 text-center"
+  >
+    <p class="text-text-secondary">{t('table.empty')}</p>
+    <button
+      type="button"
+      data-reset-filters
+      class="mt-4 inline-flex items-center px-4 py-2 rounded-sm text-sm font-medium bg-bg-secondary text-text-primary hover:bg-seafoam-light transition-colors"
+    >
+      {t('table.reset')}
+    </button>
   </div>
 </section>
 
@@ -186,6 +223,9 @@ const sortableCols = [
   const filterCook = document.getElementById('filterCook') as HTMLSelectElement | null;
   const searchInput = document.getElementById('searchInput') as HTMLInputElement | null;
   const countEl = document.querySelector<HTMLElement>('[data-count]');
+  const tableWrap = document.querySelector<HTMLElement>('[data-table-wrap]');
+  const emptyState = document.querySelector<HTMLElement>('[data-empty-state]');
+  const resetBtn = document.querySelector<HTMLButtonElement>('[data-reset-filters]');
   const allRows = tbody ? Array.from(tbody.querySelectorAll<HTMLTableRowElement>('[data-row]')) : [];
 
   // 영어 페이지인지: <html lang> 확인
@@ -204,6 +244,15 @@ const sortableCols = [
   }
 
   function rowSortValue(row: HTMLTableRowElement, key: string): number | string {
+    // 이름 정렬은 화면에 보이는 값 기준이어야 한다.
+    // 영어 페이지는 name_en을 표시하므로(없으면 한글 이름) 정렬도 같은 값을 쓴다.
+    if (key === 'name') {
+      const shown = (isEn ? row.dataset.nameEn : row.dataset.name) || row.dataset.name || '';
+      return shown.toLowerCase();
+    }
+    // 종류/조리도 표시 라벨로 정렬한다 (영어 페이지에서 한글 원본 순서로 정렬되던 문제)
+    if (key === 'type') return (row.dataset.typeLabel || row.dataset.type || '').toLowerCase();
+    if (key === 'cook') return (row.dataset.cookLabel || row.dataset.cook || '').toLowerCase();
     const raw = row.dataset[toCamel(key)] ?? '';
     if (key === 'oil' || key === 'salt' || key === 'scoreNum' || key === 'priceNum') {
       const n = Number(raw);
@@ -245,9 +294,22 @@ const sortableCols = [
     });
 
     if (countEl) countEl.textContent = String(visible.length);
+
+    // 0건이면 머리글만 남은 빈 표 대신 빈 상태를 보여준다
+    const isEmpty = visible.length === 0;
+    if (tableWrap) tableWrap.hidden = isEmpty;
+    if (emptyState) emptyState.hidden = !isEmpty;
   }
 
-  function setSort(key: string, th: HTMLElement) {
+  function resetFilters() {
+    if (filterType) filterType.value = '';
+    if (filterCook) filterCook.value = '';
+    if (searchInput) searchInput.value = '';
+    applyFilters();
+    searchInput?.focus();
+  }
+
+  function setSort(key: string, btn: HTMLElement) {
     if (sortKey === key) {
       sortDir = sortDir === 'asc' ? 'desc' : 'asc';
     } else {
@@ -256,20 +318,24 @@ const sortableCols = [
     }
     // 화살표 갱신 (variation selector U+FE0E로 텍스트 렌더링 강제)
     document.querySelectorAll('[data-sort-arrow]').forEach(el => { el.textContent = '↕︎'; });
-    const arrow = th.querySelector('[data-sort-arrow]');
+    const arrow = btn.querySelector('[data-sort-arrow]');
     if (arrow) arrow.textContent = sortDir === 'asc' ? '↑︎' : '↓︎';
+    // 보조기기에 정렬 상태 알리기
+    table?.querySelectorAll('th[aria-sort]').forEach(th => th.setAttribute('aria-sort', 'none'));
+    btn.closest('th')?.setAttribute('aria-sort', sortDir === 'asc' ? 'ascending' : 'descending');
     applyFilters();
   }
 
-  // 정렬 헤더 바인딩
-  table?.querySelectorAll<HTMLElement>('th[data-sort-key]').forEach(th => {
-    const key = th.dataset.sortKey;
+  // 정렬 헤더 바인딩 — <button>이라 Enter/Space로도 동작한다
+  table?.querySelectorAll<HTMLButtonElement>('button[data-sort-key]').forEach(btn => {
+    const key = btn.dataset.sortKey;
     if (!key) return;
-    th.addEventListener('click', () => setSort(key, th));
+    btn.addEventListener('click', () => setSort(key, btn));
   });
 
   // 필터 바인딩
   filterType?.addEventListener('change', applyFilters);
   filterCook?.addEventListener('change', applyFilters);
   searchInput?.addEventListener('input', applyFilters);
+  resetBtn?.addEventListener('click', resetFilters);
 </script>

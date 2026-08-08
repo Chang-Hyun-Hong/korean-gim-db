@@ -4,22 +4,24 @@ import { useTranslations } from '../i18n/utils';
 
 interface Props {
   locale: Locale;
+  data: { type: string; cook: string }[];
 }
-const { locale } = Astro.props;
+const { locale, data } = Astro.props;
 const t = useTranslations(locale);
 
-// type/cooking 옵션은 데이터 키(=한글) + locale 라벨
-const typeOptions = [
-  { value: '', label: t('filter.all') },
-  { value: '재래김', label: t('type_labels.재래김') },
-  { value: '돌김', label: t('type_labels.돌김') },
-  { value: '파래김', label: t('type_labels.파래김') },
-];
-const cookOptions = [
-  { value: '', label: t('filter.all') },
-  { value: '조미김', label: t('cooking_labels.조미김') },
-  { value: '무조미김', label: t('cooking_labels.무조미김') },
-];
+// 옵션은 실제 데이터에서 뽑는다 — Notion에 새 종류가 추가돼도 필터에서 빠지지 않게.
+// value는 데이터 원본(한글), label은 locale 사전(없으면 원본 그대로).
+function options(values: string[], dict: 'type_labels' | 'cooking_labels') {
+  const unique = [...new Set(values.filter(Boolean))].map((value) => ({
+    value,
+    label: t(`${dict}.${value}`, value),
+  }));
+  unique.sort((a, b) => a.label.localeCompare(b.label, locale));
+  return [{ value: '', label: t('filter.all') }, ...unique];
+}
+
+const typeOptions = options(data.map((d) => d.type), 'type_labels');
+const cookOptions = options(data.map((d) => d.cook), 'cooking_labels');
 ---
 <section class="max-w-7xl mx-auto px-6 mt-8">
   <div
@@ -30,7 +32,7 @@ const cookOptions = [
       <label for="filterType" class="text-xs font-medium text-text-secondary uppercase tracking-wider">{t('filter.type_label')}</label>
       <select
         id="filterType"
-        class="px-3 py-2 text-sm bg-bg-card border border-border rounded-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-kelp/20 focus:border-kelp transition-colors"
+        class="px-3 py-2 text-sm bg-bg-card border border-border-strong rounded-sm text-text-primary focus:border-kelp transition-colors"
       >
         {typeOptions.map(o => <option value={o.value}>{o.label}</option>)}
       </select>
@@ -39,7 +41,7 @@ const cookOptions = [
       <label for="filterCook" class="text-xs font-medium text-text-secondary uppercase tracking-wider">{t('filter.cooking_label')}</label>
       <select
         id="filterCook"
-        class="px-3 py-2 text-sm bg-bg-card border border-border rounded-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-kelp/20 focus:border-kelp transition-colors"
+        class="px-3 py-2 text-sm bg-bg-card border border-border-strong rounded-sm text-text-primary focus:border-kelp transition-colors"
       >
         {cookOptions.map(o => <option value={o.value}>{o.label}</option>)}
       </select>
@@ -50,7 +52,7 @@ const cookOptions = [
         id="searchInput"
         type="text"
         placeholder={t('filter.search_placeholder')}
-        class="px-3 py-2 text-sm bg-bg-card border border-border rounded-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-kelp/20 focus:border-kelp transition-colors"
+        class="px-3 py-2 text-sm bg-bg-card border border-border-strong rounded-sm text-text-primary placeholder:text-text-muted focus:border-kelp transition-colors"
       />
     </div>
   </div>

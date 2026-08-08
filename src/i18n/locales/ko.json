@@ -1,7 +1,8 @@
 {
   "site": {
     "title": "맛있는 김 DB",
-    "tagline": "김 리뷰 데이터베이스 — 기름진 정도, 짠 정도, 총점으로 나에게 맞는 김 찾기"
+    "tagline": "김 리뷰 데이터베이스 — 기름진 정도, 짠 정도, 총점으로 나에게 맞는 김 찾기",
+    "footer_tagline": "한국 김, 직접 먹어보고 기록합니다."
   },
   "nav": {
     "home": "홈",
@@ -11,7 +12,8 @@
     "articles": "글",
     "reviews": "리뷰",
     "menu": "메뉴",
-    "close": "닫기"
+    "close": "닫기",
+    "skip": "본문으로 건너뛰기"
   },
   "mega": {
     "start_title": "김밥부터 시작하기",
@@ -47,7 +49,9 @@
     "price": "가격",
     "link": "링크",
     "buy": "구매",
-    "count_suffix": "개 결과"
+    "count_suffix": "개 결과",
+    "empty": "조건에 맞는 김이 없습니다.",
+    "reset": "필터 초기화"
   },
   "type_labels": {
     "재래김": "재래김",
@@ -63,11 +67,20 @@
     "meta_description": "한국 김에 대한 글, 레시피, 메모 — 영어권 사용자 친화 톤으로 정리.",
     "filter_all": "전체",
     "cat_news": "소식",
-    "cat_recipe": "레시피"
+    "cat_recipe": "레시피",
+    "empty": "이 분류에는 아직 글이 없습니다.",
+    "back": "글 목록으로"
   },
   "reviews_page": {
     "title": "한국 김 리뷰",
     "meta_description": "직접 뜯어 먹어본 한국 김을 기름진 정도, 짠 정도, 총점으로 정리한 목록."
+  },
+  "notfound": {
+    "title": "페이지를 찾을 수 없습니다",
+    "body": "요청한 페이지가 없습니다. 주소가 바뀌었거나 삭제되었을 수 있습니다.",
+    "home": "홈으로 가기",
+    "reviews": "리뷰 보기",
+    "articles": "글 보기"
   },
   "recipe": {
     "cook_time": "조리 시간",

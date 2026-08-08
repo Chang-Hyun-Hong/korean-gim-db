@@ -5,6 +5,7 @@ import { localizedPath, useTranslations } from '../i18n/utils';
 interface NavItem {
   href: string;
   label: string;
+  active?: boolean;
 }
 interface Props {
   locale: Locale;
@@ -43,13 +44,17 @@ const articlesHref = localizedPath(locale, '/articles');
     </button>
   </div>
 
-  <nav class="px-6 py-8 overflow-y-auto h-[calc(100vh-4rem)]">
+  <nav class="px-6 py-8 overflow-y-auto h-[calc(100dvh-4rem)]">
     <ul class="flex flex-col gap-1">
       {navItems.map((item) => (
         <li>
           <a
             href={item.href}
-            class="block py-3 text-h3 font-serif text-text-primary hover:text-kelp transition-colors"
+            aria-current={item.active ? 'page' : undefined}
+            class:list={[
+              'block py-3 text-h3 font-serif transition-colors',
+              item.active ? 'text-kelp' : 'text-text-primary hover:text-kelp',
+            ]}
           >
             {item.label}
           </a>
@@ -91,12 +96,23 @@ const articlesHref = localizedPath(locale, '/articles');
   const panel = document.querySelector<HTMLElement>('[data-mobile-nav-panel]');
   const closeBtn = document.querySelector<HTMLButtonElement>('[data-mobile-nav-close]');
 
+  const isOpen = () => panel?.getAttribute('aria-hidden') === 'false';
+
+  function focusables(): HTMLElement[] {
+    if (!panel) return [];
+    return Array.from(
+      panel.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')
+    );
+  }
+
   function open() {
     if (!panel || !toggle) return;
     panel.classList.remove('opacity-0', 'invisible', 'pointer-events-none');
     panel.setAttribute('aria-hidden', 'false');
     toggle.setAttribute('aria-expanded', 'true');
     document.body.style.overflow = 'hidden';
+    // 패널 안으로 포커스를 옮긴다 (transition 중에는 아직 invisible이라 다음 프레임에)
+    requestAnimationFrame(() => closeBtn?.focus());
   }
 
   function close() {
@@ -105,12 +121,30 @@ const articlesHref = localizedPath(locale, '/articles');
     panel.setAttribute('aria-hidden', 'true');
     toggle.setAttribute('aria-expanded', 'false');
     document.body.style.overflow = '';
+    toggle.focus();
   }
 
   toggle?.addEventListener('click', open);
   closeBtn?.addEventListener('click', close);
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && panel?.getAttribute('aria-hidden') === 'false') close();
+    if (e.key === 'Escape' && isOpen()) {
+      close();
+      return;
+    }
+    // 포커스 트랩 — 열려 있는 동안 Tab이 패널 밖으로 나가지 않게 순환시킨다
+    if (e.key !== 'Tab' || !isOpen()) return;
+    const items = focusables();
+    if (!items.length) return;
+    const first = items[0];
+    const last = items[items.length - 1];
+    const active = document.activeElement as HTMLElement | null;
+    if (e.shiftKey && (active === first || !panel?.contains(active))) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && active === last) {
+      e.preventDefault();
+      first.focus();
+    }
   });
 </script>

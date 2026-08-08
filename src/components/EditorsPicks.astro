@@ -27,7 +27,7 @@ function displayReview(p: Pick): string {
   return p.review;
 }
 function displayType(p: Pick): string {
-  return t(`type_labels.${p.type}`) || p.type;
+  return t(`type_labels.${p.type}`, p.type);
 }
 
 const heading = locale === 'en' ? "Editor's Picks" : '에디터 추천';
@@ -43,22 +43,34 @@ const sub = locale === 'en'
     </div>
   </div>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-    {picks.map(p => (
-      <a
-        href={p.link || '#'}
-        target={p.link ? '_blank' : undefined}
-        rel={p.link ? 'noopener' : undefined}
-        class="group relative block p-6 bg-bg-card border border-border rounded-lg overflow-hidden transition-all duration-300 hover:border-kelp/40 hover:shadow-md"
-      >
-        {/* dereknee-style 글로우: 카드 호버 시 우상단에서 부드러운 라이트 */}
-        <span aria-hidden="true" class="pointer-events-none absolute -top-12 -right-12 w-40 h-40 rounded-full bg-seafoam/40 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
-        <span class="relative inline-block text-xs font-medium uppercase tracking-wider text-kelp">{displayType(p)}</span>
-        <h3 class="relative font-serif text-h3 font-medium text-text-primary mt-3 leading-snug">{displayName(p)}</h3>
-        <p class="relative text-sm text-text-secondary mt-3 leading-relaxed line-clamp-3">{displayReview(p)}</p>
-        <span class="relative inline-flex items-center gap-1.5 text-xs font-medium text-kelp mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          {t('table.buy')} <span aria-hidden="true">→</span>
-        </span>
-      </a>
-    ))}
+    {picks.map(p => {
+      // 링크가 없는 항목은 아무데도 가지 않는 <a href="#">가 아니라 비대화형 카드로 렌더한다
+      const Tag = p.link ? 'a' : 'article';
+      return (
+        <Tag
+          href={p.link || undefined}
+          target={p.link ? '_blank' : undefined}
+          rel={p.link ? 'noopener sponsored' : undefined}
+          class:list={[
+            'group relative block p-6 bg-bg-card border border-border rounded-lg overflow-hidden transition-all duration-300',
+            p.link ? 'hover:border-kelp/40 hover:shadow-md' : '',
+          ]}
+        >
+          {/* dereknee-style 글로우: 카드 호버 시 우상단에서 부드러운 라이트 */}
+          {p.link && (
+            <span aria-hidden="true" class="pointer-events-none absolute -top-12 -right-12 w-40 h-40 rounded-full bg-seafoam/40 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
+          )}
+          <span class="relative inline-block text-xs font-medium uppercase tracking-wider text-kelp">{displayType(p)}</span>
+          <h3 class="relative font-serif text-h3 font-medium text-text-primary mt-3 leading-snug">{displayName(p)}</h3>
+          <p class="relative text-sm text-text-secondary mt-3 leading-relaxed line-clamp-3">{displayReview(p)}</p>
+          {/* 호버 없는 기기(터치)에서는 CTA가 영영 안 보이므로 항상 표시 */}
+          {p.link && (
+            <span class="relative inline-flex items-center gap-1.5 text-xs font-medium text-kelp mt-4 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity duration-200">
+              {t('table.buy')} <span aria-hidden="true">→</span>
+            </span>
+          )}
+        </Tag>
+      );
+    })}
   </div>
 </section>

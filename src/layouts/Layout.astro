@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import MetaTags from '../components/seo/MetaTags.astro';
+import { useTranslations } from '../i18n/utils';
 
 interface Props {
   title: string;
@@ -19,6 +20,8 @@ const {
   type,
   noindex,
 } = Astro.props;
+
+const t = useTranslations(lang);
 ---
 <!doctype html>
 <html lang={lang}>
@@ -35,6 +38,7 @@ const {
   <slot name="head" />
 </head>
 <body>
+  <a href="#main" class="skip-link">{t('nav.skip')}</a>
   <slot />
 </body>
 </html>

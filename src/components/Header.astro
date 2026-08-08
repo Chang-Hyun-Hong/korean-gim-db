@@ -8,13 +8,14 @@ import MobileNavPanel from './MobileNavPanel.astro';
 
 interface Props {
   locale: Locale;
+  /** 현재 경로에 대응하는 다른 로케일 페이지가 없을 때(404 등) 전환 대상을 직접 지정 */
+  localeSwitchPath?: string;
 }
-const { locale } = Astro.props;
+const { locale, localeSwitchPath } = Astro.props;
 const t = useTranslations(locale);
 
 const otherLocale: Locale = locale === 'en' ? 'ko' : 'en';
 const otherLocaleLabel = otherLocale === 'en' ? 'English' : '한국어';
-const otherLocaleHref = localizedPath(otherLocale, '/');
 
 const all = await getCollection('articles', (e) => !e.data.draft);
 const localePrefix = `${locale}/`;
@@ -30,11 +31,36 @@ const pickLatest = (cat: 'news' | 'recipe') => {
 const latestNews = pickLatest('news');
 const latestRecipe = pickLatest('recipe');
 
+// 현재 페이지 판별 — 하위 경로(/articles/foo)도 상위 항목(/articles)을 활성으로 본다
+const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const isActive = (href: string) => {
+  const h = href.replace(/\/+$/, '') || '/';
+  return currentPath === h || (h !== '/' && currentPath.startsWith(`${h}/`));
+};
+
+// 언어 전환은 같은 페이지의 다른 로케일 판으로 간다 (예: /reviews ↔ /ko/reviews).
+// 404처럼 짝이 없는 페이지는 페이지 쪽에서 localeSwitchPath로 대상을 지정한다.
+const basePath = localeSwitchPath ?? (currentPath.replace(/^\/ko(?=\/|$)/, '') || '/');
+const otherLocaleHref = localizedPath(otherLocale, basePath);
+
+const aboutHref = localizedPath(locale, '/what-is-gim');
+const guidesHref = localizedPath(locale, '/buying-guide');
+const articlesNavHref = localizedPath(locale, '/articles');
+const reviewsHref = localizedPath(locale, '/reviews');
+
 const navItems = [
-  { href: localizedPath(locale, '/what-is-gim'), label: t('nav.about') },
-  { href: localizedPath(locale, '/buying-guide'), label: t('nav.guides') },
-  { href: localizedPath(locale, '/articles'), label: t('nav.articles') },
-  { href: localizedPath(locale, '/reviews'), label: t('nav.reviews') },
+  { href: aboutHref, label: t('nav.about') },
+  { href: guidesHref, label: t('nav.guides') },
+  { href: articlesNavHref, label: t('nav.articles') },
+  { href: reviewsHref, label: t('nav.reviews') },
+].map((item) => ({ ...item, active: isActive(item.href) }));
+
+// 데스크톱 링크 공통 클래스 (활성 상태는 색 + 굵기로 표시)
+const navLink = (active: boolean) => [
+  'block px-3 py-1.5 rounded-sm transition-colors',
+  active
+    ? 'text-kelp font-medium bg-bg-secondary'
+    : 'text-text-secondary hover:text-kelp hover:bg-bg-secondary',
 ];
 ---
 <header class="sticky top-0 z-40 border-b border-border/60 bg-bg-primary/80 backdrop-blur-md">
@@ -50,25 +76,33 @@ const navItems = [
       <ul class="flex items-center gap-1" data-desktop-nav>
         <li>
           <a
-            href={localizedPath(locale, '/what-is-gim')}
-            class="block px-3 py-1.5 rounded-sm text-text-secondary hover:text-kelp hover:bg-bg-secondary transition-colors"
+            href={aboutHref}
+            aria-current={isActive(aboutHref) ? 'page' : undefined}
+            class:list={navLink(isActive(aboutHref))}
           >
             {t('nav.about')}
           </a>
         </li>
         <li>
           <a
-            href={localizedPath(locale, '/buying-guide')}
-            class="block px-3 py-1.5 rounded-sm text-text-secondary hover:text-kelp hover:bg-bg-secondary transition-colors"
+            href={guidesHref}
+            aria-current={isActive(guidesHref) ? 'page' : undefined}
+            class:list={navLink(isActive(guidesHref))}
           >
             {t('nav.guides')}
           </a>
         </li>
-        <MegaMenu locale={locale} latestNews={latestNews} latestRecipe={latestRecipe} />
+        <MegaMenu
+          locale={locale}
+          latestNews={latestNews}
+          latestRecipe={latestRecipe}
+          active={isActive(articlesNavHref)}
+        />
         <li>
           <a
-            href={localizedPath(locale, '/reviews')}
-            class="block px-3 py-1.5 rounded-sm text-text-secondary hover:text-kelp hover:bg-bg-secondary transition-colors"
+            href={reviewsHref}
+            aria-current={isActive(reviewsHref) ? 'page' : undefined}
+            class:list={navLink(isActive(reviewsHref))}
           >
             {t('nav.reviews')}
           </a>

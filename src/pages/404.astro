@@ -1,0 +1,37 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Button from '../components/ui/Button.astro';
+import { useTranslations } from '../i18n/utils';
+
+// Vercel은 경로와 무관하게 하나의 404.html을 제공하므로 기본 로케일(en)로 렌더한다.
+// 한국어 사용자는 헤더의 언어 전환으로 이동할 수 있다.
+const locale = 'en' as const;
+const t = useTranslations(locale);
+---
+<Layout title={t('notfound.title')} description={t('notfound.body')} lang={locale} noindex>
+  {/* 한국어 404는 없으므로(Vercel이 404.html 하나만 제공) 언어 전환은 홈으로 보낸다 */}
+  <Header locale={locale} localeSwitchPath="/" />
+
+  <main id="main" tabindex="-1" class="max-w-3xl mx-auto px-6 py-24">
+    <p class="text-xs uppercase tracking-[0.2em] text-kelp font-medium mb-4">404</p>
+    <h1
+      class="font-serif font-medium text-text-primary tracking-tight mb-4"
+      style="font-size: var(--text-h1); line-height: var(--text-h1--line-height);"
+    >
+      {t('notfound.title')}
+    </h1>
+    <p class="text-text-secondary text-lg leading-relaxed mb-10 max-w-prose">
+      {t('notfound.body')}
+    </p>
+
+    <div class="flex flex-wrap gap-3">
+      <Button href="/">{t('notfound.home')}</Button>
+      <Button variant="secondary" href="/reviews">{t('notfound.reviews')}</Button>
+      <Button variant="ghost" href="/articles">{t('notfound.articles')}</Button>
+    </div>
+  </main>
+
+  <Footer locale={locale} />
+</Layout>

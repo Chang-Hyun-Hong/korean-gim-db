@@ -32,7 +32,7 @@
 
   /* 시맨틱 */
   --color-border: #D4DDD9;
-  --color-border-strong: #8A9994;
+  --color-border-strong: #83918D;  /* 폼 컨트롤 경계 — WCAG 1.4.11 3:1 충족 (흰 배경 3.28:1) */
 
   /* ========================================
      타이포 스케일
@@ -44,7 +44,7 @@
   --font-sans-kr: "Pretendard Variable", Pretendard, "Apple SD Gothic Neo", system-ui, sans-serif;
 
   /* 사이즈 (Tailwind 기본 + 헤드라인용 큰 사이즈) */
-  --text-display: 4.5rem;          /* 72px — hero headlines */
+  --text-display: clamp(2.5rem, 1.35rem + 4.9vw, 4.5rem); /* 40px(모바일) → 72px(1024px+) — hero headlines */
   --text-display--line-height: 1.05;
   --text-display--letter-spacing: -0.02em;
 
@@ -102,6 +102,24 @@
 }
 
 @layer components {
+  /* 키보드로 탭했을 때만 나타나는 본문 바로가기 링크 (sticky 헤더 z-40, 모바일 패널 z-60 위) */
+  .skip-link {
+    position: fixed;   /* absolute면 문서 최상단에 고정돼, 스크롤된 상태에서 탭하면 화면 밖에 나타난다 */
+    top: -100%;
+    left: 1rem;
+    z-index: 70;
+    padding: 0.625rem 1rem;
+    border-radius: var(--radius-sm);
+    background: var(--color-kelp);
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: top 0.15s;
+  }
+  .skip-link:focus {
+    top: 1rem;
+  }
+
   .filter-btn {
     padding: 0.5rem 1rem;
     border-radius: var(--radius-sm);
@@ -186,4 +204,30 @@
     border-radius: var(--radius-sm);
     font-size: 0.9em;
   }
+}
+
+/* ========================================
+   키보드 포커스 링
+   ========================================
+   @layer 밖에 둔다 — 레이어가 붙은 스타일은 명시도와 무관하게
+   레이어 순서로 밀리기 때문에, @layer base에 두면 utilities의
+   shadow-sm 같은 유틸리티에 box-shadow가 덮인다.
+   레이어 없는 규칙은 모든 레이어보다 우선한다. */
+
+/* 2색 링이라 밝은 배경(바깥 kelp가 보임)과 짙은 kelp 배경
+   (안쪽 밝은 테가 보임) 양쪽에서 모두 식별된다.
+   투명 outline은 Windows 고대비 모드 폴백 (box-shadow가 무시되는 환경). */
+:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow:
+    0 0 0 2px var(--color-bg-primary),
+    0 0 0 4px var(--color-kelp);
+}
+
+/* skip-link이 main으로 포커스를 옮길 때는 링을 그리지 않는다 */
+main[tabindex="-1"]:focus,
+main[tabindex="-1"]:focus-visible {
+  outline: none;
+  box-shadow: none;
 }
