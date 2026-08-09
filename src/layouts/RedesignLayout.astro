@@ -1,0 +1,31 @@
+---
+/**
+ * Bare shell for the design bake-off variants.
+ *
+ * Deliberately does NOT import global.css — each variant carries its own
+ * complete CSS so the three looks can't bleed into each other, and so the
+ * production design system stays untouched while we compare.
+ *
+ * Throwaway: delete once a direction is picked.
+ */
+interface Props {
+  title: string;
+  /** Extra <link>/<style> the variant needs in <head> (e.g. webfonts). */
+  fonts?: string;
+}
+const { title } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- variants must never be indexed or shared -->
+  <meta name="robots" content="noindex,nofollow" />
+  <title>{title}</title>
+  <slot name="head" />
+</head>
+<body>
+  <slot />
+</body>
+</html>

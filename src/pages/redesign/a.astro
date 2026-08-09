@@ -1,0 +1,459 @@
+---
+/**
+ * Bake-off variant A — minimalist-ui skill.
+ *
+ * Warm monochrome, editorial serif, flat bento grid, muted pastel accents.
+ * Skill constraints honoured explicitly:
+ *   - no Inter/Roboto/Open Sans      -> Newsreader + system geometric sans
+ *   - no gradients, no neon          -> flat fills only, one 0.03 radial light spot
+ *   - no heavy shadows               -> max rgba(0,0,0,0.04)
+ *   - no primary-colour big sections -> the kelp CTA band is gone, bone surface instead
+ *   - no rounded-full on containers  -> 4-12px radii; pills reserved for tags
+ *   - no emoji                       -> star rating rendered as CSS dots, not the source emoji
+ *
+ * Throwaway: delete once a direction is picked.
+ */
+import RedesignLayout from '../../layouts/RedesignLayout.astro';
+import { content, getPicks, displayName, TYPE_LABELS, COOK_LABELS } from './_content';
+
+const picks = getPicks();
+const { hero, highlights, about, finalCta } = content;
+---
+<RedesignLayout title="Variant A — minimalist-ui — Korean GIM">
+  <Fragment slot="head">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&display=swap"
+      rel="stylesheet"
+    />
+  </Fragment>
+
+  <div class="v">
+    <!-- ambient depth: a single very low-opacity warm light spot, no gradient fills -->
+    <div class="ambient" aria-hidden="true"></div>
+
+    <header class="nav">
+      <div class="wrap nav-in">
+        <a href="/redesign" class="wordmark">Korean <em>GIM</em></a>
+        <nav aria-label="Primary">
+          <a href="/what-is-gim">About</a>
+          <a href="/buying-guide">Guides</a>
+          <a href="/articles">Articles</a>
+          <a href="/reviews">Reviews</a>
+        </nav>
+        <a href="/ko" class="lang">한국어</a>
+      </div>
+    </header>
+
+    <main>
+      <!-- HERO — left-aligned editorial, no centred-over-gradient cliche -->
+      <section class="hero wrap">
+        <p class="eyebrow reveal">{hero.eyebrow}</p>
+        <h1 class="reveal" style="--i:1">{hero.title}</h1>
+        <p class="lede reveal" style="--i:2">{hero.subtitle}</p>
+        <div class="actions reveal" style="--i:3">
+          <a class="btn" href={hero.primaryCta.href}>{hero.primaryCta.label}</a>
+          <a class="btn btn-quiet" href={hero.secondaryCta.href}>{hero.secondaryCta.label}</a>
+        </div>
+        <dl class="stat-row reveal" style="--i:4">
+          <div><dt>Reviews</dt><dd>17</dd></div>
+          <div><dt>Scale</dt><dd>0–10</dd></div>
+          <div><dt>Written in</dt><dd>EN · KO</dd></div>
+        </dl>
+      </section>
+
+      <!-- HIGHLIGHTS — asymmetric bento, deliberately not three equal columns -->
+      <section class="wrap section">
+        <h2 class="sec-head reveal">{highlights.heading}</h2>
+        <div class="bento">
+          {highlights.items.map((item, i) => (
+            <article class:list={['cell', `cell-${i}`, 'reveal']} style={`--i:${i + 1}`}>
+              <span class="cell-num">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{item.keyword}</h3>
+              <p>{item.copy}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <!-- EDITOR'S PICKS — metadata in mono, pastel tags, flat meters -->
+      <section class="wrap section">
+        <div class="sec-head-row reveal">
+          <div>
+            <h2 class="sec-head">{content.picks.heading}</h2>
+            <p class="sec-sub">{content.picks.sub}</p>
+          </div>
+          <a class="link-arrow" href={content.picks.cta.href}>{content.picks.cta.label}</a>
+        </div>
+
+        <ul class="picks">
+          {picks.map((p, i) => (
+            <li class="pick reveal" style={`--i:${i + 1}`}>
+              <div class="pick-tags">
+                <span class="tag tag-green">{TYPE_LABELS[p.type] ?? p.type}</span>
+                <span class="tag">{COOK_LABELS[p.cook] ?? p.cook}</span>
+              </div>
+
+              <h3 class="pick-name">{displayName(p)}</h3>
+              <p class="pick-review">{p.review}</p>
+
+              <div class="meters">
+                <div class="meter">
+                  <span class="meter-k">Oil</span>
+                  <span class="track"><span class="fill" style={`--w:${p.oil * 10}%`}></span></span>
+                  <span class="meter-v">{p.oil}</span>
+                </div>
+                <div class="meter">
+                  <span class="meter-k">Salt</span>
+                  <span class="track"><span class="fill" style={`--w:${p.salt * 10}%`}></span></span>
+                  <span class="meter-v">{p.salt}</span>
+                </div>
+              </div>
+
+              <footer class="pick-foot">
+                <span class="rating" aria-label={`Rated ${p.scoreNum} out of 5`}>
+                  {[0, 1, 2, 3, 4].map(n => (
+                    <span class:list={['dot', n < p.scoreNum && 'on']} aria-hidden="true"></span>
+                  ))}
+                </span>
+                <span class="price">{p.price}</span>
+              </footer>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- ABOUT — asymmetric split, type-led (works with zero photography) -->
+      <section class="wrap section">
+        <div class="about reveal">
+          <div class="about-l">
+            <p class="eyebrow">{about.eyebrow}</p>
+            <h2 class="about-h">{about.heading}</h2>
+          </div>
+          <div class="about-r">
+            <p>{about.copy}</p>
+            <a class="link-arrow" href={about.cta.href}>{about.cta.label}</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- CLOSING — bone surface + rule, not a saturated colour band -->
+      <section class="closing">
+        <div class="wrap closing-in reveal">
+          <h2>{finalCta.heading}</h2>
+          <p>{finalCta.sub}</p>
+          <a class="btn" href={finalCta.button.href}>{finalCta.button.label}</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <div class="wrap foot-in">
+        <p>© 2026 Korean GIM Database</p>
+        <p class="foot-tag">Korean seaweed, reviewed.</p>
+      </div>
+    </footer>
+  </div>
+</RedesignLayout>
+
+<style is:global>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; }
+</style>
+
+<style>
+  /* ── tokens ─────────────────────────────────────────────
+     warm monochrome + one pastel spot colour (pale green,
+     the only hue on the page — it reads as seaweed) */
+  .v {
+    --canvas: #fbfbfa;
+    --surface: #ffffff;
+    --bone: #f7f6f3;
+    --line: #eaeaea;
+    --ink: #111111;
+    --ink-2: #2f3437;
+    --muted: #787774;
+
+    --pale-green: #edf3ec;
+    --pale-green-ink: #346538;
+
+    --sans: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, sans-serif;
+    --serif: 'Newsreader', 'Lyon Text', Georgia, serif;
+    --mono: 'SF Mono', 'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+    --r-sm: 4px;
+    --r: 8px;
+    --r-lg: 12px;
+
+    position: relative;
+    min-height: 100dvh;
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* single ambient light spot — depth without a gradient fill */
+  .ambient {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background: radial-gradient(60rem 40rem at 72% -10%, rgba(52, 101, 56, 0.03), transparent 70%);
+  }
+  .v > *:not(.ambient) { position: relative; z-index: 1; }
+
+  .wrap { width: 100%; max-width: 64rem; margin-inline: auto; padding-inline: 1.5rem; }
+
+  /* ── nav ─────────────────────────────────────────────── */
+  .nav {
+    position: sticky; top: 0; z-index: 20;
+    background: rgba(251, 251, 250, 0.82);
+    backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-in { display: flex; align-items: center; gap: 2rem; height: 60px; }
+  .wordmark {
+    font-family: var(--serif); font-size: 1.0625rem; font-weight: 500;
+    letter-spacing: -0.02em; color: var(--ink); text-decoration: none; margin-right: auto;
+  }
+  .wordmark em { font-style: italic; }
+  .nav nav { display: flex; gap: 1.5rem; }
+  .nav nav a, .lang {
+    font-size: 0.8125rem; color: var(--muted); text-decoration: none;
+    transition: color 160ms ease;
+  }
+  .nav nav a:hover, .lang:hover { color: var(--ink); }
+  .lang { font-family: var(--mono); font-size: 0.75rem; }
+  @media (max-width: 40rem) { .nav nav { display: none; } }
+
+  /* ── hero ────────────────────────────────────────────── */
+  .hero { padding-block: 7.5rem 5rem; }
+  .eyebrow {
+    font-family: var(--mono); font-size: 0.6875rem; text-transform: uppercase;
+    letter-spacing: 0.14em; color: var(--muted); margin: 0 0 1.25rem;
+  }
+  .hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(2.75rem, 1.6rem + 5vw, 5rem);
+    font-weight: 400; line-height: 1.05; letter-spacing: -0.035em;
+    margin: 0; max-width: 12ch; text-wrap: balance;
+  }
+  .lede {
+    font-size: 1.125rem; color: var(--ink-2); line-height: 1.65;
+    max-width: 46ch; margin: 1.75rem 0 0; text-wrap: pretty;
+  }
+  .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2.5rem; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 0.6875rem 1.25rem; border-radius: var(--r-sm);
+    background: var(--ink); color: #fff; text-decoration: none;
+    font-size: 0.875rem; font-weight: 500; letter-spacing: -0.005em;
+    border: 1px solid var(--ink);
+    transition: background-color 200ms ease, transform 120ms ease;
+  }
+  .btn:hover { background: #333; }
+  .btn:active { transform: scale(0.98); }
+  .btn-quiet {
+    background: transparent; color: var(--ink); border-color: var(--line);
+  }
+  .btn-quiet:hover { background: var(--bone); }
+
+  /* hero stat row — mono, tabular, sits on a hairline */
+  .stat-row {
+    display: flex; gap: 3rem; flex-wrap: wrap;
+    margin: 4rem 0 0; padding-top: 1.5rem; border-top: 1px solid var(--line);
+  }
+  .stat-row div { display: flex; flex-direction: column; gap: 0.25rem; }
+  .stat-row dt {
+    font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted);
+  }
+  .stat-row dd {
+    margin: 0; font-family: var(--mono); font-size: 1rem; color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── sections ────────────────────────────────────────── */
+  .section { padding-block: 5rem; }
+  .sec-head {
+    font-family: var(--serif); font-size: clamp(1.75rem, 1.2rem + 2vw, 2.5rem);
+    font-weight: 400; letter-spacing: -0.03em; line-height: 1.15; margin: 0;
+  }
+  .sec-sub { color: var(--muted); font-size: 0.9375rem; margin: 0.5rem 0 0; }
+  .sec-head-row {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 2rem; flex-wrap: wrap; margin-bottom: 2.5rem;
+  }
+  .link-arrow {
+    font-size: 0.875rem; color: var(--ink); text-decoration: none;
+    border-bottom: 1px solid var(--line); padding-bottom: 2px;
+    transition: border-color 200ms ease;
+    white-space: nowrap;
+  }
+  .link-arrow::after { content: ' →'; color: var(--muted); }
+  .link-arrow:hover { border-color: var(--ink); }
+
+  /* ── bento (asymmetric, not 3 equal columns) ─────────── */
+  .bento {
+    display: grid; gap: 1rem; margin-top: 2.5rem;
+    grid-template-columns: repeat(6, 1fr);
+  }
+  .cell {
+    border: 1px solid var(--line); border-radius: var(--r-lg);
+    background: var(--surface); padding: 2rem;
+    transition: box-shadow 200ms ease, border-color 200ms ease;
+  }
+  .cell:hover { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); }
+  .cell-0 { grid-column: span 6; }
+  .cell-1, .cell-2 { grid-column: span 3; }
+  @media (max-width: 46rem) { .cell { grid-column: span 6 !important; } }
+
+  .cell-num {
+    font-family: var(--mono); font-size: 0.6875rem; color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+  .cell h3 {
+    font-family: var(--serif); font-size: 1.375rem; font-weight: 500;
+    letter-spacing: -0.02em; margin: 1rem 0 0.5rem;
+  }
+  .cell p { margin: 0; color: var(--ink-2); font-size: 0.9375rem; max-width: 52ch; }
+  /* the wide cell gets room to breathe, so it reads as lead, not filler */
+  .cell-0 { padding: 2.5rem; }
+  .cell-0 h3 { font-size: 1.75rem; }
+
+  /* ── picks ───────────────────────────────────────────── */
+  .picks {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  }
+  .pick {
+    display: flex; flex-direction: column;
+    border: 1px solid var(--line); border-radius: var(--r-lg);
+    background: var(--surface); padding: 1.75rem;
+    transition: box-shadow 200ms ease;
+  }
+  .pick:hover { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); }
+
+  .pick-tags { display: flex; gap: 0.375rem; flex-wrap: wrap; }
+  .tag {
+    font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.06em;
+    font-weight: 500; padding: 0.25rem 0.5rem; border-radius: 9999px;
+    background: var(--bone); color: var(--muted);
+  }
+  .tag-green { background: var(--pale-green); color: var(--pale-green-ink); }
+
+  .pick-name {
+    font-family: var(--serif); font-size: 1.25rem; font-weight: 500;
+    letter-spacing: -0.02em; line-height: 1.25; margin: 1rem 0 0;
+    /* Korean falls back to the system Korean face; keep it optically level */
+    word-break: keep-all;
+  }
+  .pick-review {
+    color: var(--ink-2); font-size: 0.875rem; line-height: 1.6;
+    margin: 0.625rem 0 0; word-break: keep-all;
+  }
+
+  .meters { margin-top: 1.5rem; display: grid; gap: 0.5rem; }
+  .meter { display: grid; grid-template-columns: 2.25rem 1fr 1.5rem; align-items: center; gap: 0.625rem; }
+  .meter-k {
+    font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
+  }
+  .track { height: 3px; border-radius: 9999px; background: var(--bone); overflow: hidden; }
+  .fill { display: block; height: 100%; width: var(--w); background: var(--pale-green-ink); opacity: 0.55; }
+  .meter-v {
+    font-family: var(--mono); font-size: 0.75rem; color: var(--ink-2);
+    font-variant-numeric: tabular-nums; text-align: right;
+  }
+
+  .pick-foot {
+    margin-top: auto; padding-top: 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  /* rating as CSS dots — the source data is ⭐️ emoji, which the look bans */
+  .rating { display: inline-flex; gap: 3px; }
+  .dot { width: 5px; height: 5px; border-radius: 9999px; background: var(--line); }
+  .dot.on { background: var(--ink); }
+  .price {
+    font-family: var(--mono); font-size: 0.8125rem; color: var(--ink-2);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── about ───────────────────────────────────────────── */
+  .about { display: grid; grid-template-columns: 5fr 4fr; gap: 4rem; align-items: start; }
+  @media (max-width: 46rem) { .about { grid-template-columns: 1fr; gap: 1.5rem; } }
+  .about-h {
+    font-family: var(--serif); font-size: clamp(1.875rem, 1.2rem + 2.4vw, 2.75rem);
+    font-weight: 400; letter-spacing: -0.03em; line-height: 1.12; margin: 0;
+    text-wrap: balance;
+  }
+  .about-r p { color: var(--ink-2); margin: 0 0 1.5rem; max-width: 46ch; }
+  @media (min-width: 46rem) { .about-r { padding-top: 0.5rem; } }
+
+  /* ── closing (bone surface, no saturated band) ───────── */
+  .closing { border-block: 1px solid var(--line); background: var(--bone); margin-top: 2rem; }
+  .closing-in { padding-block: 6rem; text-align: center; }
+  .closing h2 {
+    font-family: var(--serif); font-size: clamp(2rem, 1.4rem + 2.4vw, 3rem);
+    font-weight: 400; letter-spacing: -0.03em; line-height: 1.12; margin: 0;
+    text-wrap: balance;
+  }
+  .closing p { color: var(--muted); margin: 1rem auto 2.25rem; max-width: 42ch; }
+
+  /* ── footer ──────────────────────────────────────────── */
+  .foot { border-top: 1px solid var(--line); }
+  .foot-in {
+    display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+    padding-block: 2.5rem; font-size: 0.8125rem; color: var(--muted);
+  }
+  .foot p { margin: 0; }
+  .foot-tag { font-family: var(--serif); font-style: italic; }
+
+  /* ── focus ───────────────────────────────────────────── */
+  :focus-visible {
+    outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 2px;
+  }
+
+  /* ── scroll entry ────────────────────────────────────── */
+  .reveal { opacity: 1; }
+  :global(html.js) .reveal {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  :global(html.js) .reveal.in {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 600ms cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i, 0) * 80ms),
+      transform 600ms cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i, 0) * 80ms);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.js) .reveal { opacity: 1; transform: none; }
+    :global(html.js) .reveal.in { transition: none; }
+    * { animation: none !important; }
+  }
+</style>
+
+<script>
+  // mark JS early so .reveal only hides when we can actually reveal it
+  document.documentElement.classList.add('js');
+
+  const items = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver(
+    entries => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    },
+    { rootMargin: '0px 0px -10% 0px', threshold: 0.05 }
+  );
+  items.forEach(el => io.observe(el));
+</script>

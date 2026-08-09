@@ -1,0 +1,460 @@
+---
+/**
+ * Bake-off variant C — industrial-brutalist-ui skill.
+ *
+ * Archetype (Section 2 — pick ONE, never mix):
+ *   2.1 SWISS INDUSTRIAL PRINT (light substrate)
+ *
+ * Chose print over 2.2 Tactical Telemetry (dark) deliberately: the site is a
+ * long-form beginner guide with zero photography, so a dark CRT substrate would
+ * be a large empty void and hurt reading. Print keeps the archetype's rigour —
+ * rigid grid, monolithic uppercase, hazard red — on a readable substrate.
+ *
+ * Section 4/5 compliance:
+ *   - ONE substrate, never mixed          - ONE accent (hazard red), no others
+ *   - no gradients / soft shadows / translucency
+ *   - border-radius: 0 everywhere, 90 degree corners only
+ *   - hairlines via `grid; gap:1px` on an ink ground (Section 8.1)
+ *   - no scroll-entry motion: the archetype is mechanical, not cinematic
+ *
+ * Throwaway: delete once a direction is picked.
+ */
+import RedesignLayout from '../../layouts/RedesignLayout.astro';
+import { content, getPicks, displayName, TYPE_LABELS, COOK_LABELS } from './_content';
+
+const picks = getPicks();
+const { hero, highlights, about, finalCta } = content;
+
+const stats = [
+  { k: 'Units logged', v: '17' },
+  { k: 'Scale', v: '0–10' },
+  { k: 'Locales', v: 'EN / KO' },
+];
+---
+<RedesignLayout title="Variant C — industrial-brutalist-ui — Korean GIM">
+  <Fragment slot="head">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+  </Fragment>
+
+  <div class="v">
+    <div class="noise" aria-hidden="true"></div>
+
+    <!-- ── utility strip: unit ids, revision, coordinates ── -->
+    <div class="util">
+      <span>KOREAN GIM DATABASE</span>
+      <span class="sep" aria-hidden="true">///</span>
+      <span>UNIT / D&#8209;01</span>
+      <span class="sep" aria-hidden="true">///</span>
+      <span>REV 2.6</span>
+      <span class="util-r"><span class="dot-red" aria-hidden="true"></span>ACTIVE</span>
+    </div>
+
+    <header class="nav">
+      <a href="/redesign" class="mark">KOREAN GIM<span class="reg">&#174;</span></a>
+      <nav aria-label="Primary">
+        <a href="/what-is-gim">About</a>
+        <a href="/buying-guide">Guides</a>
+        <a href="/articles">Articles</a>
+        <a href="/reviews">Reviews</a>
+      </nav>
+      <a href="/ko" class="nav-ko">KO</a>
+    </header>
+
+    <main>
+      <!-- ── HERO: macro-typography vs dense telemetry ──── -->
+      <section class="hero">
+        <div class="hero-meta">
+          <span class="label">[ SECTION 00 ]</span>
+          <span class="label">{hero.eyebrow}</span>
+        </div>
+
+        <h1>{hero.title}</h1>
+
+        <hr class="rule-red" />
+
+        <div class="hero-grid">
+          <p class="lede">{hero.subtitle}</p>
+
+          <dl class="telemetry">
+            {stats.map(s => (
+              <div class="tel-row">
+                <dt>{s.k}</dt>
+                <dd><data value={s.v}>{s.v}</data></dd>
+              </div>
+            ))}
+          </dl>
+
+          <div class="hero-cta">
+            <a class="btn btn-red" href={hero.primaryCta.href}>
+              {hero.primaryCta.label}<span aria-hidden="true"> &gt;&gt;&gt;</span>
+            </a>
+            <a class="btn" href={hero.secondaryCta.href}>
+              {hero.secondaryCta.label}<span aria-hidden="true"> &gt;&gt;&gt;</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── HIGHLIGHTS: blueprint grid, 1px hairlines ──── -->
+      <section class="section">
+        <div class="sec-bar">
+          <h2 class="label">[ {highlights.heading} ]</h2>
+          <span class="label" aria-hidden="true">03 UNITS</span>
+        </div>
+
+        <div class="blueprint">
+          {highlights.items.map((item, i) => (
+            <article class="cellx">
+              <span class="cell-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{item.keyword}</h3>
+              <p>{item.copy}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <!-- ── PICKS: high-density tabular telemetry ──────── -->
+      <section class="section">
+        <div class="sec-bar">
+          <h2 class="label">[ {content.picks.heading} ]</h2>
+          <a class="label link" href={content.picks.cta.href}>
+            {content.picks.cta.label}<span aria-hidden="true"> &gt;&gt;&gt;</span>
+          </a>
+        </div>
+
+        <p class="sec-sub">{content.picks.sub}</p>
+
+        <div class="blueprint blueprint-3">
+          {picks.map((p, i) => (
+            <article class="cellx pickx">
+              <header class="pick-head">
+                <span class="idx" aria-hidden="true">D&#8209;0{i + 1}</span>
+                <span class="score" aria-label={`Rated ${p.scoreNum} out of 5`}>
+                  <span aria-hidden="true">{'█'.repeat(p.scoreNum)}{'░'.repeat(5 - p.scoreNum)}</span>
+                </span>
+              </header>
+
+              <h3 class="pick-name">{displayName(p)}</h3>
+
+              <ul class="chips">
+                <li>{TYPE_LABELS[p.type] ?? p.type}</li>
+                <li>{COOK_LABELS[p.cook] ?? p.cook}</li>
+              </ul>
+
+              <p class="pick-review">{p.review}</p>
+
+              <dl class="readout">
+                {[{ k: 'OIL', v: p.oil }, { k: 'SALT', v: p.salt }].map(m => (
+                  <div class="ro-row">
+                    <dt>{m.k}</dt>
+                    <dd class="ro-bar" aria-hidden="true">
+                      <span class="ro-fill" style={`--w:${m.v * 10}%`}></span>
+                    </dd>
+                    <dd class="ro-v"><output>{m.v}</output>/10</dd>
+                  </div>
+                ))}
+                <div class="ro-row ro-price">
+                  <dt>PRICE</dt>
+                  <dd class="ro-v ro-v-wide">{p.price}</dd>
+                </div>
+              </dl>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <!-- ── ABOUT: macro type + mono column ────────────── -->
+      <section class="section">
+        <div class="sec-bar">
+          <h2 class="label">[ {about.eyebrow} ]</h2>
+          <span class="label" aria-hidden="true">FIG. 01</span>
+        </div>
+
+        <div class="about">
+          <h3 class="about-h">{about.heading}</h3>
+          <div class="about-r">
+            <p>{about.copy}</p>
+            <a class="btn" href={about.cta.href}>
+              {about.cta.label}<span aria-hidden="true"> &gt;&gt;&gt;</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── CLOSING: hazard band, halftone dot overlay ─── -->
+      <section class="band">
+        <div class="halftone" aria-hidden="true"></div>
+        <div class="band-in">
+          <span class="label label-inv">[ NEXT STEP ]</span>
+          <h2>{finalCta.heading}</h2>
+          <p>{finalCta.sub}</p>
+          <a class="btn btn-inv" href={finalCta.button.href}>
+            {finalCta.button.label}<span aria-hidden="true"> &gt;&gt;&gt;</span>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <div class="barcode" aria-hidden="true"></div>
+      <div class="foot-in">
+        <span>&#169; 2026 KOREAN GIM DATABASE</span>
+        <span>KOREAN SEAWEED, REVIEWED&#8202;&#8482;</span>
+      </div>
+    </footer>
+  </div>
+</RedesignLayout>
+
+<style is:global>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; }
+</style>
+
+<style>
+  /* ── SWISS INDUSTRIAL PRINT substrate ───────────────── */
+  .v {
+    --paper: #f4f4f0;
+    --paper-2: #eae8e3;
+    --ink: #0a0a0a;
+    --ink-2: #3a3a36;
+    --red: #e61919;
+
+    --grot: 'Archivo', 'Archivo Black', 'Helvetica Neue', sans-serif;
+    --mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
+
+    position: relative;
+    min-height: 100dvh;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--grot);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* mechanical noise — unified physical grain */
+  .noise {
+    position: fixed; inset: 0; z-index: 5; pointer-events: none; opacity: 0.055;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* every corner is 90 degrees */
+  .v :where(a, button, div, section, article, span, li, dd, dt) { border-radius: 0; }
+
+  /* ── micro-typography: mono, uppercase, tracked ─────── */
+  .label, .util, .nav nav a, .nav-ko, .chips li, .telemetry, .readout, .foot-in, .btn, .cell-num, .idx {
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .util {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.5rem 1.5rem; font-size: 0.625rem;
+    background: var(--ink); color: var(--paper);
+  }
+  .util .sep { color: var(--red); }
+  .util-r { margin-left: auto; display: inline-flex; align-items: center; gap: 0.5rem; }
+  .dot-red { width: 6px; height: 6px; background: var(--red); display: inline-block; }
+  @media (max-width: 40rem) { .util .sep, .util span:nth-child(4) { display: none; } }
+
+  /* ── nav: rigid, bordered, no float ─────────────────── */
+  .nav {
+    display: flex; align-items: center; gap: 2rem;
+    padding: 1rem 1.5rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  .mark {
+    font-family: var(--grot); font-weight: 900; font-size: 1.125rem;
+    letter-spacing: -0.02em; text-transform: uppercase;
+    color: var(--ink); text-decoration: none; margin-right: auto;
+  }
+  .reg { color: var(--red); font-size: 0.75em; vertical-align: super; }
+  .nav nav { display: flex; gap: 1.25rem; }
+  .nav nav a, .nav-ko {
+    font-size: 0.6875rem; color: var(--ink); text-decoration: none;
+    padding: 0.25rem 0; border-bottom: 2px solid transparent;
+    transition: border-color 100ms linear, color 100ms linear;
+  }
+  .nav nav a:hover, .nav-ko:hover { border-bottom-color: var(--red); color: var(--red); }
+  .nav-ko { border: 1px solid var(--ink); padding: 0.25rem 0.5rem; }
+  .nav-ko:hover { background: var(--red); border-color: var(--red); color: var(--paper); }
+  @media (max-width: 46rem) { .nav nav { display: none; } }
+
+  /* ── hero: macro typography ─────────────────────────── */
+  .hero { padding: 3rem 1.5rem 0; }
+  .hero-meta { display: flex; justify-content: space-between; gap: 1rem; }
+  .label { font-size: 0.6875rem; font-weight: 500; margin: 0; }
+  .link { color: var(--ink); text-decoration: none; }
+  .link:hover { color: var(--red); }
+
+  .hero h1 {
+    font-family: var(--grot);
+    font-size: clamp(2.75rem, 11.5vw, 11rem);
+    font-weight: 900;
+    font-stretch: 108%;
+    text-transform: uppercase;
+    letter-spacing: -0.045em;
+    line-height: 0.85;
+    margin: 1.5rem 0 2rem;
+  }
+
+  .rule-red { border: 0; border-top: 6px solid var(--red); margin: 0; }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.9fr 0.9fr;
+    gap: 3rem;
+    padding: 2rem 0 5rem;
+  }
+  @media (max-width: 60rem) { .hero-grid { grid-template-columns: 1fr; gap: 2rem; } }
+  .lede { font-size: 1.0625rem; margin: 0; max-width: 40ch; color: var(--ink-2); }
+
+  .telemetry { margin: 0; font-size: 0.6875rem; }
+  .tel-row {
+    display: flex; justify-content: space-between; gap: 1rem;
+    padding: 0.5rem 0; border-bottom: 1px solid var(--ink);
+  }
+  .tel-row:first-child { border-top: 1px solid var(--ink); }
+  .telemetry dt { color: var(--ink-2); }
+  .telemetry dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+  .hero-cta { display: flex; flex-direction: column; gap: 0.5rem; align-items: start; }
+
+  /* ── buttons: hard-edged blocks, instant inversion ──── */
+  .btn {
+    display: inline-block; padding: 0.75rem 1.25rem;
+    font-size: 0.6875rem; font-weight: 500;
+    border: 2px solid var(--ink); background: transparent; color: var(--ink);
+    text-decoration: none;
+    transition: background-color 100ms linear, color 100ms linear, border-color 100ms linear;
+  }
+  .btn:hover { background: var(--ink); color: var(--paper); }
+  .btn:active { background: var(--red); border-color: var(--red); color: var(--paper); }
+  .btn-red { background: var(--red); border-color: var(--red); color: var(--paper); }
+  .btn-red:hover { background: var(--ink); border-color: var(--ink); }
+  .btn-inv { border-color: var(--paper); color: var(--paper); }
+  .btn-inv:hover { background: var(--paper); color: var(--ink); }
+
+  /* ── sections ───────────────────────────────────────── */
+  .section { padding: 0 1.5rem 5rem; }
+  .sec-bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    padding: 0.75rem 0; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--ink);
+    margin-bottom: 2rem;
+  }
+  .sec-sub { font-size: 0.9375rem; color: var(--ink-2); margin: -1rem 0 2rem; }
+
+  /* ── blueprint grid: 1px hairlines via gap on ink ───── */
+  .blueprint {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--ink);
+    border: 1px solid var(--ink);
+  }
+  @media (max-width: 60rem) { .blueprint { grid-template-columns: 1fr; } }
+  .cellx { background: var(--paper); padding: 1.75rem; }
+
+  .cell-num { font-size: 0.625rem; color: var(--red); font-weight: 700; }
+  .cellx h3 {
+    font-family: var(--grot); font-weight: 900; text-transform: uppercase;
+    font-size: 1.375rem; letter-spacing: -0.025em; line-height: 0.95;
+    margin: 0.875rem 0 0.75rem;
+  }
+  .cellx p { margin: 0; font-size: 0.9375rem; color: var(--ink-2); }
+
+  /* ── picks: telemetry cards ─────────────────────────── */
+  .pickx { display: flex; flex-direction: column; }
+  .pick-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-bottom: 0.75rem; border-bottom: 1px solid var(--ink);
+  }
+  .idx { font-size: 0.625rem; font-weight: 700; }
+  .score {
+    font-family: var(--mono); font-size: 0.75rem; color: var(--red);
+    letter-spacing: 0.05em; line-height: 1;
+  }
+  .pick-name {
+    font-family: var(--grot); font-weight: 900; text-transform: uppercase;
+    font-size: 1.25rem; letter-spacing: -0.02em; line-height: 1;
+    margin: 1.25rem 0 0.875rem; word-break: keep-all;
+  }
+  .chips { display: flex; gap: 0.375rem; list-style: none; margin: 0 0 1rem; padding: 0; }
+  .chips li {
+    font-size: 0.5625rem; font-weight: 500;
+    padding: 0.1875rem 0.4375rem; border: 1px solid var(--ink);
+  }
+  .pick-review { margin: 0 0 1.5rem; font-size: 0.875rem; color: var(--ink-2); word-break: keep-all; }
+
+  .readout { margin: auto 0 0; font-size: 0.625rem; }
+  .ro-row {
+    display: grid; grid-template-columns: 2.75rem 1fr auto; align-items: center; gap: 0.625rem;
+    padding: 0.4375rem 0; border-top: 1px solid var(--ink);
+  }
+  .readout dt { font-weight: 500; }
+  .readout dd { margin: 0; }
+  .ro-bar { height: 8px; background: var(--paper-2); border: 1px solid var(--ink); }
+  .ro-fill { display: block; height: 100%; width: var(--w); background: var(--red); }
+  .ro-v { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .ro-price .ro-v-wide { grid-column: 2 / -1; text-align: right; }
+
+  /* ── about ──────────────────────────────────────────── */
+  .about { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 3rem; align-items: start; }
+  @media (max-width: 60rem) { .about { grid-template-columns: 1fr; gap: 1.5rem; } }
+  .about-h {
+    font-family: var(--grot); font-weight: 900; text-transform: uppercase;
+    font-size: clamp(1.75rem, 5.2vw, 4rem);
+    letter-spacing: -0.04em; line-height: 0.9; margin: 0;
+  }
+  .about-r p { margin: 0 0 1.5rem; color: var(--ink-2); font-size: 0.9375rem; }
+
+  /* ── closing hazard band ────────────────────────────── */
+  .band { position: relative; background: var(--ink); color: var(--paper); overflow: hidden; }
+  /* halftone dot matrix. The skill specifies `multiply`, which is correct over a
+     light substrate — over this reversed ink panel it can only darken near-black
+     and renders as nothing, so the dark panel uses `screen` to let the dots read. */
+  .halftone {
+    position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen;
+    /* strong enough to read as a dot matrix, weak enough that 10px mono on top
+       of it stays legible — 0.5 alpha shredded the small copy */
+    background-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.2) 1px, transparent 1.3px);
+    background-size: 6px 6px;
+  }
+  .band-in { position: relative; padding: 5rem 1.5rem; max-width: 60rem; }
+  .label-inv { color: var(--red); }
+  .band h2 {
+    font-family: var(--grot); font-weight: 900; text-transform: uppercase;
+    font-size: clamp(2rem, 6.5vw, 5rem);
+    letter-spacing: -0.04em; line-height: 0.88; margin: 1.25rem 0 1rem;
+  }
+  .band p { margin: 0 0 2rem; color: #b8b8b2; font-size: 0.9375rem; }
+
+  /* ── footer ─────────────────────────────────────────── */
+  .barcode {
+    height: 2.5rem;
+    background-image: repeating-linear-gradient(
+      90deg,
+      var(--ink) 0 2px, transparent 2px 5px,
+      var(--ink) 5px 6px, transparent 6px 11px,
+      var(--ink) 11px 14px, transparent 14px 16px
+    );
+  }
+  .foot-in {
+    display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+    padding: 1.25rem 1.5rem; font-size: 0.625rem;
+    border-top: 2px solid var(--ink);
+  }
+
+  /* ── focus: hard red block, no soft ring ────────────── */
+  :focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>

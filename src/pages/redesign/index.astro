@@ -1,0 +1,102 @@
+---
+/**
+ * Bake-off hub. Deliberately plain — it must not compete visually with the
+ * variants it links to. Throwaway: delete once a direction is picked.
+ */
+import RedesignLayout from '../../layouts/RedesignLayout.astro';
+
+const variants = [
+  {
+    key: 'a',
+    skill: 'minimalist-ui',
+    blurb: 'Warm monochrome, editorial serif, asymmetric bento, muted pastel accents. No gradients, no heavy shadows, no colour bands.',
+    status: 'ready' as const,
+  },
+  {
+    key: 'b',
+    skill: 'high-end-visual-design',
+    blurb: 'Editorial Luxury vibe, editorial-split layout. Cream and espresso, muted sage, film grain, double-bezel cards, floating island nav, blur-in scroll reveals.',
+    status: 'ready' as const,
+  },
+  {
+    key: 'c',
+    skill: 'industrial-brutalist-ui',
+    blurb: 'Swiss Industrial Print archetype. Newsprint substrate, monolithic uppercase Archivo, hazard red as the only accent, 1px blueprint hairlines, mono telemetry, halftone band.',
+    status: 'ready' as const,
+  },
+];
+---
+<RedesignLayout title="Design bake-off — Korean GIM">
+  <main class="page">
+    <h1>Design bake-off</h1>
+    <p class="sub">
+      Three looks, same content, same data. Pick one and it rolls out site-wide.
+      These pages are <code>noindex</code> and live only on the
+      <code>redesign-taste</code> branch.
+    </p>
+
+    <ul class="list">
+      {variants.map(v => (
+        <li>
+          {v.status === 'ready' ? (
+            <a href={`/redesign/${v.key}`}>
+              <span class="key">{v.key.toUpperCase()}</span>
+              <span class="body">
+                <strong>{v.skill}</strong>
+                <span class="blurb">{v.blurb}</span>
+              </span>
+              <span class="go">View →</span>
+            </a>
+          ) : (
+            <div class="pending">
+              <span class="key">{v.key.toUpperCase()}</span>
+              <span class="body">
+                <strong>{v.skill}</strong>
+                <span class="blurb">{v.blurb}</span>
+              </span>
+              <span class="go">Not built yet</span>
+            </div>
+          )}
+        </li>
+      ))}
+    </ul>
+
+    <p class="foot">
+      Reference: <a href="/">the current live home page</a> (unchanged, for comparison).
+    </p>
+  </main>
+</RedesignLayout>
+
+<style>
+  :global(body) {
+    margin: 0;
+    background: #fff;
+    color: #111;
+    font: 16px/1.6 ui-sans-serif, -apple-system, system-ui, sans-serif;
+  }
+  .page { max-width: 44rem; margin: 0 auto; padding: 4rem 1.5rem; }
+  h1 { font-size: 1.5rem; letter-spacing: -0.02em; margin: 0 0 0.5rem; }
+  .sub { color: #666; margin: 0 0 2.5rem; font-size: 0.9375rem; }
+  code { font: 0.85em ui-monospace, monospace; background: #f4f4f4; padding: 1px 5px; border-radius: 3px; }
+
+  .list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; }
+  .list a, .pending {
+    display: grid; grid-template-columns: 2.5rem 1fr auto; gap: 1rem; align-items: center;
+    padding: 1.25rem; border: 1px solid #e5e5e5; border-radius: 10px;
+    text-decoration: none; color: inherit;
+  }
+  .list a { transition: border-color 160ms ease, background-color 160ms ease; }
+  .list a:hover { border-color: #111; background: #fafafa; }
+  .pending { opacity: 0.5; }
+
+  .key { font: 600 0.875rem ui-monospace, monospace; color: #666; }
+  .body { display: grid; gap: 0.25rem; }
+  .blurb { color: #666; font-size: 0.875rem; }
+  .go { font-size: 0.8125rem; color: #666; white-space: nowrap; }
+
+  .foot { margin-top: 3rem; font-size: 0.875rem; color: #666; }
+  @media (max-width: 34rem) {
+    .list a, .pending { grid-template-columns: 2rem 1fr; }
+    .go { display: none; }
+  }
+</style>
