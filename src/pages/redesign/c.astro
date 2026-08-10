@@ -20,15 +20,29 @@
  * Throwaway: delete once a direction is picked.
  */
 import RedesignLayout from '../../layouts/RedesignLayout.astro';
-import { content, getPicks, displayName, TYPE_LABELS, COOK_LABELS } from './_content';
+import {
+  content, getPicks, getTotals, displayName, displayReview, isKoFallback,
+  TYPE_LABELS, COOK_LABELS,
+} from './_content';
 
 const picks = getPicks();
+const totals = getTotals();
 const { hero, highlights, about, finalCta } = content;
 
+// One source for both the desktop bar and the mobile panel, so they can't drift.
+const navItems = [
+  { href: '/what-is-gim', label: 'About' },
+  { href: '/buying-guide', label: 'Guides' },
+  { href: '/articles', label: 'Articles' },
+  { href: '/reviews', label: 'Reviews' },
+];
+
+// Real counts, not invented telemetry. `Scale` still reads 0–10 while the pick
+// score renders out of 5 — that contradiction is the score redraw's to settle.
 const stats = [
-  { k: 'Units logged', v: '17' },
+  { k: 'Reviews', v: String(totals.reviews) },
+  { k: 'Types', v: String(totals.types) },
   { k: 'Scale', v: '0–10' },
-  { k: 'Locales', v: 'EN / KO' },
 ];
 ---
 <RedesignLayout title="Variant C — industrial-brutalist-ui — Korean GIM">
@@ -42,34 +56,35 @@ const stats = [
   </Fragment>
 
   <div class="v">
+    <a href="#main" class="skip">Skip to content</a>
     <div class="noise" aria-hidden="true"></div>
 
-    <!-- ── utility strip: unit ids, revision, coordinates ── -->
-    <div class="util">
-      <span>KOREAN GIM DATABASE</span>
-      <span class="sep" aria-hidden="true">///</span>
-      <span>UNIT / D&#8209;01</span>
-      <span class="sep" aria-hidden="true">///</span>
-      <span>REV 2.6</span>
-      <span class="util-r"><span class="dot-red" aria-hidden="true"></span>ACTIVE</span>
-    </div>
-
     <header class="nav">
-      <a href="/redesign" class="mark">KOREAN GIM<span class="reg">&#174;</span></a>
+      <a href="/redesign" class="mark">KOREAN GIM</a>
       <nav aria-label="Primary">
-        <a href="/what-is-gim">About</a>
-        <a href="/buying-guide">Guides</a>
-        <a href="/articles">Articles</a>
-        <a href="/reviews">Reviews</a>
+        {navItems.map(item => <a href={item.href}>{item.label}</a>)}
       </nav>
       <a href="/ko" class="nav-ko">KO</a>
+      <button
+        type="button"
+        class="mnav-btn"
+        aria-controls="mobile-nav"
+        aria-expanded="false"
+        data-mnav-toggle
+      >Menu</button>
     </header>
 
-    <main>
+    <!-- Disclosure panel, not an overlay: it sits in flow and pushes the page
+         down, so there is no focus to trap and no body scroll to lock. Tab
+         order runs toggle → panel links → page, which is already correct. -->
+    <nav id="mobile-nav" class="mnav" aria-label="Primary" hidden>
+      {navItems.map(item => <a href={item.href}>{item.label}</a>)}
+    </nav>
+
+    <main id="main" tabindex="-1">
       <!-- ── HERO: macro-typography vs dense telemetry ──── -->
       <section class="hero">
         <div class="hero-meta">
-          <span class="label">[ SECTION 00 ]</span>
           <span class="label">{hero.eyebrow}</span>
         </div>
 
@@ -84,7 +99,7 @@ const stats = [
             {stats.map(s => (
               <div class="tel-row">
                 <dt>{s.k}</dt>
-                <dd><data value={s.v}>{s.v}</data></dd>
+                <dd>{s.v}</dd>
               </div>
             ))}
           </dl>
@@ -104,7 +119,6 @@ const stats = [
       <section class="section">
         <div class="sec-bar">
           <h2 class="label">[ {highlights.heading} ]</h2>
-          <span class="label" aria-hidden="true">03 UNITS</span>
         </div>
 
         <div class="blueprint">
@@ -133,20 +147,30 @@ const stats = [
           {picks.map((p, i) => (
             <article class="cellx pickx">
               <header class="pick-head">
-                <span class="idx" aria-hidden="true">D&#8209;0{i + 1}</span>
+                <span class="idx" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
                 <span class="score" aria-label={`Rated ${p.scoreNum} out of 5`}>
                   <span aria-hidden="true">{'█'.repeat(p.scoreNum)}{'░'.repeat(5 - p.scoreNum)}</span>
                 </span>
               </header>
 
-              <h3 class="pick-name">{displayName(p)}</h3>
+              {/* lang follows whichever language actually rendered, so a screen
+                  reader doesn't read Korean with an English voice */}
+              <h3 class="pick-name" lang={isKoFallback(p.name_en) ? 'ko' : undefined}>
+                {p.link ? (
+                  <a href={p.link} target="_blank" rel="noopener noreferrer">
+                    {displayName(p)}<span class="sr-only" lang="en"> (opens in a new tab)</span>
+                  </a>
+                ) : displayName(p)}
+              </h3>
 
               <ul class="chips">
                 <li>{TYPE_LABELS[p.type] ?? p.type}</li>
                 <li>{COOK_LABELS[p.cook] ?? p.cook}</li>
               </ul>
 
-              <p class="pick-review">{p.review}</p>
+              <p class="pick-review" lang={isKoFallback(p.review_en) ? 'ko' : undefined}>
+                {displayReview(p)}
+              </p>
 
               <dl class="readout">
                 {[{ k: 'OIL', v: p.oil }, { k: 'SALT', v: p.salt }].map(m => (
@@ -155,12 +179,14 @@ const stats = [
                     <dd class="ro-bar" aria-hidden="true">
                       <span class="ro-fill" style={`--w:${m.v * 10}%`}></span>
                     </dd>
-                    <dd class="ro-v"><output>{m.v}</output>/10</dd>
+                    <dd class="ro-v">{m.v}/10</dd>
                   </div>
                 ))}
                 <div class="ro-row ro-price">
                   <dt>PRICE</dt>
-                  <dd class="ro-v ro-v-wide">{p.price}</dd>
+                  {/* one row ships with no price — keep the row so the three
+                      cards stay aligned, show the gap honestly */}
+                  <dd class="ro-v ro-v-wide">{p.price || '—'}</dd>
                 </div>
               </dl>
             </article>
@@ -172,7 +198,6 @@ const stats = [
       <section class="section">
         <div class="sec-bar">
           <h2 class="label">[ {about.eyebrow} ]</h2>
-          <span class="label" aria-hidden="true">FIG. 01</span>
         </div>
 
         <div class="about">
@@ -190,21 +215,24 @@ const stats = [
       <section class="band">
         <div class="halftone" aria-hidden="true"></div>
         <div class="band-in">
-          <span class="label label-inv">[ NEXT STEP ]</span>
-          <h2>{finalCta.heading}</h2>
-          <p>{finalCta.sub}</p>
-          <a class="btn btn-inv" href={finalCta.button.href}>
-            {finalCta.button.label}<span aria-hidden="true"> &gt;&gt;&gt;</span>
-          </a>
+          <div>
+            <span class="label label-inv">[ NEXT STEP ]</span>
+            <h2>{finalCta.heading}</h2>
+          </div>
+          <div class="band-r">
+            <p>{finalCta.sub}</p>
+            <a class="btn btn-inv" href={finalCta.button.href}>
+              {finalCta.button.label}<span aria-hidden="true"> &gt;&gt;&gt;</span>
+            </a>
+          </div>
         </div>
       </section>
     </main>
 
     <footer class="foot">
-      <div class="barcode" aria-hidden="true"></div>
       <div class="foot-in">
         <span>&#169; 2026 KOREAN GIM DATABASE</span>
-        <span>KOREAN SEAWEED, REVIEWED&#8202;&#8482;</span>
+        <span>KOREAN SEAWEED, REVIEWED</span>
       </div>
     </footer>
   </div>
@@ -224,7 +252,16 @@ const stats = [
     --paper-2: #eae8e3;
     --ink: #0a0a0a;
     --ink-2: #3a3a36;
+    /* One accent, three tonal steps — the substrates pull in opposite
+       directions, so no single red can carry text on both.
+         --red       graphics only (rules, meter fills, score, focus ring).
+                     Non-text, needs 3:1 — 4.22 on paper, 4.26 on ink. OK.
+         --red-text  red text on paper, and paper text on red (same pair):
+                     5.37 on paper, 4.84 on the card hover tint.
+         --red-lift  red text on the reversed ink panel: 5.04. */
     --red: #e61919;
+    --red-text: #c81111;
+    --red-lift: #f03a2a;
 
     --grot: 'Archivo', 'Archivo Black', 'Helvetica Neue', sans-serif;
     --mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
@@ -245,25 +282,26 @@ const stats = [
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
+  /* ── skip link: off-canvas until focused, then a hard ink block ── */
+  .skip {
+    position: absolute; top: 0; left: 0; z-index: 10;
+    transform: translateY(-100%);
+    padding: 0.75rem 1.25rem; font-size: 0.6875rem; font-weight: 500;
+    background: var(--ink); color: var(--paper); text-decoration: none;
+  }
+  .skip:focus { transform: translateY(0); }
+  /* programmatic target only — never reached by Tab, so no indicator is owed */
+  main:focus { outline: none; }
+
   /* every corner is 90 degrees */
   .v :where(a, button, div, section, article, span, li, dd, dt) { border-radius: 0; }
 
   /* ── micro-typography: mono, uppercase, tracked ─────── */
-  .label, .util, .nav nav a, .nav-ko, .chips li, .telemetry, .readout, .foot-in, .btn, .cell-num, .idx {
+  .label, .skip, .nav nav a, .nav-ko, .mnav-btn, .mnav a, .chips li, .telemetry, .readout, .foot-in, .btn, .cell-num, .idx {
     font-family: var(--mono);
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
-
-  .util {
-    display: flex; align-items: center; gap: 0.75rem;
-    padding: 0.5rem 1.5rem; font-size: 0.625rem;
-    background: var(--ink); color: var(--paper);
-  }
-  .util .sep { color: var(--red); }
-  .util-r { margin-left: auto; display: inline-flex; align-items: center; gap: 0.5rem; }
-  .dot-red { width: 6px; height: 6px; background: var(--red); display: inline-block; }
-  @media (max-width: 40rem) { .util .sep, .util span:nth-child(4) { display: none; } }
 
   /* ── nav: rigid, bordered, no float ─────────────────── */
   .nav {
@@ -276,24 +314,56 @@ const stats = [
     letter-spacing: -0.02em; text-transform: uppercase;
     color: var(--ink); text-decoration: none; margin-right: auto;
   }
-  .reg { color: var(--red); font-size: 0.75em; vertical-align: super; }
   .nav nav { display: flex; gap: 1.25rem; }
   .nav nav a, .nav-ko {
     font-size: 0.6875rem; color: var(--ink); text-decoration: none;
     padding: 0.25rem 0; border-bottom: 2px solid transparent;
     transition: border-color 100ms linear, color 100ms linear;
   }
-  .nav nav a:hover, .nav-ko:hover { border-bottom-color: var(--red); color: var(--red); }
+  .nav nav a:hover, .nav-ko:hover { border-bottom-color: var(--red-text); color: var(--red-text); }
   .nav-ko { border: 1px solid var(--ink); padding: 0.25rem 0.5rem; }
-  .nav-ko:hover { background: var(--red); border-color: var(--red); color: var(--paper); }
-  @media (max-width: 46rem) { .nav nav { display: none; } }
+  .nav-ko:hover { background: var(--red-text); border-color: var(--red-text); color: var(--paper); }
+
+  /* ── mobile disclosure nav ──────────────────────────── */
+  /* Toggle and panel are desktop-hidden by default and switched on below the
+     breakpoint, so `hidden` and the media query can't fight each other. */
+  .mnav-btn, .mnav { display: none; }
+
+  .mnav-btn {
+    font-size: 0.6875rem; font-weight: 500;
+    border: 1px solid var(--ink); background: transparent; color: var(--ink);
+    padding: 0.25rem 0.5rem; cursor: pointer;
+    transition: background-color 100ms linear, color 100ms linear;
+  }
+  .mnav-btn:hover { background: var(--ink); color: var(--paper); }
+
+  @media (max-width: 46rem) {
+    .nav nav { display: none; }
+    .nav { gap: 0.75rem; }
+    .mnav-btn { display: inline-block; }
+    /* same hairline mechanism as .blueprint — 1px gaps on an ink ground */
+    .mnav {
+      display: grid; gap: 1px;
+      background: var(--ink); border-bottom: 2px solid var(--ink);
+    }
+    .mnav[hidden] { display: none; }
+  }
+
+  .mnav a {
+    background: var(--paper); color: var(--ink); text-decoration: none;
+    /* 1rem block padding clears a 48px touch target at this font size */
+    padding: 1rem 1.5rem; font-size: 0.8125rem; font-weight: 500;
+    transition: background-color 100ms linear, color 100ms linear;
+  }
+  /* inversion, not red — red on paper is only 4.22:1 and would fail AA here */
+  .mnav a:hover, .mnav a:active { background: var(--ink); color: var(--paper); }
 
   /* ── hero: macro typography ─────────────────────────── */
   .hero { padding: 3rem 1.5rem 0; }
   .hero-meta { display: flex; justify-content: space-between; gap: 1rem; }
   .label { font-size: 0.6875rem; font-weight: 500; margin: 0; }
   .link { color: var(--ink); text-decoration: none; }
-  .link:hover { color: var(--red); }
+  .link:hover { color: var(--red-text); }
 
   .hero h1 {
     font-family: var(--grot);
@@ -337,8 +407,8 @@ const stats = [
     transition: background-color 100ms linear, color 100ms linear, border-color 100ms linear;
   }
   .btn:hover { background: var(--ink); color: var(--paper); }
-  .btn:active { background: var(--red); border-color: var(--red); color: var(--paper); }
-  .btn-red { background: var(--red); border-color: var(--red); color: var(--paper); }
+  .btn:active { background: var(--red-text); border-color: var(--red-text); color: var(--paper); }
+  .btn-red { background: var(--red-text); border-color: var(--red-text); color: var(--paper); }
   .btn-red:hover { background: var(--ink); border-color: var(--ink); }
   .btn-inv { border-color: var(--paper); color: var(--paper); }
   .btn-inv:hover { background: var(--paper); color: var(--ink); }
@@ -363,7 +433,7 @@ const stats = [
   @media (max-width: 60rem) { .blueprint { grid-template-columns: 1fr; } }
   .cellx { background: var(--paper); padding: 1.75rem; }
 
-  .cell-num { font-size: 0.625rem; color: var(--red); font-weight: 700; }
+  .cell-num { font-size: 0.625rem; color: var(--red-text); font-weight: 700; }
   .cellx h3 {
     font-family: var(--grot); font-weight: 900; text-transform: uppercase;
     font-size: 1.375rem; letter-spacing: -0.025em; line-height: 0.95;
@@ -372,7 +442,26 @@ const stats = [
   .cellx p { margin: 0; font-size: 0.9375rem; color: var(--ink-2); }
 
   /* ── picks: telemetry cards ─────────────────────────── */
-  .pickx { display: flex; flex-direction: column; }
+  .pickx {
+    display: flex; flex-direction: column;
+    position: relative;
+    transition: background-color 100ms linear;
+  }
+
+  /* whole card is the hit area, but the accessible name stays the product
+     name — `:has` so the one row without a link gets no false affordance */
+  .pick-name a { color: inherit; text-decoration: none; }
+  .pick-name a::after { content: ''; position: absolute; inset: 0; }
+  .pickx:has(.pick-name a):hover { background: var(--paper-2); }
+  /* the readout track is paper-2, so swap it back or it vanishes on hover */
+  .pickx:has(.pick-name a):hover .ro-bar { background: var(--paper); }
+  .pickx:has(.pick-name a:focus-visible) { outline: 3px solid var(--red); outline-offset: -3px; }
+  .pick-name a:focus-visible { outline: none; }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip-path: inset(50%); white-space: nowrap;
+  }
   .pick-head {
     display: flex; align-items: center; justify-content: space-between;
     padding-bottom: 0.75rem; border-bottom: 1px solid var(--ink);
@@ -428,8 +517,17 @@ const stats = [
     background-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.2) 1px, transparent 1.3px);
     background-size: 6px 6px;
   }
-  .band-in { position: relative; padding: 5rem 1.5rem; max-width: 60rem; }
-  .label-inv { color: var(--red); }
+  /* same 1.25fr/0.75fr split as .about directly above, so the two closing
+     sections share a rhythm — a centred container would be the only one on
+     the page and would read as a different system */
+  .band-in {
+    position: relative; padding: 5rem 1.5rem;
+    display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 3rem; align-items: start;
+  }
+  @media (max-width: 60rem) { .band-in { grid-template-columns: 1fr; gap: 1.5rem; } }
+  /* the button sits at the column foot, level with the heading's last line */
+  .band-r { display: flex; flex-direction: column; align-items: start; }
+  .label-inv { color: var(--red-lift); }
   .band h2 {
     font-family: var(--grot); font-weight: 900; text-transform: uppercase;
     font-size: clamp(2rem, 6.5vw, 5rem);
@@ -438,15 +536,6 @@ const stats = [
   .band p { margin: 0 0 2rem; color: #b8b8b2; font-size: 0.9375rem; }
 
   /* ── footer ─────────────────────────────────────────── */
-  .barcode {
-    height: 2.5rem;
-    background-image: repeating-linear-gradient(
-      90deg,
-      var(--ink) 0 2px, transparent 2px 5px,
-      var(--ink) 5px 6px, transparent 6px 11px,
-      var(--ink) 11px 14px, transparent 14px 16px
-    );
-  }
   .foot-in {
     display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
     padding: 1.25rem 1.5rem; font-size: 0.625rem;
@@ -458,3 +547,25 @@ const stats = [
 
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-mnav-toggle]');
+  const panel = document.getElementById('mobile-nav');
+
+  if (toggle && panel) {
+    const setOpen = (open: boolean) => {
+      panel.hidden = !open;
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.textContent = open ? 'Close' : 'Menu';
+    };
+
+    toggle.addEventListener('click', () => setOpen(panel.hidden));
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !panel.hidden) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+  }
+</script>

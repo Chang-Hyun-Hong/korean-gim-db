@@ -20,19 +20,52 @@ export interface Pick {
   scoreNum: number;
   price: string;
   review: string;
+  review_en: string;
   desc: string;
   link: string;
 }
 
-/** First three reviews, same slice the real home page uses. */
-export function getPicks(): Pick[] {
+function readRows(): Pick[] {
   const dataPath = resolve(process.cwd(), 'public/data.json');
-  return JSON.parse(readFileSync(dataPath, 'utf-8')).slice(0, 3);
+  return JSON.parse(readFileSync(dataPath, 'utf-8'));
 }
 
-/** name_en is empty for every row today (blocked on Notion), so fall back to Korean. */
+/**
+ * Top three by score. The section calls them picks and says "worth trying
+ * first", so they have to be the best-rated — the real home page still takes
+ * the first three in database order (index.astro), which surfaces 2/5 and 1/5
+ * products as recommendations. Ties keep database order (sort is stable).
+ */
+export function getPicks(): Pick[] {
+  return readRows()
+    .sort((a, b) => b.scoreNum - a.scoreNum)
+    .slice(0, 3);
+}
+
+/** Derived so the numbers on the page can't drift from the data. */
+export function getTotals(): { reviews: number; types: number } {
+  const rows = readRows();
+  return {
+    reviews: rows.length,
+    types: new Set(rows.map(r => r.type)).size,
+  };
+}
+
+/**
+ * name_en and review_en are empty for all 17 rows today (blocked on Notion), so
+ * both fall back to Korean. Callers need to know *which* language came back so
+ * they can mark it up — hence `isKoFallback`, used to set lang="ko".
+ */
 export function displayName(p: Pick): string {
   return p.name_en || p.name;
+}
+
+export function displayReview(p: Pick): string {
+  return p.review_en || p.review;
+}
+
+export function isKoFallback(en: string): boolean {
+  return !en?.trim();
 }
 
 export const TYPE_LABELS: Record<string, string> = {
