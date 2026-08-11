@@ -25,6 +25,12 @@ export interface Pick {
   review_en: string;
   desc: string;
   link: string;
+  /**
+   * Filename of the product shot, resolved against public/products/.
+   * Empty for every row today — the card simply omits the plate until a
+   * photo exists, so there is no placeholder box to look unfinished.
+   */
+  image?: string;
 }
 
 function readRows(): Pick[] {

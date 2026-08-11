@@ -148,6 +148,18 @@ const stats = [
         <div class="blueprint blueprint-3">
           {picks.map((p, i) => (
             <article class="cellx pickx">
+              {p.image && (
+                <img
+                  class="pick-shot"
+                  src={`/products/${p.image}`}
+                  alt={`Packaging: ${displayName(p)}`}
+                  width="600"
+                  height="600"
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
+
               <header class="pick-head">
                 <span class="idx" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
                 {/* the readout below already says 7/10 twice — same idiom here,
@@ -495,6 +507,27 @@ const stats = [
 
   /* ── picks: telemetry cards ─────────────────────────── */
   .pickx { display: flex; flex-direction: column; }
+
+  /* Full-bleed plate at the head of the cell — catalogue language, which is
+     what this archetype is actually good at. Negative margins cancel the
+     cell padding; aspect-ratio reserves the box so nothing shifts on load.
+     Grayscale is deliberate: Korean packaging is loud, and letting it in
+     would break the one-accent rule and make 17 phone photos read as 17
+     different sets. Hover lifts it to true colour. */
+  .pick-shot {
+    display: block;
+    width: calc(100% + 3.5rem);
+    max-width: none;
+    margin: -1.75rem -1.75rem 1.5rem;
+    /* 4:3, not square — a square plate ran to 62% of the card height and made
+       the section image-led, which is the opposite of what this grid is for */
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-bottom: 1px solid var(--ink);
+    filter: grayscale(1) contrast(1.08);
+    transition: filter 100ms linear;
+  }
+  .cellx:has(.stretch a):hover .pick-shot { filter: none; }
 
   .sr-only {
     position: absolute; width: 1px; height: 1px; overflow: hidden;
