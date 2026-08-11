@@ -9,6 +9,7 @@
  */
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { getCollection } from 'astro:content';
 
 export interface Pick {
   name: string;
@@ -74,6 +75,31 @@ export function isKoFallback(en: string): boolean {
   return !en?.trim();
 }
 
+export interface ArticleLink {
+  slug: string;
+  title: string;
+  description: string;
+  category: string;
+  /** ISO date — the blueprint substrate wants a sortable stamp, not prose. */
+  date: string;
+}
+
+/** Latest English articles — same filter and sort the real home page uses. */
+export async function getLatestArticles(): Promise<ArticleLink[]> {
+  const all = await getCollection('articles');
+  return all
+    .filter(e => e.id.startsWith('en/') && !e.data.draft)
+    .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf())
+    .slice(0, 3)
+    .map(e => ({
+      slug: e.id.replace(/^en\//, ''),
+      title: e.data.title,
+      description: e.data.description,
+      category: e.data.category,
+      date: e.data.publishedAt.toISOString().slice(0, 10),
+    }));
+}
+
 export const TYPE_LABELS: Record<string, string> = {
   재래김: 'Traditional',
   돌김: 'Stone Laver',
@@ -117,6 +143,13 @@ export const content = {
     heading: "Editor's picks",
     sub: 'A handful of gim worth trying first.',
     cta: { label: 'See all reviews', href: '/reviews' },
+  },
+
+  // copy lifted verbatim from the production locale file (home.articles_*)
+  articles: {
+    heading: 'Latest articles',
+    sub: 'Fresh writing on gim, recipes, and site updates.',
+    cta: { label: 'Read all articles', href: '/articles' },
   },
 
   about: {

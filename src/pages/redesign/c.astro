@@ -21,12 +21,13 @@
  */
 import RedesignLayout from '../../layouts/RedesignLayout.astro';
 import {
-  content, getPicks, getTotals, displayName, displayReview, isKoFallback,
-  TYPE_LABELS, COOK_LABELS,
+  content, getPicks, getTotals, getLatestArticles, displayName, displayReview,
+  isKoFallback, TYPE_LABELS, COOK_LABELS,
 } from './_content';
 
 const picks = getPicks();
 const totals = getTotals();
+const articles = await getLatestArticles();
 const { hero, highlights, about, finalCta } = content;
 
 // One source for both the desktop bar and the mobile panel, so they can't drift.
@@ -159,7 +160,7 @@ const stats = [
 
               {/* lang follows whichever language actually rendered, so a screen
                   reader doesn't read Korean with an English voice */}
-              <h3 class="pick-name" lang={isKoFallback(p.name_en) ? 'ko' : undefined}>
+              <h3 class="pick-name stretch" lang={isKoFallback(p.name_en) ? 'ko' : undefined}>
                 {p.link ? (
                   <a href={p.link} target="_blank" rel="noopener noreferrer">
                     {displayName(p)}<span class="sr-only" lang="en"> (opens in a new tab)</span>
@@ -197,6 +198,37 @@ const stats = [
           ))}
         </div>
       </section>
+
+      <!-- ── ARTICLES: same blueprint cells, dated ──────── -->
+      {articles.length > 0 && (
+        <section class="section">
+          <div class="sec-bar">
+            <h2 class="label">[ {content.articles.heading} ]</h2>
+            <a class="label link" href={content.articles.cta.href}>
+              {content.articles.cta.label}<span aria-hidden="true"> &gt;&gt;&gt;</span>
+            </a>
+          </div>
+
+          <p class="sec-sub">{content.articles.sub}</p>
+
+          {/* column count follows the item count so a short list can't leave
+              an empty cell showing through as a black block */}
+          <div class="blueprint" style={`--cols:${Math.min(articles.length, 3)}`}>
+            {articles.map(a => (
+              <article class="cellx artx">
+                <header class="art-head">
+                  <time datetime={a.date}>{a.date}</time>
+                  <span class="art-cat">{a.category}</span>
+                </header>
+                <h3 class="stretch">
+                  <a href={`/articles/${a.slug}`}>{a.title}</a>
+                </h3>
+                <p>{a.description}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
 
       <!-- ── ABOUT: macro type + mono column ────────────── -->
       <section class="section">
@@ -301,7 +333,7 @@ const stats = [
   .v :where(a, button, div, section, article, span, li, dd, dt) { border-radius: 0; }
 
   /* ── micro-typography: mono, uppercase, tracked ─────── */
-  .label, .skip, .nav nav a, .nav-ko, .mnav-btn, .mnav a, .chips li, .telemetry, .readout, .foot-in, .btn, .cell-num, .idx {
+  .label, .skip, .nav nav a, .nav-ko, .mnav-btn, .mnav a, .chips li, .art-head, .telemetry, .readout, .foot-in, .btn, .cell-num, .idx {
     font-family: var(--mono);
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -429,13 +461,17 @@ const stats = [
   /* ── blueprint grid: 1px hairlines via gap on ink ───── */
   .blueprint {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(var(--cols, 3), 1fr);
     gap: 1px;
     background: var(--ink);
     border: 1px solid var(--ink);
   }
   @media (max-width: 60rem) { .blueprint { grid-template-columns: 1fr; } }
-  .cellx { background: var(--paper); padding: 1.75rem; }
+  .cellx {
+    background: var(--paper); padding: 1.75rem;
+    position: relative; /* anchors the stretched link's ::after */
+    transition: background-color 100ms linear;
+  }
 
   .cell-num { font-size: 0.625rem; color: var(--red-text); font-weight: 700; }
   .cellx h3 {
@@ -445,22 +481,20 @@ const stats = [
   }
   .cellx p { margin: 0; font-size: 0.9375rem; color: var(--ink-2); }
 
-  /* ── picks: telemetry cards ─────────────────────────── */
-  .pickx {
-    display: flex; flex-direction: column;
-    position: relative;
-    transition: background-color 100ms linear;
-  }
-
-  /* whole card is the hit area, but the accessible name stays the product
-     name — `:has` so the one row without a link gets no false affordance */
-  .pick-name a { color: inherit; text-decoration: none; }
-  .pick-name a::after { content: ''; position: absolute; inset: 0; }
-  .pickx:has(.pick-name a):hover { background: var(--paper-2); }
+  /* ── stretched link: shared by pick and article cells ─ */
+  /* The whole cell is the hit area, but the accessible name stays the title.
+     `:has` gates it so a cell without a link — the highlights, and the one
+     pick with no URL — gets no false affordance. */
+  .stretch a { color: inherit; text-decoration: none; }
+  .stretch a::after { content: ''; position: absolute; inset: 0; }
+  .cellx:has(.stretch a):hover { background: var(--paper-2); }
   /* the readout track is paper-2, so swap it back or it vanishes on hover */
-  .pickx:has(.pick-name a):hover .ro-bar { background: var(--paper); }
-  .pickx:has(.pick-name a:focus-visible) { outline: 3px solid var(--red); outline-offset: -3px; }
-  .pick-name a:focus-visible { outline: none; }
+  .cellx:has(.stretch a):hover .ro-bar { background: var(--paper); }
+  .cellx:has(.stretch a:focus-visible) { outline: 3px solid var(--red); outline-offset: -3px; }
+  .stretch a:focus-visible { outline: none; }
+
+  /* ── picks: telemetry cards ─────────────────────────── */
+  .pickx { display: flex; flex-direction: column; }
 
   .sr-only {
     position: absolute; width: 1px; height: 1px; overflow: hidden;
@@ -501,6 +535,17 @@ const stats = [
   .ro-fill { display: block; height: 100%; width: var(--w); background: var(--red); }
   .ro-v { font-weight: 700; font-variant-numeric: tabular-nums; }
   .ro-price .ro-v-wide { grid-column: 2 / -1; text-align: right; }
+
+  /* ── articles: dated blueprint cells ────────────────── */
+  /* title, body and hover all come from .cellx — only the dated head row
+     and the category tag are new */
+  .art-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    padding-bottom: 0.75rem; border-bottom: 1px solid var(--ink);
+    font-size: 0.625rem;
+  }
+  .art-head time { font-variant-numeric: tabular-nums; }
+  .art-cat { font-size: 0.5625rem; padding: 0.1875rem 0.4375rem; border: 1px solid var(--ink); }
 
   /* ── about ──────────────────────────────────────────── */
   .about { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 3rem; align-items: start; }
