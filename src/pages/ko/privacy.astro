@@ -1,0 +1,87 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { useTranslations } from '../../i18n/utils';
+
+const locale = 'ko' as const;
+const t = useTranslations(locale);
+---
+<Layout
+  title={t('legal.privacy_title')}
+  description={t('legal.privacy_description')}
+  lang={locale}
+  type="article"
+>
+  <Header locale={locale} />
+
+  <main id="main" tabindex="-1" class="max-w-3xl mx-auto px-6 py-16">
+    <h1 class="text-text-primary mb-4 font-medium" style="font-size: var(--text-h1); line-height: var(--text-h1--line-height);">
+      {t('legal.privacy_title')}
+    </h1>
+    <p class="text-text-muted text-sm mb-12">{t('legal.updated')}</p>
+
+    <div class="prose">
+      <p>
+        맛있는 김 DB는 개인이 운영하는 리뷰 사이트입니다. 회원가입도, 뉴스레터도,
+        댓글 입력란도, 광고도 없습니다.
+      </p>
+
+      <h2>이 사이트가 수집하는 것</h2>
+      <p>
+        없습니다. 분석 도구를 전혀 쓰지 않습니다 — 구글 애널리틱스도, 추적
+        픽셀도, 이 사이트가 심는 쿠키도 없습니다. 방문자가 이 사이트에서 무엇을
+        보든 제가 기록하거나 개인과 연결하지 않습니다.
+      </p>
+
+      <h2>호스트가 남기는 기록</h2>
+      <p>
+        이 사이트는 Vercel에서 제공됩니다. 다른 웹 호스트와 마찬가지로 Vercel
+        서버는 일반적인 접속 로그 — IP 주소, 브라우저 정보(user-agent), 요청한
+        페이지 — 를 남깁니다. 페이지를 전달하고 악용을 막기 위한 것이며, 이
+        로그는 Vercel이 자체 개인정보처리방침에 따라 보관합니다. 저는 사본을
+        따로 갖고 있지 않고, 이를 이용해 어떤 프로필도 만들지 않습니다.
+      </p>
+
+      <h2>폰트</h2>
+      <p>
+        한국어 페이지는 공개 CDN인 jsDelivr에서 Pretendard 서체를 불러옵니다.
+        따라서 방문자의 브라우저가 <code>jsdelivr.net</code>에 직접 접속하게
+        되고, jsDelivr는 방문자의 IP 주소를 볼 수 있습니다. 그 외 서체는 모두 이
+        사이트에서 직접 제공합니다.
+      </p>
+
+      <h2>제품 링크를 눌렀을 때</h2>
+      <p>
+        제품 링크는 외부 판매처 — 주로 쿠팡과 네이버 스마트스토어 — 로
+        연결됩니다. 그곳에 도착한 뒤부터는 해당 사이트의 규칙이 적용되며, 그쪽에서
+        자체 쿠키를 심을 수 있습니다. 방문자가 무엇을 봤는지, 무엇을 샀는지는 이
+        사이트로 전달되지 않습니다.
+      </p>
+      <p>
+        이 사이트는 어떤 제휴(어필리에이트) 프로그램에도 참여하고 있지 않으며,
+        해당 링크로 수수료를 받지 않습니다.
+      </p>
+
+      <h2>아동</h2>
+      <p>
+        이 사이트는 아동을 대상으로 하지 않으며, 누구의 개인정보도 알면서
+        수집하지 않습니다.
+      </p>
+
+      <h2>변경</h2>
+      <p>
+        위 내용이 달라지면 — 분석 도구 도입, 제휴 프로그램 참여, 뉴스레터 시작 —
+        이 페이지를 먼저 고치고 맨 위 날짜를 갱신합니다.
+      </p>
+
+      <h2>문의</h2>
+      <p>
+        이 방침에 대한 문의:
+        <a href="mailto:andyhong315@gmail.com">andyhong315@gmail.com</a>
+      </p>
+    </div>
+  </main>
+
+  <Footer locale={locale} />
+</Layout>

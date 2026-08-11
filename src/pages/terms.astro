@@ -1,0 +1,81 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { useTranslations } from '../i18n/utils';
+
+const locale = 'en' as const;
+const t = useTranslations(locale);
+---
+<Layout
+  title={t('legal.terms_title')}
+  description={t('legal.terms_description')}
+  lang={locale}
+  type="article"
+>
+  <Header locale={locale} />
+
+  <main id="main" tabindex="-1" class="max-w-3xl mx-auto px-6 py-16">
+    <h1 class="font-serif text-text-primary mb-4" style="font-size: var(--text-h1); line-height: var(--text-h1--line-height);">
+      {t('legal.terms_title')}
+    </h1>
+    <p class="text-text-muted text-sm mb-12">{t('legal.updated')}</p>
+
+    <div class="prose">
+      <h2>What this site is</h2>
+      <p>
+        A personal record of gim I bought and ate, with my own ratings. It is
+        one person's opinion — not laboratory testing, and not professional
+        nutritional advice.
+      </p>
+
+      <h2>Ratings and prices</h2>
+      <p>
+        Scores reflect my taste on the day I tried the product. Recipes,
+        processing and packaging change over time, and a product you buy today
+        may not be the one I rated. Prices are whatever the source listed at the
+        last data sync, not a live quote — check the shop's own page before
+        buying.
+      </p>
+
+      <h2>Allergies and food safety</h2>
+      <p>
+        Gim products may contain or be processed alongside allergens, and many
+        seasoned varieties are high in sodium. Read the actual package. If you
+        have an allergy or a medical condition, rely on the manufacturer's
+        labelling, not on this site.
+      </p>
+
+      <h2>Outside links</h2>
+      <p>
+        Links to shops are a convenience. I don't run those shops and I'm not
+        responsible for their content, prices, stock, delivery, or how they
+        handle your order. Any purchase is a contract between you and that
+        shop. This site is not part of any affiliate programme and earns no
+        commission on those links.
+      </p>
+
+      <h2>Using the content</h2>
+      <p>
+        The text, ratings and photos here are mine. You're welcome to quote a
+        sentence or two with a link back. Republishing the review database
+        wholesale, or using it to train a commercial product, needs a
+        conversation first.
+      </p>
+
+      <h2>No warranty</h2>
+      <p>
+        This site is provided as is. I make no guarantee that it will be
+        accurate, complete, or available without interruption.
+      </p>
+
+      <h2>Contact and governing law</h2>
+      <p>
+        Questions: <a href="mailto:andyhong315@gmail.com">andyhong315@gmail.com</a>.
+        These terms are governed by the laws of the Republic of Korea.
+      </p>
+    </div>
+  </main>
+
+  <Footer locale={locale} />
+</Layout>

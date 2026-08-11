@@ -1,0 +1,79 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { useTranslations } from '../../i18n/utils';
+
+const locale = 'ko' as const;
+const t = useTranslations(locale);
+---
+<Layout
+  title={t('legal.terms_title')}
+  description={t('legal.terms_description')}
+  lang={locale}
+  type="article"
+>
+  <Header locale={locale} />
+
+  <main id="main" tabindex="-1" class="max-w-3xl mx-auto px-6 py-16">
+    <h1 class="text-text-primary mb-4 font-medium" style="font-size: var(--text-h1); line-height: var(--text-h1--line-height);">
+      {t('legal.terms_title')}
+    </h1>
+    <p class="text-text-muted text-sm mb-12">{t('legal.updated')}</p>
+
+    <div class="prose">
+      <h2>이 사이트는 무엇인가</h2>
+      <p>
+        제가 직접 사서 먹어본 김을 기록하고 점수를 매긴 개인 사이트입니다. 한
+        사람의 의견이며, 실험실 검사 결과도 아니고 전문적인 영양 조언도
+        아닙니다.
+      </p>
+
+      <h2>평점과 가격</h2>
+      <p>
+        점수는 제가 그 제품을 먹어본 날의 제 입맛을 반영합니다. 배합과 가공,
+        포장은 시간이 지나며 바뀌기 때문에 지금 사는 제품이 제가 평가한 그
+        제품이 아닐 수 있습니다. 가격은 마지막 데이터 동기화 시점에 판매처에
+        표시돼 있던 값이며 실시간 가격이 아닙니다. 사기 전에 판매처 페이지에서
+        직접 확인하세요.
+      </p>
+
+      <h2>알레르기와 식품 안전</h2>
+      <p>
+        김 제품에는 알레르기 유발 물질이 들어 있거나 같은 설비에서 함께 가공될
+        수 있고, 조미김은 나트륨 함량이 높은 경우가 많습니다. 실제 제품 포장을
+        읽어보세요. 알레르기나 지병이 있다면 이 사이트가 아니라 제조사 표시를
+        기준으로 판단해야 합니다.
+      </p>
+
+      <h2>외부 링크</h2>
+      <p>
+        판매처 링크는 편의를 위한 것입니다. 저는 그 쇼핑몰을 운영하지 않으며,
+        해당 사이트의 내용·가격·재고·배송, 주문 처리에 대해 책임지지 않습니다.
+        구매는 방문자와 그 판매처 사이의 계약입니다. 이 사이트는 어떤 제휴
+        프로그램에도 참여하고 있지 않으며 해당 링크로 수수료를 받지 않습니다.
+      </p>
+
+      <h2>콘텐츠 이용</h2>
+      <p>
+        이곳의 글과 평점, 사진은 제가 만든 것입니다. 출처 링크를 달고 한두 문장
+        인용하는 것은 환영합니다. 다만 리뷰 데이터베이스를 통째로 옮겨 싣거나
+        상업용 제품 학습에 쓰는 것은 먼저 문의해 주셔야 합니다.
+      </p>
+
+      <h2>보증하지 않는 것</h2>
+      <p>
+        이 사이트는 있는 그대로 제공됩니다. 내용이 정확하다거나 빠짐없다거나
+        중단 없이 접속된다는 점을 보장하지 않습니다.
+      </p>
+
+      <h2>문의 및 준거법</h2>
+      <p>
+        문의: <a href="mailto:andyhong315@gmail.com">andyhong315@gmail.com</a>.
+        본 약관은 대한민국 법을 따릅니다.
+      </p>
+    </div>
+  </main>
+
+  <Footer locale={locale} />
+</Layout>

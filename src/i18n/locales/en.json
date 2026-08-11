@@ -4,6 +4,18 @@
     "tagline": "Seaweed review database — find your perfect gim by oiliness, saltiness & rating.",
     "footer_tagline": "Korean seaweed, reviewed."
   },
+  "footer": {
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "disclosure": "No paid placements. Product links go straight to the shop and earn this site nothing."
+  },
+  "legal": {
+    "updated": "Last updated 11 August 2026",
+    "privacy_title": "Privacy Policy",
+    "privacy_description": "What this site collects (nothing), what the host logs, and what happens when you click a product link.",
+    "terms_title": "Terms of Use",
+    "terms_description": "What this site is, how far the ratings go, and what to check before you buy."
+  },
   "nav": {
     "home": "Home",
     "language": "Language",

@@ -56,7 +56,7 @@ const sub = locale === 'en'
         <Tag
           href={p.link || undefined}
           target={p.link ? '_blank' : undefined}
-          rel={p.link ? 'noopener sponsored' : undefined}
+          rel={p.link ? 'noopener nofollow' : undefined}
           class:list={[
             'group relative block p-6 bg-bg-card border border-border rounded-lg overflow-hidden transition-all duration-300',
             p.link ? 'hover:border-kelp/40 hover:shadow-md' : '',

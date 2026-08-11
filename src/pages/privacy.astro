@@ -1,0 +1,87 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { useTranslations } from '../i18n/utils';
+
+const locale = 'en' as const;
+const t = useTranslations(locale);
+---
+<Layout
+  title={t('legal.privacy_title')}
+  description={t('legal.privacy_description')}
+  lang={locale}
+  type="article"
+>
+  <Header locale={locale} />
+
+  <main id="main" tabindex="-1" class="max-w-3xl mx-auto px-6 py-16">
+    <h1 class="font-serif text-text-primary mb-4" style="font-size: var(--text-h1); line-height: var(--text-h1--line-height);">
+      {t('legal.privacy_title')}
+    </h1>
+    <p class="text-text-muted text-sm mb-12">{t('legal.updated')}</p>
+
+    <div class="prose">
+      <p>
+        Korean GIM Database is a personal review site. There are no accounts,
+        no sign-up, no newsletter, no comment form, and no advertising.
+      </p>
+
+      <h2>What this site collects</h2>
+      <p>
+        Nothing. There is no analytics here — no Google Analytics, no tracking
+        pixels, and no cookies set by this site. Nothing you do on these pages
+        is recorded by me or tied to you.
+      </p>
+
+      <h2>What the host records</h2>
+      <p>
+        The site is served by Vercel. Like any web host, its servers keep
+        standard access logs — your IP address, your browser's user-agent
+        string, and the page requested — to deliver pages and to guard against
+        abuse. Those logs are held by the host under its own privacy policy. I
+        keep no copy of them and build no profile from them.
+      </p>
+
+      <h2>Fonts</h2>
+      <p>
+        Korean pages load the Pretendard typeface from jsDelivr, a public CDN,
+        so your browser contacts <code>jsdelivr.net</code> directly and
+        jsDelivr can see your IP address. Every other font on this site is
+        served from this site.
+      </p>
+
+      <h2>When you click a product link</h2>
+      <p>
+        Product links lead to outside shops — mainly Coupang and Naver
+        Smartstore. Once you arrive you are on their site, under their rules,
+        and they may set their own cookies. Nothing comes back to this site
+        about what you viewed or bought.
+      </p>
+      <p>
+        This site is not part of any affiliate programme and earns no
+        commission on those links.
+      </p>
+
+      <h2>Children</h2>
+      <p>
+        Nothing here is directed at children, and no personal data is knowingly
+        collected from anyone.
+      </p>
+
+      <h2>Changes</h2>
+      <p>
+        If any of this changes — analytics, an affiliate programme, a
+        newsletter — this page is updated first, with a new date at the top.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions about this policy:
+        <a href="mailto:andyhong315@gmail.com">andyhong315@gmail.com</a>
+      </p>
+    </div>
+  </main>
+
+  <Footer locale={locale} />
+</Layout>
