@@ -93,6 +93,10 @@ def parse_page(page):
     gim_type = extract_select(props.get("김 종류", {}).get("select"))
     cook_state = extract_select(props.get("조리상태", {}).get("select"))
     cut = extract_select(props.get("등분 여부", {}).get("select"))
+    # 제품 사진은 파일명만 받는다. Notion "파일과 미디어" 속성을 쓰면 안 되는데,
+    # 거기서 오는 URL은 서명된 임시 주소라 1시간쯤 뒤 만료되어 사진이 조용히 깨진다.
+    # 실제 파일은 public/products/ 에 같은 이름으로 둔다.
+    image = extract_text(props.get("이미지", {}).get("rich_text", []))
 
     # 가격: number 타입 → 표시용 텍스트 생성
     price_num = int(price_raw) if price_raw else 0
@@ -114,6 +118,7 @@ def parse_page(page):
         "desc": desc,
         "link": link or "",
         "cut": cut,
+        "image": image,
     }
 
 
