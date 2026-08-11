@@ -37,12 +37,13 @@ const navItems = [
   { href: '/reviews', label: 'Reviews' },
 ];
 
-// Real counts, not invented telemetry. `Scale` still reads 0–10 while the pick
-// score renders out of 5 — that contradiction is the score redraw's to settle.
+// Real counts, not invented telemetry. The old `Scale 0–10` row is gone: the
+// cards now spell out their own units inline (5/5, 7/10), so it explained
+// nothing and contradicted the out-of-5 score.
 const stats = [
   { k: 'Reviews', v: String(totals.reviews) },
   { k: 'Types', v: String(totals.types) },
-  { k: 'Scale', v: '0–10' },
+  { k: 'Price', v: totals.priceRange },
 ];
 ---
 <RedesignLayout title="Variant C — industrial-brutalist-ui — Korean GIM">
@@ -148,8 +149,11 @@ const stats = [
             <article class="cellx pickx">
               <header class="pick-head">
                 <span class="idx" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-                <span class="score" aria-label={`Rated ${p.scoreNum} out of 5`}>
-                  <span aria-hidden="true">{'█'.repeat(p.scoreNum)}{'░'.repeat(5 - p.scoreNum)}</span>
+                {/* the readout below already says 7/10 twice — same idiom here,
+                    which reads at any size and needs no legend */}
+                <span class="score">
+                  <span class="sr-only">Rated {p.scoreNum} out of 5</span>
+                  <span aria-hidden="true">{p.scoreNum}/5</span>
                 </span>
               </header>
 
@@ -467,9 +471,12 @@ const stats = [
     padding-bottom: 0.75rem; border-bottom: 1px solid var(--ink);
   }
   .idx { font-size: 0.625rem; font-weight: 700; }
+  /* red-text, not red: this is now a number rather than a bar glyph, so it
+     owes 4.5:1 instead of 3:1 */
   .score {
-    font-family: var(--mono); font-size: 0.75rem; color: var(--red);
-    letter-spacing: 0.05em; line-height: 1;
+    font-family: var(--mono); font-size: 0.75rem; color: var(--red-text);
+    letter-spacing: 0.08em; line-height: 1;
+    font-weight: 700; font-variant-numeric: tabular-nums;
   }
   .pick-name {
     font-family: var(--grot); font-weight: 900; text-transform: uppercase;

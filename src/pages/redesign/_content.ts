@@ -19,6 +19,7 @@ export interface Pick {
   salt: number;
   scoreNum: number;
   price: string;
+  priceNum: number;
   review: string;
   review_en: string;
   desc: string;
@@ -43,11 +44,16 @@ export function getPicks(): Pick[] {
 }
 
 /** Derived so the numbers on the page can't drift from the data. */
-export function getTotals(): { reviews: number; types: number } {
+export function getTotals(): { reviews: number; types: number; priceRange: string } {
   const rows = readRows();
+  // 2 of 17 rows ship without a price, so this is the range across priced rows.
+  const prices = rows.map(r => r.priceNum).filter(n => n > 0);
+  // explicit locale — the default would drift with whatever builds the site
+  const won = (n: number) => new Intl.NumberFormat('en-US').format(n);
   return {
     reviews: rows.length,
     types: new Set(rows.map(r => r.type)).size,
+    priceRange: `₩${won(Math.min(...prices))}–${won(Math.max(...prices))}`,
   };
 }
 
