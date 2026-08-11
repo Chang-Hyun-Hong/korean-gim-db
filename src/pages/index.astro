@@ -18,7 +18,8 @@ const t = useTranslations(locale);
 
 const dataPath = resolve(process.cwd(), 'public/data.json');
 const reviews = JSON.parse(readFileSync(dataPath, 'utf-8'));
-const picks = reviews.slice(0, 3);
+// 평점 높은 순으로 3개. DB 순서 그대로 자르면 2점·1점짜리가 "먼저 먹어볼 김"으로 올라간다.
+const picks = [...reviews].sort((a, b) => b.scoreNum - a.scoreNum).slice(0, 3);
 
 const allArticles = await getCollection('articles');
 const latestArticles = allArticles

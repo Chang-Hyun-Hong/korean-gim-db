@@ -12,7 +12,8 @@ import { useTranslations } from '../../i18n/utils';
 
 const dataPath = resolve(process.cwd(), 'public/data.json');
 const data = JSON.parse(readFileSync(dataPath, 'utf-8'));
-const picks = data.slice(0, 3);
+// 평점 높은 순으로 3개. 원본 data는 아래 표에 그대로 쓰이므로 복사본을 정렬한다.
+const picks = [...data].sort((a, b) => b.scoreNum - a.scoreNum).slice(0, 3);
 
 const locale = 'en' as const;
 const t = useTranslations(locale);
